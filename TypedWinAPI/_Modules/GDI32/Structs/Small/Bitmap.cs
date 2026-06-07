@@ -1,0 +1,45 @@
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+namespace TypedWinAPI.GDI32;
+
+[StructLayout(LayoutKind.Explicit, Size = 32)]
+public unsafe struct Bitmap
+    : IEqualityOperators<Bitmap, Bitmap, bool>, IEquatable<Bitmap>
+{
+    [FieldOffset(0)] public int bmType;
+    [FieldOffset(4)] public int bmWidth;
+    [FieldOffset(8)] public int bmHeight;
+    [FieldOffset(12)] public int bmWidthBytes;
+    [FieldOffset(16)] public ushort bmPlanes;
+    [FieldOffset(18)] public BitDepth bmBitsPixel;
+    [FieldOffset(24)] public void* bmBits;
+
+    /// <summary>
+    /// Returns a Span of the actual pixel data, not the struct metadata.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly Span<byte> GetPixelData()
+        => bmBits is null ? [] : new Span<byte>(bmBits, bmHeight * bmWidthBytes);
+    [UnscopedRef]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly Span<byte> AsSpan()
+        => MemoryMarshal.CreateSpan(ref Unsafe
+                        .As<int, byte>(ref Unsafe
+                        .AsRef(in bmType)), sizeof(Bitmap));
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override readonly bool Equals([NotNullWhen(true)] object? obj)
+        => obj is Bitmap bmp && this == bmp;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly bool Equals(Bitmap other) => this == other;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator ==(Bitmap left, Bitmap right) => left.AsSpan().SequenceEqual(right.AsSpan());
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator !=(Bitmap left, Bitmap right) => !(left == right);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override readonly int GetHashCode() => -1;
+}

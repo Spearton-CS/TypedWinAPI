@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Runner/Runner.csproj" />
+  <Project Path="TypedWinAPI.Safe/TypedWinAPI.Safe.csproj" />
+  <Project Path="TypedWinAPI/TypedWinAPI.csproj" />
+</Solution>

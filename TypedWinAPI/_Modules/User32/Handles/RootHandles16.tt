@@ -1,0 +1,374 @@
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".g.cs" #>
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+using TypedWinAPI.Contracts;
+
+namespace TypedWinAPI.User32;
+
+<#
+    // --- SETTINGS ---
+
+    (string ClassName, string Comment)[] handles =
+    [
+        ("ATOM", "")
+    ];
+
+    Dictionary<string, (
+        string MinValue,
+        string MaxValue,
+        string Zero)> customMathConsts = new()
+    {
+        { "Example", ("(Example)Handle16.MinValue", "(Example)Handle16.MaxValue", "(Example)Handle16.Zero") }
+    };
+
+    Dictionary<string, (
+        string Equal,
+        string NonEqual,
+        string _GetHashCode,
+        string _CompareTo,
+        string Less,
+        string More,
+        string LessOrEqual,
+        string MoreOrEqual)> customEqualityLogic = new()
+    {
+        { "Example", (
+            "a.Handle16Value == b.Handle16Value",
+            "a.Handle16Value != b.Handle16Value",
+            "a.Handle16Value.GetHashCode()",
+            "Handle16Value.CompareTo(other.Handle16Value)",
+            "a.Handle16Value < b.Handle16Value",
+            "a.Handle16Value > b.Handle16Value",
+            "a.Handle16Value <= b.Handle16Value",
+            "a.Handle16Value >= b.Handle16Value") }
+    };
+
+    Dictionary<string, (
+        string _ToString,
+        string ToStringFormat,
+        string TryFormat,
+        string Parse,
+        string TryParse)> customStringLogic = new()
+    {
+        { "Example", (
+            "Handle16Value.ToString()",
+            "Handle16Value.ToString(format, provider)",
+            "Handle16Value.TryFormat(destination, out written, format, provider)",
+            "(Example)Handle16.Parse(s, provider)",
+            "Unsafe.SkipInit(out result);\r\n\t\treturn Handle16.TryParse(s, provider, out Unsafe.As<Example, Handle16>(ref result))") }
+    };
+
+    // ---------------------------
+
+    foreach (var (name, comment) in handles)
+    {
+        string
+            MinValueDefault = $"({name})Handle16.MinValue",
+            MaxValueDefault = $"({name})Handle16.MaxValue",
+            ZeroDefault = $"({name})Handle16.Zero";
+
+        string
+            EqualDefault = "a.Handle16Value == b.Handle16Value",
+            NonEqualDefault = "a.Handle16Value != b.Handle16Value",
+            GetHashCodeDefault = "Handle16Value.GetHashCode()",
+            CompareToDefault = "Handle16Value.CompareTo(other.Handle16Value)",
+            LessDefault = "a.Handle16Value < b.Handle16Value",
+            MoreDefault = "a.Handle16Value > b.Handle16Value",
+            LessOrEqualDefault = "a.Handle16Value <= b.Handle16Value",
+            MoreOrEqualDefault = "a.Handle16Value >= b.Handle16Value";
+
+        string
+            ToStringDefault = "Handle16Value.ToString()",
+            ToStringFormatDefault = "Handle16Value.ToString(format, provider)",
+            TryFormatDefault = "Handle16Value.TryFormat(destination, out written, format, provider)",
+            ParseDefault = $"({name})Handle16.Parse(s, provider)",
+            TryParseDefault = $"Unsafe.SkipInit(out result);\r\n\t\treturn Handle16.TryParse(s, provider, out Unsafe.As<{name}, Handle16>(ref result));";
+
+#>
+
+/// <summary>
+/// <#= comment #>
+/// </summary>
+[
+    StructLayout(LayoutKind.Explicit, Size = 8),
+    DebuggerDisplay("{ToString(),nq}"),
+    DebuggerStepThrough,
+    SkipLocalsInit
+]
+public unsafe readonly struct <#= name #> :
+    IHandle16TSelfContracts<<#= name #>>, IHandle16TBaseHandle16Contracts<<#= name #>, Handle16>, IHandle16Contracts<<#= name #>>
+{
+    #region Construct
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public <#= name #>() => Handle16Value = default;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public <#= name #>(Handle16 h) => Handle16Value = h;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public <#= name #>(ushort unsig) => UnsignedValue = unsig;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public <#= name #>(short sig) => SignedValue = sig;
+
+    #endregion
+
+    #region Fields
+
+    [FieldOffset(0)] public readonly Handle16 Handle16Value;
+    [FieldOffset(0)] public readonly ushort UnsignedValue;
+    [FieldOffset(0)] public readonly short SignedValue;
+
+    #endregion
+
+    #region Math
+
+    public static <#= name #> MinValue
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => <#= customMathConsts.TryGetValue(name, out var consts) ? consts.MinValue : MinValueDefault #>;
+    }
+    public static <#= name #> MaxValue
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => <#= customMathConsts.TryGetValue(name, out consts) ? consts.MaxValue : MaxValueDefault #>;
+    }
+
+    public static <#= name #> Zero
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => <#= customMathConsts.TryGetValue(name, out consts) ? consts.Zero : ZeroDefault #>;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator <<(<#= name #> a, int shift) => (<#= name #>)(a.Handle16Value << shift);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator >>(<#= name #> a, int shift) => (<#= name #>)(a.Handle16Value >> shift);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator >>>(<#= name #> a, int shift) => (<#= name #>)(a.Handle16Value >>> shift);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator &(<#= name #> a, <#= name #> b) => (<#= name #>)(ushort)(a.UnsignedValue & b.UnsignedValue);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator |(<#= name #> a, <#= name #> b) => (<#= name #>)(ushort)(a.UnsignedValue | b.UnsignedValue);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator ^(<#= name #> a, <#= name #> b) => (<#= name #>)(ushort)(a.UnsignedValue ^ b.UnsignedValue);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator ~(<#= name #> a) => (<#= name #>)(ushort)~a.UnsignedValue;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator &(<#= name #> a, Handle16 b) => (<#= name #>)(a.Handle16Value & b);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator |(<#= name #> a, Handle16 b) => (<#= name #>)(a.Handle16Value | b);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator ^(<#= name #> a, Handle16 b) => (<#= name #>)(a.Handle16Value ^ b);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator &(<#= name #> a, ushort b) => (<#= name #>)(ushort)(a.UnsignedValue & b);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator |(<#= name #> a, ushort b) => (<#= name #>)(ushort)(a.UnsignedValue | b);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator ^(<#= name #> a, ushort b) => (<#= name #>)(ushort)(a.UnsignedValue ^ b);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator &(<#= name #> a, short b) => (<#= name #>)(short)(a.SignedValue & b);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator |(<#= name #> a, short b) => (<#= name #>)(short)(a.SignedValue | b);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator ^(<#= name #> a, short b) => (<#= name #>)(short)(a.SignedValue ^ b);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator &(<#= name #> a, void* b) => (<#= name #>)(ushort)(a.UnsignedValue & (ushort)b);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator |(<#= name #> a, void* b) => (<#= name #>)(ushort)(a.UnsignedValue | (ushort)b);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> operator ^(<#= name #> a, void* b) => (<#= name #>)(ushort)(a.UnsignedValue ^ (ushort)b);
+
+    #endregion
+
+    #region Equality
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly override bool Equals([NotNullWhen(true)] object? obj)
+        => obj is <#= name #> other ? this == other
+            : obj is Handle16 h ? this == h
+                : obj is ushort unsig ? this == unsig
+                    : obj is short sig && this == sig;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly bool Equals(<#= name #> other) => this == other;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly bool Equals(Handle16 other) => this == other;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly bool Equals(ushort other) => this == other;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly bool Equals(short other) => this == other;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly bool Equals(void* other) => this == other;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator ==(<#= name #> a, <#= name #> b) => <#= customEqualityLogic.TryGetValue(name, out var logicEq) ? logicEq.Equal : EqualDefault #>;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator !=(<#= name #> a, <#= name #> b) => <#= customEqualityLogic.TryGetValue(name, out logicEq) ? logicEq.NonEqual : NonEqualDefault #>;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator ==(<#= name #> a, Handle16 b) => a.Handle16Value == b;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator !=(<#= name #> a, Handle16 b) => a.Handle16Value != b;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator ==(<#= name #> a, ushort b) => a.UnsignedValue == b;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator !=(<#= name #> a, ushort b) => a.UnsignedValue != b;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator ==(<#= name #> a, short b) => a.SignedValue == b;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator !=(<#= name #> a, short b) => a.SignedValue != b;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator ==(<#= name #> a, void* b) => a.Handle16Value == b;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator !=(<#= name #> a, void* b) => a.Handle16Value != b;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly override int GetHashCode() => <#= customEqualityLogic.TryGetValue(name, out logicEq) ? logicEq._GetHashCode : GetHashCodeDefault #>;
+
+    #endregion
+
+    #region Comparability
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly int CompareTo(object? obj)
+        => obj is <#= name #> other ? CompareTo(other)
+            : obj is Handle16 h ? CompareTo(h)
+                : obj is ushort unsig ? CompareTo(unsig)
+                    : obj is short sig ? CompareTo(sig)
+                        : 0;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly int CompareTo(<#= name #> other) => <#= customEqualityLogic.TryGetValue(name, out logicEq) ? logicEq._CompareTo : CompareToDefault #>;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly int CompareTo(Handle16 other) => Handle16Value.CompareTo(other);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly int CompareTo(ushort other) => UnsignedValue.CompareTo(other);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly int CompareTo(short other) => SignedValue.CompareTo(other);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly int CompareTo(void* other) => UnsignedValue.CompareTo((ushort)other);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator <(<#= name #> a, <#= name #> b) => <#= customEqualityLogic.TryGetValue(name, out logicEq) ? logicEq.Less : LessDefault #>;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator >(<#= name #> a, <#= name #> b) => <#= customEqualityLogic.TryGetValue(name, out logicEq) ? logicEq.More : MoreDefault #>;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator <=(<#= name #> a, <#= name #> b) => <#= customEqualityLogic.TryGetValue(name, out logicEq) ? logicEq.LessOrEqual : LessOrEqualDefault #>;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator >=(<#= name #> a, <#= name #> b) => <#= customEqualityLogic.TryGetValue(name, out logicEq) ? logicEq.MoreOrEqual : MoreOrEqualDefault #>;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator <(<#= name #> a, Handle16 b) => a.Handle16Value < b;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator >(<#= name #> a, Handle16 b) => a.Handle16Value > b;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator <=(<#= name #> a, Handle16 b) => a.Handle16Value <= b;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator >=(<#= name #> a, Handle16 b) => a.Handle16Value >= b;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator <(<#= name #> a, ushort b) => a.UnsignedValue < b;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator >(<#= name #> a, ushort b) => a.UnsignedValue > b;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator <=(<#= name #> a, ushort b) => a.UnsignedValue <= b;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator >=(<#= name #> a, ushort b) => a.UnsignedValue >= b;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator <(<#= name #> a, short b) => a.SignedValue < b;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator >(<#= name #> a, short b) => a.SignedValue > b;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator <=(<#= name #> a, short b) => a.SignedValue <= b;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator >=(<#= name #> a, short b) => a.SignedValue >= b;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator <(<#= name #> a, void* b) => a.Handle16Value < b;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator >(<#= name #> a, void* b) => a.Handle16Value > b;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator <=(<#= name #> a, void* b) => a.Handle16Value <= b;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator >=(<#= name #> a, void* b) => a.Handle16Value >= b;
+
+    #endregion
+
+    #region Format and Parse
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly override string ToString() => <#= customStringLogic.TryGetValue(name, out var logicTxt) ? logicTxt._ToString : ToStringDefault #>;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly string ToString(string? format, IFormatProvider? provider = null) => <#= customStringLogic.TryGetValue(name, out logicTxt) ? logicTxt.ToStringFormat : ToStringFormatDefault #>;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly bool TryFormat(Span<char> destination, scoped out int written, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
+        => <#= customStringLogic.TryGetValue(name, out logicTxt) ? logicTxt.TryFormat : TryFormatDefault #>;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly bool TryFormat(Span<byte> destination, scoped out int written, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
+        => <#= customStringLogic.TryGetValue(name, out logicTxt) ? logicTxt.TryFormat : TryFormatDefault #>;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> Parse(string s, IFormatProvider? provider = null) => <#= customStringLogic.TryGetValue(name, out logicTxt) ? logicTxt.Parse : ParseDefault #>;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool TryParse(string s, IFormatProvider? provider, scoped out <#= name #> result)
+    {
+        <#= customStringLogic.TryGetValue(name, out logicTxt) ? logicTxt.TryParse : TryParseDefault #>
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> Parse(ReadOnlySpan<char> s, IFormatProvider? provider = null) => <#= customStringLogic.TryGetValue(name, out logicTxt) ? logicTxt.Parse : ParseDefault #>;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, scoped out <#= name #> result)
+    {
+        <#= customStringLogic.TryGetValue(name, out logicTxt) ? logicTxt.TryParse : TryParseDefault #>
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static <#= name #> Parse(ReadOnlySpan<byte> s, IFormatProvider? provider = null) => <#= customStringLogic.TryGetValue(name, out logicTxt) ? logicTxt.Parse : ParseDefault #>;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool TryParse(ReadOnlySpan<byte> s, IFormatProvider provider, scoped out <#= name #> result)
+    {
+        <#= customStringLogic.TryGetValue(name, out logicTxt) ? logicTxt.TryParse : TryParseDefault #>
+    }
+
+    #endregion
+
+    #region Cast
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator <#= name #>(Handle16 h) => new(h);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator <#= name #>(void* ptr) => new((Handle16)ptr);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator <#= name #>(ushort unsig) => new(unsig);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator <#= name #>(short sig) => new(sig);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static implicit operator Handle16(<#= name #> h) => h.Handle16Value;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator void*(<#= name #> h) => (void*)h.Handle16Value;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator ushort(<#= name #> h) => h.UnsignedValue;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator short(<#= name #> h) => h.SignedValue;
+
+    #endregion
+}
+<#
+    }
+#>
