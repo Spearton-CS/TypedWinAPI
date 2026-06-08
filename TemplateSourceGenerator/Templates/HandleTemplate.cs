@@ -32,29 +32,36 @@ internal static class HandleTemplate
         }
         static void Contracts(StringBuilder sb, in Handle h)
         {
-            sb.AppendLine("\t// --- Default contracts ---");
-            sb.AppendLine($"\tIHandleTSelfContracts<{h.ClassName}>,");
+            sb.AppendLine(
+            $"""
+                // --- Default contracts ---
+                IHandleTSelfContracts<{h.ClassName}>,
+            """);
             if (h.BaseClassNames is not null)
                 foreach (var baseName in h.BaseClassNames)
                     sb.AppendLine($"\tIHandleTBaseHandleContracts<{h.ClassName}, {baseName}>,");
             if (h.Contracts is not null)
-            {
-                sb.AppendLine("\t --- Custom contracts ---");
-                foreach (var contract in h.Contracts)
-                    sb.AppendLine($"\t{contract},");
-            }
-            else
-                sb.AppendLine("\t// --- Default contracts ---");
-            sb.AppendLine($"\tIHandleTBaseHandleContracts<{h.ClassName}, Handle>,");
-            sb.AppendLine($"\tIHandleContracts<{h.ClassName}>");
+                sb.AppendLine(
+                $"""
+                    // --- Custom contracts ---
+                    {string.Join(",\r\n\t", h.Contracts)},
+                    // --- Default contracts ---
+                 """);
+            sb.AppendLine(
+            $"""
+                IHandleTBaseHandleContracts<{h.ClassName}, Handle>,
+                IHandleContracts<{h.ClassName}>
+            """);
         }
 
         if (h.Comment is not null)
         {
-            sb.AppendLine("/// <summary>");
-            sb.Append("/// ");
-            sb.AppendLine(h.Comment.Replace("\r\n", "\r\n///"));
-            sb.AppendLine("/// </summary>");
+            sb.AppendLine(
+            $"""
+            /// <summary>
+            /// {h.Comment.Replace("\r\n", "\r\n/// ")}
+            /// </summary>
+            """);
         }
         Attributes(sb, in h);
         sb.AppendLine($"public unsafe readonly struct {h.ClassName} :");
@@ -65,417 +72,379 @@ internal static class HandleTemplate
     {
         static void Construct(StringBuilder sb, in Handle h)
         {
-            sb.AppendLine("\t#region Construct");
-            sb.AppendLine();
-            {
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
+            sb.AppendLine(
+            """
+                #region Construct
 
+            """);
+            {
                 if (h.BaseClassNames is not null)
                 {
-                    sb.AppendLine($"\tpublic {h.ClassName}() => {h.BaseClassNames[0]}Value = default;");
-                    sb.AppendLine();
-                    sb.AppendLine("\t");
+                    sb.AppendLine(
+                    $"""
+                        {Const.Inlined}
+                        public {h.ClassName}() => {h.BaseClassNames[0]}Value = default;
+
+                    """);
                     foreach (var baseName in h.BaseClassNames)
-                    {
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic {h.ClassName}({baseName} h) => {baseName}Value = h;");
-                    }
+                        sb.AppendLine(
+                        $"""
+                            {Const.Inlined}
+                            public {h.ClassName}({baseName} h) => {baseName}Value = h;
+                        """);
                     sb.AppendLine();
                 }
                 else
-                    sb.AppendLine($"\tpublic {h.ClassName}() => HandleValue = default;");
+                    sb.AppendLine(
+                    $"""
+                        {Const.Inlined}
+                        public {h.ClassName}() => HandleValue = default;
+                    """);
 
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic {h.ClassName}(Handle h) => HandleValue = h;");
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic {h.ClassName}(void* ptr) => PointerValue = ptr;");
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic {h.ClassName}(nuint unsig) => UnsignedValue = unsig;");
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic {h.ClassName}(nint sig) => SignedValue = sig;");
+                sb.AppendLine(
+                $"""
+                    {Const.Inlined}
+                    public {h.ClassName}(Handle h) => HandleValue = h;
+                    {Const.Inlined}
+                    public {h.ClassName}(void* ptr) => PointerValue = ptr;
+                    {Const.Inlined}
+                    public {h.ClassName}(nuint unsig) => UnsignedValue = unsig;
+                    {Const.Inlined}
+                    public {h.ClassName}(nint sig) => SignedValue = sig;
+                """);
             }
-            sb.AppendLine();
-            sb.AppendLine("\t#endregion");
+            sb.AppendLine(
+            """
+
+                #endregion
+            """);
         }
         static void Fields(StringBuilder sb, in Handle h)
         {
-            sb.AppendLine("\t#region Fields");
-            sb.AppendLine();
+            sb.AppendLine(
+            """
+                #region Fields
+
+            """);
             {
                 if (h.BaseClassNames is not null)
                     foreach (var baseName in h.BaseClassNames)
                         sb.AppendLine($"\t[FieldOffset(0)] public readonly {baseName} {baseName}Value;");
 
-                sb.AppendLine("\t[FieldOffset(0)] public readonly Handle HandleValue;");
-                sb.AppendLine("\t[FieldOffset(0)] public readonly void* PointerValue;");
-                sb.AppendLine("\t[FieldOffset(0)] public readonly nuint UnsignedValue;");
-                sb.AppendLine("\t[FieldOffset(0)] public readonly nint SignedValue;");
+                sb.AppendLine(
+                """
+                    [FieldOffset(0)] public readonly Handle HandleValue;
+                    [FieldOffset(0)] public readonly void* PointerValue;
+                    [FieldOffset(0)] public readonly nuint UnsignedValue;
+                    [FieldOffset(0)] public readonly nint SignedValue;
+                """);
             }
-            sb.AppendLine();
-            sb.AppendLine("\t#endregion");
+            sb.AppendLine(
+            """
+
+                #endregion
+            """);
         }
         static void Math(StringBuilder sb, in Handle h)
         {
-            static void _Consts(StringBuilder sb, in Handle h)
-            {
-                sb.AppendLine($"\tpublic static {h.ClassName} MinValue");
-                sb.AppendLine("\t{");
-                {
-                    sb.Append("\t\t"); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\t\tget => {h.MathConsts.MinValue};");
-                }
-                sb.AppendLine("\t}");
-
-                sb.AppendLine();
-
-                sb.AppendLine($"\tpublic static {h.ClassName} MaxValue");
-                sb.AppendLine("\t{");
-                {
-                    sb.Append("\t\t"); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\t\tget => {h.MathConsts.MaxValue};");
-                }
-                sb.AppendLine("\t}");
-
-                sb.AppendLine();
-
-                sb.AppendLine($"\tpublic static {h.ClassName} Zero");
-                sb.AppendLine("\t{");
-                {
-                    sb.Append("\t\t"); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\t\tget => {h.MathConsts.Zero};");
-                }
-                sb.AppendLine("\t}");
-            }
             static void _BitOps(StringBuilder sb, in Handle h)
             {
                 static void __Handles(StringBuilder sb, in Handle h)
                 {
                     if (h.BaseClassNames is not null)
                     {
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static {h.ClassName} operator <<({h.ClassName} a, int shift) => ({h.ClassName})a.{h.BaseClassNames[0]}Value << shift;");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static {h.ClassName} operator >>({h.ClassName} a, int shift) => ({h.ClassName})a.{h.BaseClassNames[0]}Value >> shift;");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static {h.ClassName} operator >>>({h.ClassName} a, int shift) => ({h.ClassName})a.{h.BaseClassNames[0]}Value >>> shift;");
+                        sb.AppendLine(
+                        $"""
+                            {Const.Inlined}
+                            public static {h.ClassName} operator <<({h.ClassName} a, int shift) => ({h.ClassName})a.{h.BaseClassNames[0]}Value << shift;
+                            {Const.Inlined}
+                            public static {h.ClassName} operator >>({h.ClassName} a, int shift) => ({h.ClassName})a.{h.BaseClassNames[0]}Value >> shift;
+                            {Const.Inlined}
+                            public static {h.ClassName} operator >>>({h.ClassName} a, int shift) => ({h.ClassName})a.{h.BaseClassNames[0]}Value >>> shift;
+                        """);
 
                         foreach (var baseName in h.BaseClassNames)
-                        {
-                            sb.AppendLine();
+                            sb.AppendLine(
+                            $"""
 
-                            sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                            sb.AppendLine($"\tpublic static {h.ClassName} operator &({h.ClassName} a, {baseName} b) => ({h.ClassName})(a.{baseName}Value & b);");
-                            sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                            sb.AppendLine($"\tpublic static {h.ClassName} operator |({h.ClassName} a, {baseName} b) => ({h.ClassName})(a.{baseName}Value | b);");
-                            sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                            sb.AppendLine($"\tpublic static {h.ClassName} operator ^({h.ClassName} a, {baseName} b) => ({h.ClassName})(a.{baseName}Value ^ b);");
-                        }
-
-                        sb.AppendLine();
-
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static {h.ClassName} operator &({h.ClassName} a, {h.ClassName} b) => ({h.ClassName})(a.UnsignedValue & b.UnsignedValue);");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static {h.ClassName} operator |({h.ClassName} a, {h.ClassName} b) => ({h.ClassName})(a.UnsignedValue | b.UnsignedValue);");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static {h.ClassName} operator ^({h.ClassName} a, {h.ClassName} b) => ({h.ClassName})(a.UnsignedValue ^ b.UnsignedValue);");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static {h.ClassName} operator ~({h.ClassName} a) => ({h.ClassName})~a.UnsignedValue;");
+                                {Const.Inlined}
+                                public static {h.ClassName} operator &({h.ClassName} a, {baseName} b) => ({h.ClassName})a.{baseName}Value & b;
+                                {Const.Inlined}
+                                public static {h.ClassName} operator |({h.ClassName} a, {baseName} b) => ({h.ClassName})a.{baseName}Value | b;
+                                {Const.Inlined}
+                                public static {h.ClassName} operator ^({h.ClassName} a, {baseName} b) => ({h.ClassName})a.{baseName}Value ^ b;
+                            """);
                     }
                     else
-                    {
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static {h.ClassName} operator <<({h.ClassName} a, int shift) => ({h.ClassName})a.HandleValue << shift;");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static {h.ClassName} operator >>({h.ClassName} a, int shift) => ({h.ClassName})a.HandleValue >> shift;");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static {h.ClassName} operator >>>({h.ClassName} a, int shift) => ({h.ClassName})a.HandleValue >>> shift;");
+                        sb.AppendLine(
+                        $"""
+                            {Const.Inlined}
+                            public static {h.ClassName} operator <<({h.ClassName} a, int shift) => ({h.ClassName})a.HandleValue << shift;
+                            {Const.Inlined}
+                            public static {h.ClassName} operator >>({h.ClassName} a, int shift) => ({h.ClassName})a.HandleValue >> shift;
+                            {Const.Inlined}
+                            public static {h.ClassName} operator >>>({h.ClassName} a, int shift) => ({h.ClassName})a.HandleValue >>> shift;
+                        """);
 
-                        sb.AppendLine();
+                    sb.AppendLine(
+                    $"""
 
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static {h.ClassName} operator &({h.ClassName} a, {h.ClassName} b) => ({h.ClassName})(a.UnsignedValue & b.UnsignedValue);");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static {h.ClassName} operator |({h.ClassName} a, {h.ClassName} b) => ({h.ClassName})(a.UnsignedValue | b.UnsignedValue);");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static {h.ClassName} operator ^({h.ClassName} a, {h.ClassName} b) => ({h.ClassName})(a.UnsignedValue ^ b.UnsignedValue);");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static {h.ClassName} operator ~({h.ClassName} a) => ({h.ClassName})~a.UnsignedValue;");
-                    }
-                }
-                static void __Primitives(StringBuilder sb, in Handle h)
-                {
-                    sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\tpublic static {h.ClassName} operator &({h.ClassName} a, Handle b) => ({h.ClassName})(a.HandleValue & b);");
-                    sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\tpublic static {h.ClassName} operator |({h.ClassName} a, Handle b) => ({h.ClassName})(a.HandleValue | b);");
-                    sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\tpublic static {h.ClassName} operator ^({h.ClassName} a, Handle b) => ({h.ClassName})(a.HandleValue ^ b);");
-
-                    sb.AppendLine();
-
-                    sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\tpublic static {h.ClassName} operator &({h.ClassName} a, nuint b) => ({h.ClassName})(a.UnsignedValue & b);");
-                    sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\tpublic static {h.ClassName} operator |({h.ClassName} a, nuint b) => ({h.ClassName})(a.UnsignedValue | b);");
-                    sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\tpublic static {h.ClassName} operator ^({h.ClassName} a, nuint b) => ({h.ClassName})(a.UnsignedValue ^ b);");
-
-                    sb.AppendLine();
-
-                    sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\tpublic static {h.ClassName} operator &({h.ClassName} a, nint b) => ({h.ClassName})(a.SignedValue & b);");
-                    sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\tpublic static {h.ClassName} operator |({h.ClassName} a, nint b) => ({h.ClassName})(a.SignedValue | b);");
-                    sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\tpublic static {h.ClassName} operator ^({h.ClassName} a, nint b) => ({h.ClassName})(a.SignedValue ^ b);");
-
-                    sb.AppendLine();
-
-                    sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\tpublic static {h.ClassName} operator &({h.ClassName} a, void* b) => ({h.ClassName})(a.UnsignedValue & (nuint)b);");
-                    sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\tpublic static {h.ClassName} operator |({h.ClassName} a, void* b) => ({h.ClassName})(a.UnsignedValue | (nuint)b);");
-                    sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\tpublic static {h.ClassName} operator ^({h.ClassName} a, void* b) => ({h.ClassName})(a.UnsignedValue ^ (nuint)b);");
+                        {Const.Inlined}
+                        public static {h.ClassName} operator &({h.ClassName} a, {h.ClassName} b) => ({h.ClassName})(a.UnsignedValue & b.UnsignedValue);
+                        {Const.Inlined}
+                        public static {h.ClassName} operator |({h.ClassName} a, {h.ClassName} b) => ({h.ClassName})(a.UnsignedValue | b.UnsignedValue);
+                        {Const.Inlined}
+                        public static {h.ClassName} operator ^({h.ClassName} a, {h.ClassName} b) => ({h.ClassName})(a.UnsignedValue ^ b.UnsignedValue);
+                        {Const.Inlined}
+                        public static {h.ClassName} operator ~({h.ClassName} a) => ({h.ClassName})~a.UnsignedValue;
+                    """);
                 }
 
                 __Handles(sb, in h);
                 sb.AppendLine();
-                __Primitives(sb, in h);
+                sb.AppendLine(
+                $"""
+                    {Const.Inlined}
+                    public static {h.ClassName} operator &({h.ClassName} a, Handle b) => ({h.ClassName})(a.HandleValue & b);
+                    {Const.Inlined}
+                    public static {h.ClassName} operator |({h.ClassName} a, Handle b) => ({h.ClassName})(a.HandleValue | b);
+                    {Const.Inlined}
+                    public static {h.ClassName} operator ^({h.ClassName} a, Handle b) => ({h.ClassName})(a.HandleValue ^ b);
+
+                    {Const.Inlined}
+                    public static {h.ClassName} operator &({h.ClassName} a, nuint b) => ({h.ClassName})(a.UnsignedValue & b);
+                    {Const.Inlined}
+                    public static {h.ClassName} operator |({h.ClassName} a, nuint b) => ({h.ClassName})(a.UnsignedValue | b);
+                    {Const.Inlined}
+                    public static {h.ClassName} operator ^({h.ClassName} a, nuint b) => ({h.ClassName})(a.UnsignedValue ^ b);
+
+                    {Const.Inlined}
+                    public static {h.ClassName} operator &({h.ClassName} a, nint b) => ({h.ClassName})(a.SignedValue & b);
+                    {Const.Inlined}
+                    public static {h.ClassName} operator |({h.ClassName} a, nint b) => ({h.ClassName})(a.SignedValue | b);
+                    {Const.Inlined}
+                    public static {h.ClassName} operator ^({h.ClassName} a, nint b) => ({h.ClassName})(a.SignedValue ^ b);
+
+                    {Const.Inlined}
+                    public static {h.ClassName} operator &({h.ClassName} a, void* b) => ({h.ClassName})(a.UnsignedValue & (nuint)b);
+                    {Const.Inlined}
+                    public static {h.ClassName} operator |({h.ClassName} a, void* b) => ({h.ClassName})(a.UnsignedValue | (nuint)b);
+                    {Const.Inlined}
+                    public static {h.ClassName} operator ^({h.ClassName} a, void* b) => ({h.ClassName})(a.UnsignedValue ^ (nuint)b);
+                """);
             }
 
-            sb.AppendLine("\t#region Math");
-            sb.AppendLine();
-            _Consts(sb, in h);
+            sb.AppendLine(
+            """
+                #region Math
+            
+            """);
+            sb.AppendLine(
+            $$"""
+                public static {{h.ClassName}} MinValue
+                {
+                    {{Const.Inlined}}
+                    get => {{h.MathConsts.MinValue}};
+                }
+
+                public static {{h.ClassName}} MaxValue
+                {
+                    {{Const.Inlined}}
+                    get => {{h.MathConsts.MaxValue}};
+                }
+
+                public static {{h.ClassName}} Zero
+                {
+                    {{Const.Inlined}}
+                    get => {{h.MathConsts.Zero}};
+                }
+            """);
             sb.AppendLine();
             _BitOps(sb, in h);
-            sb.AppendLine();
-            sb.AppendLine("\t#endregion");
+            sb.AppendLine(
+            """
+
+                #endregion
+            """);
         }
         static void EqualityAndComparability(StringBuilder sb, in Handle h)
         {
             static void _Equals(StringBuilder sb, in Handle h)
             {
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine("\tpublic readonly override bool Equals([NotNullWhen(true)] object? obj)");
-                sb.AppendLine($"\t\t=> obj is {h.ClassName} other ? this == other");
+                sb.AppendLine(
+                $"""
+                    {Const.Inlined}
+                    public readonly override bool Equals([NotNullWhen(true)] object? obj)
+                        => obj is {h.ClassName} other ? this == other
+                """);
                 if (h.BaseClassNames is not null)
                     foreach (var baseName in h.BaseClassNames)
                         sb.AppendLine($"\t\t\t: obj is {baseName} @{baseName} ? this == @{baseName}");
-                sb.AppendLine("\t\t\t\t: obj is Handle h ? this == h");
-                sb.AppendLine("\t\t\t\t\t: obj is nuint unsig ? this == unsig");
-                sb.AppendLine("\t\t\t\t\t\t: obj is nint sig && this == sig;");
+                sb.AppendLine(
+                $"""
+                                : obj is Handle h ? this == h
+                                    : obj is nuint unsig ? this == unsig
+                                        : obj is nint sig && this == sig;
 
-                sb.AppendLine();
+
+                """);
 
                 if (h.BaseClassNames is not null)
                     foreach (var baseName in h.BaseClassNames)
                     {
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic readonly bool Equals({baseName} other) => this == other;");
-                        sb.AppendLine();
+                        sb.AppendLine(
+                        $"""
+                            {Const.Inlined}
+                            public readonly bool Equals({baseName} other) => this == other;
+
+                        """);
                     }
 
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic readonly bool Equals({h.ClassName} other) => this == other;");
+                sb.AppendLine(
+                $"""
+                    {Const.Inlined}
+                    public readonly bool Equals({h.ClassName} other) => this == other;
 
-                sb.AppendLine();
-
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine("\tpublic readonly bool Equals(Handle other) => this == other;");
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine("\tpublic readonly bool Equals(nuint other) => this == other;");
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine("\tpublic readonly bool Equals(nint other) => this == other;");
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine("\tpublic readonly bool Equals(void* other) => this == other;");
+                    {Const.Inlined}
+                    public readonly bool Equals(Handle other) => this == other;
+                    {Const.Inlined}
+                    public readonly bool Equals(nuint other) => this == other;
+                    {Const.Inlined}
+                    public readonly bool Equals(nint other) => this == other;
+                    {Const.Inlined}
+                    public readonly bool Equals(void* other) => this == other;
+                """);
             }
             static void _CompareTo(StringBuilder sb, in Handle h)
             {
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine("\tpublic readonly int CompareTo([NotNullWhen(true)] object? obj)");
-                sb.AppendLine($"\t\t=> obj is {h.ClassName} other ? CompareTo(other)");
+                sb.AppendLine(
+                $"""
+                    {Const.Inlined}
+                    public readonly int CompareTo([NotNullWhen(true)] object? obj)
+                        => obj is {h.ClassName} other ? CompareTo(other)
+                """);
                 if (h.BaseClassNames is not null)
                     foreach (var baseName in h.BaseClassNames)
                         sb.AppendLine($"\t\t\t: obj is {baseName} @{baseName} ? CompareTo(@{baseName})");
-                sb.AppendLine("\t\t\t\t: obj is Handle h ? CompareTo(h)");
-                sb.AppendLine("\t\t\t\t\t: obj is nuint unsig ? CompareTo(unsig)");
-                sb.AppendLine("\t\t\t\t\t\t: obj is nint sig ? CompareTo(sig) : 0;");
+                sb.AppendLine(
+                $"""
+                                : obj is Handle h ? CompareTo(h)
+                                    : obj is nuint unsig ? CompareTo(unsig)
+                                        : obj is nint sig ? CompareTo(sig) : 0;
 
-                sb.AppendLine();
+                """);
 
                 if (h.BaseClassNames is not null)
                     foreach (var baseName in h.BaseClassNames)
-                    {
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic readonly int CompareTo({baseName} other) => {baseName}Value.CompareTo(other);");
-                        sb.AppendLine();
-                    }
+                        sb.AppendLine(
+                        $"""
+                            {Const.Inlined}
+                            public readonly int CompareTo({baseName} other) => {baseName}Value.CompareTo(other);
 
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic readonly int CompareTo({h.ClassName} other) => {h.EqualityLogic._CompareTo};");
-                sb.AppendLine();
+                        """);
 
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine("\tpublic readonly int CompareTo(Handle other) => HandleValue.CompareTo(other);");
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine("\tpublic readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);");
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine("\tpublic readonly int CompareTo(nint other) => SignedValue.CompareTo(other);");
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine("\tpublic readonly int CompareTo(void* other) => UnsignedValue.CompareTo((nuint)other);");
+                sb.AppendLine(
+                $"""
+                    {Const.Inlined}
+                    public readonly int CompareTo({h.ClassName} other) => {h.EqualityLogic._CompareTo};
+
+                    {Const.Inlined}
+                    public readonly int CompareTo(Handle other) => HandleValue.CompareTo(other);
+                    {Const.Inlined}
+                    public readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);
+                    {Const.Inlined}
+                    public readonly int CompareTo(nint other) => SignedValue.CompareTo(other);
+                    {Const.Inlined}
+                    public readonly int CompareTo(void* other) => UnsignedValue.CompareTo((nuint)other);
+                """);
             }
             static void _Operators(StringBuilder sb, in Handle h)
             {
-                static void __Self(StringBuilder sb, in Handle h)
-                {
-                    sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\tpublic static bool operator ==({h.ClassName} a, {h.ClassName} b) => {h.EqualityLogic.Equal};");
-                    sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\tpublic static bool operator !=({h.ClassName} a, {h.ClassName} b) => {h.EqualityLogic.NonEqual};");
+                sb.AppendLine(
+                $"""
+                    {Const.Inlined}
+                    public static bool operator ==({h.ClassName} a, {h.ClassName} b) => {h.EqualityLogic.Equal};
+                    {Const.Inlined}
+                    public static bool operator !=({h.ClassName} a, {h.ClassName} b) => {h.EqualityLogic.NonEqual};
 
-                    sb.AppendLine();
+                    {Const.Inlined}
+                    public static bool operator <({h.ClassName} a, {h.ClassName} b) => {h.EqualityLogic.Less};
+                    {Const.Inlined}
+                    public static bool operator >({h.ClassName} a, {h.ClassName} b) => {h.EqualityLogic.More};
 
-                    sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\tpublic static bool operator <({h.ClassName} a, {h.ClassName} b) => {h.EqualityLogic.Less};");
-                    sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\tpublic static bool operator >({h.ClassName} a, {h.ClassName} b) => {h.EqualityLogic.More};");
+                    {Const.Inlined}
+                    public static bool operator <=({h.ClassName} a, {h.ClassName} b) => {h.EqualityLogic.LessOrEqual};
+                    {Const.Inlined}
+                    public static bool operator >=({h.ClassName} a, {h.ClassName} b) => {h.EqualityLogic.MoreOrEqual};
 
-                    sb.AppendLine();
+                """);
+                if (h.BaseClassNames is not null)
+                    foreach (var baseName in h.BaseClassNames)
+                        sb.AppendLine(
+                        $"""
+                            {Const.Inlined}
+                            public static bool operator ==({h.ClassName} a, {baseName} b) => a.{baseName}Value == b;
+                            {Const.Inlined}
+                            public static bool operator !=({h.ClassName} a, {baseName} b) => a.{baseName}Value != b;
 
-                    sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\tpublic static bool operator <=({h.ClassName} a, {h.ClassName} b) => {h.EqualityLogic.LessOrEqual};");
-                    sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                    sb.AppendLine($"\tpublic static bool operator >=({h.ClassName} a, {h.ClassName} b) => {h.EqualityLogic.MoreOrEqual};");
-                }
-                static void __Base(StringBuilder sb, in Handle h)
-                {
-                    if (h.BaseClassNames is not null)
-                        foreach (var baseName in h.BaseClassNames)
-                        {
-                            sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                            sb.AppendLine($"\tpublic static bool operator ==({h.ClassName} a, {baseName} b) => a.{baseName}Value == b;");
-                            sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                            sb.AppendLine($"\tpublic static bool operator !=({h.ClassName} a, {baseName} b) => a.{baseName}Value != b;");
+                            {Const.Inlined}
+                            public static bool operator <({h.ClassName} a, {baseName} b) => a.{baseName}Value < b;
+                            {Const.Inlined}
+                            public static bool operator >({h.ClassName} a, {baseName} b) => a.{baseName}Value > b;
 
-                            sb.AppendLine();
+                            {Const.Inlined}
+                            public static bool operator <=({h.ClassName} a, {baseName} b) => a.{baseName}Value <= b;
+                            {Const.Inlined}
+                            public static bool operator >=({h.ClassName} a, {baseName} b) => a.{baseName}Value >= b;
 
-                            sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                            sb.AppendLine($"\tpublic static bool operator <({h.ClassName} a, {baseName} b) => a.{baseName}Value < b;");
-                            sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                            sb.AppendLine($"\tpublic static bool operator >({h.ClassName} a, {baseName} b) => a.{baseName}Value > b;");
+                        """);
+                sb.AppendLine(
+                $"""
+                    {Const.Inlined}
+                    public static bool operator ==({h.ClassName} a, Handle b) => a.HandleValue == b;
+                    {Const.Inlined}
+                    public static bool operator !=({h.ClassName} a, Handle b) => a.HandleValue != b;
 
-                            sb.AppendLine();
+                    {Const.Inlined}
+                    public static bool operator <({h.ClassName} a, Handle b) => a.HandleValue < b;
+                    {Const.Inlined}
+                    public static bool operator >({h.ClassName} a, Handle b) => a.HandleValue > b;
 
-                            sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                            sb.AppendLine($"\tpublic static bool operator <=({h.ClassName} a, {baseName} b) => a.{baseName}Value <= b;");
-                            sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                            sb.AppendLine($"\tpublic static bool operator >=({h.ClassName} a, {baseName} b) => a.{baseName}Value >= b;");
+                    {Const.Inlined}
+                    public static bool operator <=({h.ClassName} a, Handle b) => a.HandleValue <= b;
+                    {Const.Inlined}
+                    public static bool operator >=({h.ClassName} a, Handle b) => a.HandleValue >= b;
 
-                            sb.AppendLine();
-                        }
-                }
-                static void __Primitives(StringBuilder sb, in Handle h)
-                {
-                    static void ___Handle(StringBuilder sb, in Handle h)
-                    {
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator ==({h.ClassName} a, Handle b) => a.HandleValue == b;");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator !=({h.ClassName} a, Handle b) => a.HandleValue != b;");
 
-                        sb.AppendLine();
+                    {Const.Inlined}public static bool operator ==({h.ClassName} a, nuint b) => a.UnsignedValue == b;
+                    {Const.Inlined}public static bool operator !=({h.ClassName} a, nuint b) => a.UnsignedValue != b;
 
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator <({h.ClassName} a, Handle b) => a.HandleValue < b;");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator >({h.ClassName} a, Handle b) => a.HandleValue > b;");
+                    {Const.Inlined}public static bool operator <({h.ClassName} a, nuint b) => a.UnsignedValue < b;
+                    {Const.Inlined}public static bool operator >({h.ClassName} a, nuint b) => a.UnsignedValue > b;
 
-                        sb.AppendLine();
+                    {Const.Inlined}public static bool operator <=({h.ClassName} a, nuint b) => a.UnsignedValue <= b;
+                    {Const.Inlined}public static bool operator >=({h.ClassName} a, nuint b) => a.UnsignedValue >= b;
 
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator <=({h.ClassName} a, Handle b) => a.HandleValue <= b;");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator >=({h.ClassName} a, Handle b) => a.HandleValue >= b;");
-                    }
-                    static void ___Unsigned(StringBuilder sb, in Handle h)
-                    {
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator ==({h.ClassName} a, nuint b) => a.UnsignedValue == b;");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator !=({h.ClassName} a, nuint b) => a.UnsignedValue != b;");
 
-                        sb.AppendLine();
+                    {Const.Inlined}public static bool operator ==({h.ClassName} a, nint b) => a.SignedValue == b;
+                    {Const.Inlined}public static bool operator !=({h.ClassName} a, nint b) => a.SignedValue != b;
+                
+                    {Const.Inlined}public static bool operator <({h.ClassName} a, nint b) => a.SignedValue < b;
+                    {Const.Inlined}public static bool operator >({h.ClassName} a, nint b) => a.SignedValue > b;
+                
+                    {Const.Inlined}public static bool operator <=({h.ClassName} a, nint b) => a.SignedValue <= b;
+                    {Const.Inlined}public static bool operator >=({h.ClassName} a, nint b) => a.SignedValue >= b;
 
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator <({h.ClassName} a, nuint b) => a.UnsignedValue < b;");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator >({h.ClassName} a, nuint b) => a.UnsignedValue > b;");
 
-                        sb.AppendLine();
-
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator <=({h.ClassName} a, nuint b) => a.UnsignedValue <= b;");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator >=({h.ClassName} a, nuint b) => a.UnsignedValue >= b;");
-                    }
-                    static void ___Signed(StringBuilder sb, in Handle h)
-                    {
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator ==({h.ClassName} a, nint b) => a.SignedValue == b;");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator !=({h.ClassName} a, nint b) => a.SignedValue != b;");
-
-                        sb.AppendLine();
-
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator <({h.ClassName} a, nint b) => a.SignedValue < b;");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator >({h.ClassName} a, nint b) => a.SignedValue > b;");
-
-                        sb.AppendLine();
-
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator <=({h.ClassName} a, nint b) => a.SignedValue <= b;");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator >=({h.ClassName} a, nint b) => a.SignedValue >= b;");
-                    }
-                    static void ___Pointer(StringBuilder sb, in Handle h)
-                    {
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator ==({h.ClassName} a, void* b) => a.PointerValue == b;");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator !=({h.ClassName} a, void* b) => a.PointerValue != b;");
-
-                        sb.AppendLine();
-
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator <({h.ClassName} a, void* b) => a.PointerValue < b;");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator >({h.ClassName} a, void* b) => a.PointerValue > b;");
-
-                        sb.AppendLine();
-
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator <=({h.ClassName} a, void* b) => a.PointerValue <= b;");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static bool operator >=({h.ClassName} a, void* b) => a.PointerValue >= b;");
-                    }
-
-                    ___Handle(sb, in h);
-                    sb.AppendLine();
-                    ___Unsigned(sb, in h);
-                    sb.AppendLine();
-                    ___Signed(sb, in h);
-                    sb.AppendLine();
-                    ___Pointer(sb, in h);
-                }
-
-                __Self(sb, in h);
-                sb.AppendLine();
-                __Base(sb, in h);
-                __Primitives(sb, in h);
+                    {Const.Inlined}public static bool operator ==({h.ClassName} a, void* b) => a.PointerValue == b;
+                    {Const.Inlined}public static bool operator !=({h.ClassName} a, void* b) => a.PointerValue != b;
+                
+                    {Const.Inlined}public static bool operator <({h.ClassName} a, void* b) => a.PointerValue < b;
+                    {Const.Inlined}public static bool operator >({h.ClassName} a, void* b) => a.PointerValue > b;
+                
+                    {Const.Inlined}public static bool operator <=({h.ClassName} a, void* b) => a.PointerValue <= b;
+                    {Const.Inlined}public static bool operator >=({h.ClassName} a, void* b) => a.PointerValue >= b;
+                """);
             }
             sb.AppendLine("\t#region Equality and Comparability");
             sb.AppendLine();
@@ -484,118 +453,102 @@ internal static class HandleTemplate
             _CompareTo(sb, in h);
             sb.AppendLine();
             _Operators(sb, in h);
-            sb.AppendLine();
-            sb.Append('\t'); sb.AppendLine(Const.Inlined);
-            sb.AppendLine($"\tpublic readonly override int GetHashCode() => {h.EqualityLogic._GetHashCode};");
-            sb.AppendLine();
-            sb.AppendLine("\t#endregion");
+            sb.AppendLine(
+            $"""
+
+                {Const.Inlined}
+                public readonly override int GetHashCode() => {h.EqualityLogic._GetHashCode};
+
+                #endregion
+            """);
         }
         static void FormatAndParse(StringBuilder sb, in Handle h)
         {
-            sb.AppendLine("\t#region Format and Parse");
-            sb.AppendLine();
-            {
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic readonly override string ToString() => {h.StringLogic._ToString};");
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic readonly string ToString(string? format, IFormatProvider? provider = null) => {h.StringLogic.ToStringFormat};");
+            string tryParse = h.StringLogic.TryParse.Replace("\r\n", "\r\n\t\t");
+            sb.AppendLine(
+            $$"""
+                #region Format and Parse
 
+                {{Const.Inlined}}
+                public readonly override string ToString() => {{h.StringLogic._ToString}};
+                {{Const.Inlined}}
+                public readonly string ToString(string? format, IFormatProvider? provider = null) => {{h.StringLogic.ToStringFormat}};
 
-                sb.AppendLine();
+                {{Const.Inlined}}
+                public readonly bool TryFormat(Span<char> destination, scoped out int written, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
+                    => {{h.StringLogic.TryFormat}};
+                {{Const.Inlined}}
+                public readonly bool TryFormat(Span<byte> destination, scoped out int written, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
+                    => {{h.StringLogic.TryFormat}};
+                {{Const.Inlined}}
+                public static {{h.ClassName}} Parse(string s, IFormatProvider? provider = null) => {{h.StringLogic.Parse}};
+                {{Const.Inlined}}
+                public static bool TryParse(string s, IFormatProvider? provider, scoped out {{h.ClassName}} result)
+                {
+                    {{tryParse}}
+                }
 
+                {{Const.Inlined}}
+                public static {{h.ClassName}} Parse(ReadOnlySpan<char> s, IFormatProvider? provider = null) => {{h.StringLogic.Parse}};
+                {{Const.Inlined}}
+                public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, scoped out {{h.ClassName}} result)
+                {
+                    {{tryParse}}
+                }
 
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine("\tpublic readonly bool TryFormat(Span<char> destination, scoped out int written, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)");
-                sb.AppendLine($"\t\t=> {h.StringLogic.TryFormat};");
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine("\tpublic readonly bool TryFormat(Span<byte> destination, scoped out int written, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)");
-                sb.AppendLine($"\t\t=> {h.StringLogic.TryFormat};");
+                {{Const.Inlined}}
+                public static {{h.ClassName}} Parse(ReadOnlySpan<byte> s, IFormatProvider? provider = null) => {{h.StringLogic.Parse}};
+                {{Const.Inlined}}
+                public static bool TryParse(ReadOnlySpan<byte> s, IFormatProvider? provider, scoped out {{h.ClassName}} result)
+                {
+                    {{tryParse}}
+                }
 
-
-                sb.AppendLine();
-
-
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic static {h.ClassName} Parse(string s, IFormatProvider? provider = null) => {h.StringLogic.Parse};");
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic static bool TryParse(string s, IFormatProvider? provider, scoped out {h.ClassName} result)");
-                sb.AppendLine("\t{");
-                string tryParse = "\t\t" + h.StringLogic.TryParse.Replace("\r\n", "\r\n\t\t");
-                sb.AppendLine(tryParse);
-                sb.AppendLine("\t}");
-
-
-                sb.AppendLine();
-
-
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic static {h.ClassName} Parse(ReadOnlySpan<char> s, IFormatProvider? provider = null) => {h.StringLogic.Parse};");
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, scoped out {h.ClassName} result)");
-                sb.AppendLine("\t{");
-                sb.AppendLine(tryParse);
-                sb.AppendLine("\t}");
-
-
-
-                sb.AppendLine();
-
-
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic static {h.ClassName} Parse(ReadOnlySpan<byte> s, IFormatProvider? provider = null) => {h.StringLogic.Parse};");
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic static bool TryParse(ReadOnlySpan<byte> s, IFormatProvider? provider, scoped out {h.ClassName} result)");
-                sb.AppendLine("\t{");
-                sb.AppendLine(tryParse);
-                sb.AppendLine("\t}");
-            }
-            sb.AppendLine();
-            sb.AppendLine("\t#endregion");
+                #endregion
+            """);
         }
         static void Cast(StringBuilder sb, in Handle h)
         {
-            sb.AppendLine("\t#region Cast");
-            sb.AppendLine();
-            {
-                if (h.BaseClassNames is not null)
-                    foreach (var baseName in h.BaseClassNames)
-                    {
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static explicit operator {h.ClassName}({baseName} h) => new(h);");
-                        sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                        sb.AppendLine($"\tpublic static implicit operator {baseName}({h.ClassName} h) => h.{baseName}Value;");
+            sb.AppendLine(
+            """
+                #region Cast
 
-                        sb.AppendLine();
-                    }
+            """);
+            if (h.BaseClassNames is not null)
+                foreach (var baseName in h.BaseClassNames)
+                    sb.AppendLine(
+                    $"""
+                        {Const.Inlined}
+                        public static explicit operator {h.ClassName}({baseName} h) => new(h);
+                        {Const.Inlined}
+                        public static implicit operator {baseName}({h.ClassName} h) => h.{baseName}Value;
 
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic static explicit operator {h.ClassName}(Handle h) => new(h);");
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic static implicit operator Handle({h.ClassName} h) => h.HandleValue;");
+                    """);
 
-                sb.AppendLine();
+            sb.AppendLine(
+            $"""
+                {Const.Inlined}
+                public static explicit operator {h.ClassName}(Handle h) => new(h);
+                {Const.Inlined}
+                public static implicit operator Handle({h.ClassName} h) => h.HandleValue;
 
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic static explicit operator {h.ClassName}(nuint h) => new(h);");
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic static explicit operator nuint({h.ClassName} h) => h.UnsignedValue;");
+                {Const.Inlined}
+                public static explicit operator {h.ClassName}(nuint h) => new(h);
+                {Const.Inlined}
+                public static explicit operator nuint({h.ClassName} h) => h.UnsignedValue;
 
-                sb.AppendLine();
+                {Const.Inlined}
+                public static explicit operator {h.ClassName}(nint h) => new(h);
+                {Const.Inlined}
+                public static explicit operator nint({h.ClassName} h) => h.SignedValue;
 
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic static explicit operator {h.ClassName}(nint h) => new(h);");
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic static explicit operator nint({h.ClassName} h) => h.SignedValue;");
+                {Const.Inlined}
+                public static explicit operator {h.ClassName}(void* h) => new(h);
+                {Const.Inlined}
+                public static explicit operator void*({h.ClassName} h) => h.PointerValue;
 
-                sb.AppendLine();
-
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic static explicit operator {h.ClassName}(void* h) => new(h);");
-                sb.Append('\t'); sb.AppendLine(Const.Inlined);
-                sb.AppendLine($"\tpublic static explicit operator void*({h.ClassName} h) => h.PointerValue;");
-            }
-            sb.AppendLine();
-            sb.AppendLine("\t#endregion");
+                #endregion
+            """);
         }
 
         Construct(sb, in h);
@@ -631,7 +584,7 @@ internal static class HandleTemplate
         sb.AppendLine();
         GenerateDefinition(sb, in h);
         GenerateBody(sb, in h);
-        sb.AppendLine("}");
+        sb.Append('}');
     }
 
     public static void Generate(StringBuilder sb, string @namespace, params ReadOnlySpan<Handle> hSpan)
@@ -659,9 +612,13 @@ internal static class HandleTemplate
             ref readonly var h = ref hSpan[i];
             GenerateDefinition(sb, in h);
             GenerateBody(sb, in h);
-            sb.AppendLine("}");
             if (i != last)
+            {
+                sb.AppendLine("}");
                 sb.AppendLine();
+            }
+            else
+                sb.Append('}');
         }
     }
 
