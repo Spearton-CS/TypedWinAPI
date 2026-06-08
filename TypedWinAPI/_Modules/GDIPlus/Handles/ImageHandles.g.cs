@@ -69,11 +69,11 @@ public unsafe readonly struct HBitmap :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HBitmap operator <<(HBitmap a, int shift) => (HBitmap)a.HandleValue << shift;
+    public static HBitmap operator <<(HBitmap a, int shift) => (HBitmap)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HBitmap operator >>(HBitmap a, int shift) => (HBitmap)a.HandleValue >> shift;
+    public static HBitmap operator >>(HBitmap a, int shift) => (HBitmap)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HBitmap operator >>>(HBitmap a, int shift) => (HBitmap)a.HandleValue >>> shift;
+    public static HBitmap operator >>>(HBitmap a, int shift) => (HBitmap)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HBitmap operator &(HBitmap a, HBitmap b) => (HBitmap)(a.UnsignedValue & b.UnsignedValue);

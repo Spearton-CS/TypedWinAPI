@@ -69,11 +69,11 @@ public unsafe readonly struct HProcess :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HProcess operator <<(HProcess a, int shift) => (HProcess)a.HandleValue << shift;
+    public static HProcess operator <<(HProcess a, int shift) => (HProcess)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HProcess operator >>(HProcess a, int shift) => (HProcess)a.HandleValue >> shift;
+    public static HProcess operator >>(HProcess a, int shift) => (HProcess)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HProcess operator >>>(HProcess a, int shift) => (HProcess)a.HandleValue >>> shift;
+    public static HProcess operator >>>(HProcess a, int shift) => (HProcess)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HProcess operator &(HProcess a, HProcess b) => (HProcess)(a.UnsignedValue & b.UnsignedValue);

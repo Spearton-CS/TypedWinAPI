@@ -69,11 +69,11 @@ public unsafe readonly struct HKey :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HKey operator <<(HKey a, int shift) => (HKey)a.HandleValue << shift;
+    public static HKey operator <<(HKey a, int shift) => (HKey)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HKey operator >>(HKey a, int shift) => (HKey)a.HandleValue >> shift;
+    public static HKey operator >>(HKey a, int shift) => (HKey)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HKey operator >>>(HKey a, int shift) => (HKey)a.HandleValue >>> shift;
+    public static HKey operator >>>(HKey a, int shift) => (HKey)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HKey operator &(HKey a, HKey b) => (HKey)(a.UnsignedValue & b.UnsignedValue);

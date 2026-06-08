@@ -43,14 +43,6 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Update="Structs\StructTemplate.tt.txt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>StructTemplate.tt.g.cs</LastGenOutput>
-    </None>
-    <None Update="_Modules\User32\Handles\RootHandles16.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RootHandles16.g.cs</LastGenOutput>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -103,14 +95,6 @@
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="_Modules\User32\Handles\RootHandles16.g.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RootHandles16.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
 
 </Project>

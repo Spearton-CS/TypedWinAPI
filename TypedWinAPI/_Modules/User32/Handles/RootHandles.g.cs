@@ -9,7 +9,7 @@ using TypedWinAPI.Contracts.Ptr;
 namespace TypedWinAPI.User32;
 
 /// <summary>
-/// Handle to a User32 window
+/// Handle to an User32 window
 /// </summary>
 [
 	// --- Default attributes ---
@@ -69,11 +69,11 @@ public unsafe readonly struct HWND :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator <<(HWND a, int shift) => (HWND)a.HandleValue << shift;
+    public static HWND operator <<(HWND a, int shift) => (HWND)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator >>(HWND a, int shift) => (HWND)a.HandleValue >> shift;
+    public static HWND operator >>(HWND a, int shift) => (HWND)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator >>>(HWND a, int shift) => (HWND)a.HandleValue >>> shift;
+    public static HWND operator >>>(HWND a, int shift) => (HWND)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HWND operator &(HWND a, HWND b) => (HWND)(a.UnsignedValue & b.UnsignedValue);
@@ -288,7 +288,7 @@ public unsafe readonly struct HWND :
 }
 
 /// <summary>
-/// Handle to a User32 menu
+/// Handle to an User32 menu
 /// </summary>
 [
 	// --- Default attributes ---
@@ -348,11 +348,11 @@ public unsafe readonly struct HMenu :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator <<(HMenu a, int shift) => (HMenu)a.HandleValue << shift;
+    public static HMenu operator <<(HMenu a, int shift) => (HMenu)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator >>(HMenu a, int shift) => (HMenu)a.HandleValue >> shift;
+    public static HMenu operator >>(HMenu a, int shift) => (HMenu)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator >>>(HMenu a, int shift) => (HMenu)a.HandleValue >>> shift;
+    public static HMenu operator >>>(HMenu a, int shift) => (HMenu)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HMenu operator &(HMenu a, HMenu b) => (HMenu)(a.UnsignedValue & b.UnsignedValue);
@@ -567,7 +567,7 @@ public unsafe readonly struct HMenu :
 }
 
 /// <summary>
-/// Handle to a User32 cursor
+/// Handle to an User32 cursor
 /// </summary>
 [
 	// --- Default attributes ---
@@ -627,11 +627,11 @@ public unsafe readonly struct HCursor :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator <<(HCursor a, int shift) => (HCursor)a.HandleValue << shift;
+    public static HCursor operator <<(HCursor a, int shift) => (HCursor)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator >>(HCursor a, int shift) => (HCursor)a.HandleValue >> shift;
+    public static HCursor operator >>(HCursor a, int shift) => (HCursor)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator >>>(HCursor a, int shift) => (HCursor)a.HandleValue >>> shift;
+    public static HCursor operator >>>(HCursor a, int shift) => (HCursor)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HCursor operator &(HCursor a, HCursor b) => (HCursor)(a.UnsignedValue & b.UnsignedValue);
@@ -846,7 +846,7 @@ public unsafe readonly struct HCursor :
 }
 
 /// <summary>
-/// Handle to a User32 icon
+/// Handle to an User32 icon
 /// </summary>
 [
 	// --- Default attributes ---
@@ -906,11 +906,11 @@ public unsafe readonly struct HIcon :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator <<(HIcon a, int shift) => (HIcon)a.HandleValue << shift;
+    public static HIcon operator <<(HIcon a, int shift) => (HIcon)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator >>(HIcon a, int shift) => (HIcon)a.HandleValue >> shift;
+    public static HIcon operator >>(HIcon a, int shift) => (HIcon)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator >>>(HIcon a, int shift) => (HIcon)a.HandleValue >>> shift;
+    public static HIcon operator >>>(HIcon a, int shift) => (HIcon)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HIcon operator &(HIcon a, HIcon b) => (HIcon)(a.UnsignedValue & b.UnsignedValue);

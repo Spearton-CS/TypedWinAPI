@@ -2,7 +2,7 @@
 
 namespace TemplateSourceGenerator.Templates;
 
-internal static class HandleTemplate
+internal static class Handle16Template
 {
     public static readonly string[]
         DefaultUsings =
@@ -16,15 +16,15 @@ internal static class HandleTemplate
         ],
         DefaultAttributes =
         [
-            "StructLayout(LayoutKind.Explicit, Size = 8)",
+            "StructLayout(LayoutKind.Explicit, Size = 2)",
             "DebuggerDisplay(\"{ToString(),nq}\")",
             "DebuggerStepThrough",
             "SkipLocalsInit"
         ];
 
-    private static void GenerateDefinition(StringBuilder sb, in Handle h)
+    private static void GenerateDefinition(StringBuilder sb, in Handle16 h)
     {
-        static void Attributes(StringBuilder sb, in Handle h)
+        static void Attributes(StringBuilder sb, in Handle16 h)
         {
             sb.AppendLine("[");
             sb.AppendLine("\t// --- Default attributes ---");
@@ -48,16 +48,16 @@ internal static class HandleTemplate
             sb.AppendLine();
             sb.AppendLine("]");
         }
-        static void Contracts(StringBuilder sb, in Handle h)
+        static void Contracts(StringBuilder sb, in Handle16 h)
         {
             sb.AppendLine(
             $"""
                 // --- Default contracts ---
-                IHandleTSelfContracts<{h.ClassName}>,
+                IHandle16TSelfContracts<{h.ClassName}>,
             """);
             if (h.BaseClassNames is not null)
                 foreach (var baseName in h.BaseClassNames)
-                    sb.AppendLine($"\tIHandleTBaseHandleContracts<{h.ClassName}, {baseName}>,");
+                    sb.AppendLine($"\tIHandle16TBaseHandle16Contracts<{h.ClassName}, {baseName}>,");
             if (h.Contracts is not null)
                 sb.AppendLine(
                 $"""
@@ -67,8 +67,8 @@ internal static class HandleTemplate
                  """);
             sb.AppendLine(
             $"""
-                IHandleTBaseHandleContracts<{h.ClassName}, Handle>,
-                IHandleContracts<{h.ClassName}>
+                IHandle16TBaseHandle16Contracts<{h.ClassName}, Handle16>,
+                IHandle16Contracts<{h.ClassName}>
             """);
         }
 
@@ -86,9 +86,9 @@ internal static class HandleTemplate
         Contracts(sb, in h);
         sb.AppendLine("{");
     }
-    private static void GenerateBody(StringBuilder sb, in Handle h)
+    private static void GenerateBody(StringBuilder sb, in Handle16 h)
     {
-        static void Construct(StringBuilder sb, in Handle h)
+        static void Construct(StringBuilder sb, in Handle16 h)
         {
             sb.AppendLine(
             """
@@ -116,19 +116,19 @@ internal static class HandleTemplate
                     sb.AppendLine(
                     $"""
                         {Const.Inlined}
-                        public {h.ClassName}() => HandleValue = default;
+                        public {h.ClassName}() => Handle16Value = default;
                     """);
 
                 sb.AppendLine(
                 $"""
                     {Const.Inlined}
-                    public {h.ClassName}(Handle h) => HandleValue = h;
+                    public {h.ClassName}(Handle16 h) => Handle16Value = h;
                     {Const.Inlined}
                     public {h.ClassName}(void* ptr) => PointerValue = ptr;
                     {Const.Inlined}
-                    public {h.ClassName}(nuint unsig) => UnsignedValue = unsig;
+                    public {h.ClassName}(ushort unsig) => UnsignedValue = unsig;
                     {Const.Inlined}
-                    public {h.ClassName}(nint sig) => SignedValue = sig;
+                    public {h.ClassName}(short sig) => SignedValue = sig;
                 """);
             }
             sb.AppendLine(
@@ -137,7 +137,7 @@ internal static class HandleTemplate
                 #endregion
             """);
         }
-        static void Fields(StringBuilder sb, in Handle h)
+        static void Fields(StringBuilder sb, in Handle16 h)
         {
             sb.AppendLine(
             """
@@ -151,10 +151,10 @@ internal static class HandleTemplate
 
                 sb.AppendLine(
                 """
-                    [FieldOffset(0)] public readonly Handle HandleValue;
+                    [FieldOffset(0)] public readonly Handle16 Handle16Value;
                     [FieldOffset(0)] public readonly void* PointerValue;
-                    [FieldOffset(0)] public readonly nuint UnsignedValue;
-                    [FieldOffset(0)] public readonly nint SignedValue;
+                    [FieldOffset(0)] public readonly ushort UnsignedValue;
+                    [FieldOffset(0)] public readonly short SignedValue;
                 """);
             }
             sb.AppendLine(
@@ -163,11 +163,11 @@ internal static class HandleTemplate
                 #endregion
             """);
         }
-        static void Math(StringBuilder sb, in Handle h)
+        static void Math(StringBuilder sb, in Handle16 h)
         {
-            static void _BitOps(StringBuilder sb, in Handle h)
+            static void _BitOps(StringBuilder sb, in Handle16 h)
             {
-                static void __Handles(StringBuilder sb, in Handle h)
+                static void __Handle16s(StringBuilder sb, in Handle16 h)
                 {
                     if (h.BaseClassNames is not null)
                     {
@@ -197,58 +197,58 @@ internal static class HandleTemplate
                         sb.AppendLine(
                         $"""
                             {Const.Inlined}
-                            public static {h.ClassName} operator <<({h.ClassName} a, int shift) => ({h.ClassName})(a.HandleValue << shift);
+                            public static {h.ClassName} operator <<({h.ClassName} a, int shift) => ({h.ClassName})(ushort)(a.Handle16Value << shift);
                             {Const.Inlined}
-                            public static {h.ClassName} operator >>({h.ClassName} a, int shift) => ({h.ClassName})(a.HandleValue >> shift);
+                            public static {h.ClassName} operator >>({h.ClassName} a, int shift) => ({h.ClassName})(ushort)(a.Handle16Value >> shift);
                             {Const.Inlined}
-                            public static {h.ClassName} operator >>>({h.ClassName} a, int shift) => ({h.ClassName})(a.HandleValue >>> shift);
+                            public static {h.ClassName} operator >>>({h.ClassName} a, int shift) => ({h.ClassName})(ushort)(a.Handle16Value >>> shift);
                         """);
 
                     sb.AppendLine(
                     $"""
 
                         {Const.Inlined}
-                        public static {h.ClassName} operator &({h.ClassName} a, {h.ClassName} b) => ({h.ClassName})(a.UnsignedValue & b.UnsignedValue);
+                        public static {h.ClassName} operator &({h.ClassName} a, {h.ClassName} b) => ({h.ClassName})(ushort)(a.UnsignedValue & b.UnsignedValue);
                         {Const.Inlined}
-                        public static {h.ClassName} operator |({h.ClassName} a, {h.ClassName} b) => ({h.ClassName})(a.UnsignedValue | b.UnsignedValue);
+                        public static {h.ClassName} operator |({h.ClassName} a, {h.ClassName} b) => ({h.ClassName})(ushort)(a.UnsignedValue | b.UnsignedValue);
                         {Const.Inlined}
-                        public static {h.ClassName} operator ^({h.ClassName} a, {h.ClassName} b) => ({h.ClassName})(a.UnsignedValue ^ b.UnsignedValue);
+                        public static {h.ClassName} operator ^({h.ClassName} a, {h.ClassName} b) => ({h.ClassName})(ushort)(a.UnsignedValue ^ b.UnsignedValue);
                         {Const.Inlined}
-                        public static {h.ClassName} operator ~({h.ClassName} a) => ({h.ClassName})~a.UnsignedValue;
+                        public static {h.ClassName} operator ~({h.ClassName} a) => ({h.ClassName})(ushort)~a.UnsignedValue;
                     """);
                 }
 
-                __Handles(sb, in h);
+                __Handle16s(sb, in h);
                 sb.AppendLine();
                 sb.AppendLine(
                 $"""
                     {Const.Inlined}
-                    public static {h.ClassName} operator &({h.ClassName} a, Handle b) => ({h.ClassName})(a.HandleValue & b);
+                    public static {h.ClassName} operator &({h.ClassName} a, Handle16 b) => ({h.ClassName})(a.Handle16Value & b);
                     {Const.Inlined}
-                    public static {h.ClassName} operator |({h.ClassName} a, Handle b) => ({h.ClassName})(a.HandleValue | b);
+                    public static {h.ClassName} operator |({h.ClassName} a, Handle16 b) => ({h.ClassName})(a.Handle16Value | b);
                     {Const.Inlined}
-                    public static {h.ClassName} operator ^({h.ClassName} a, Handle b) => ({h.ClassName})(a.HandleValue ^ b);
+                    public static {h.ClassName} operator ^({h.ClassName} a, Handle16 b) => ({h.ClassName})(a.Handle16Value ^ b);
 
                     {Const.Inlined}
-                    public static {h.ClassName} operator &({h.ClassName} a, nuint b) => ({h.ClassName})(a.UnsignedValue & b);
+                    public static {h.ClassName} operator &({h.ClassName} a, ushort b) => ({h.ClassName})(ushort)(a.UnsignedValue & b);
                     {Const.Inlined}
-                    public static {h.ClassName} operator |({h.ClassName} a, nuint b) => ({h.ClassName})(a.UnsignedValue | b);
+                    public static {h.ClassName} operator |({h.ClassName} a, ushort b) => ({h.ClassName})(ushort)(a.UnsignedValue | b);
                     {Const.Inlined}
-                    public static {h.ClassName} operator ^({h.ClassName} a, nuint b) => ({h.ClassName})(a.UnsignedValue ^ b);
+                    public static {h.ClassName} operator ^({h.ClassName} a, ushort b) => ({h.ClassName})(ushort)(a.UnsignedValue ^ b);
 
                     {Const.Inlined}
-                    public static {h.ClassName} operator &({h.ClassName} a, nint b) => ({h.ClassName})(a.SignedValue & b);
+                    public static {h.ClassName} operator &({h.ClassName} a, short b) => ({h.ClassName})(short)(a.SignedValue & b);
                     {Const.Inlined}
-                    public static {h.ClassName} operator |({h.ClassName} a, nint b) => ({h.ClassName})(a.SignedValue | b);
+                    public static {h.ClassName} operator |({h.ClassName} a, short b) => ({h.ClassName})(short)(a.SignedValue | b);
                     {Const.Inlined}
-                    public static {h.ClassName} operator ^({h.ClassName} a, nint b) => ({h.ClassName})(a.SignedValue ^ b);
+                    public static {h.ClassName} operator ^({h.ClassName} a, short b) => ({h.ClassName})(short)(a.SignedValue ^ b);
 
                     {Const.Inlined}
-                    public static {h.ClassName} operator &({h.ClassName} a, void* b) => ({h.ClassName})(a.UnsignedValue & (nuint)b);
+                    public static {h.ClassName} operator &({h.ClassName} a, void* b) => ({h.ClassName})(ushort)(a.UnsignedValue & (ushort)b);
                     {Const.Inlined}
-                    public static {h.ClassName} operator |({h.ClassName} a, void* b) => ({h.ClassName})(a.UnsignedValue | (nuint)b);
+                    public static {h.ClassName} operator |({h.ClassName} a, void* b) => ({h.ClassName})(ushort)(a.UnsignedValue | (ushort)b);
                     {Const.Inlined}
-                    public static {h.ClassName} operator ^({h.ClassName} a, void* b) => ({h.ClassName})(a.UnsignedValue ^ (nuint)b);
+                    public static {h.ClassName} operator ^({h.ClassName} a, void* b) => ({h.ClassName})(ushort)(a.UnsignedValue ^ (ushort)b);
                 """);
             }
 
@@ -285,9 +285,9 @@ internal static class HandleTemplate
                 #endregion
             """);
         }
-        static void EqualityAndComparability(StringBuilder sb, in Handle h)
+        static void EqualityAndComparability(StringBuilder sb, in Handle16 h)
         {
-            static void _Equals(StringBuilder sb, in Handle h)
+            static void _Equals(StringBuilder sb, in Handle16 h)
             {
                 sb.AppendLine(
                 $"""
@@ -300,9 +300,9 @@ internal static class HandleTemplate
                         sb.AppendLine($"\t\t\t: obj is {baseName} @{baseName} ? this == @{baseName}");
                 sb.AppendLine(
                 $"""
-                                : obj is Handle h ? this == h
-                                    : obj is nuint unsig ? this == unsig
-                                        : obj is nint sig && this == sig;
+                                : obj is Handle16 h ? this == h
+                                    : obj is ushort unsig ? this == unsig
+                                        : obj is short sig && this == sig;
 
 
                 """);
@@ -324,16 +324,16 @@ internal static class HandleTemplate
                     public readonly bool Equals({h.ClassName} other) => this == other;
 
                     {Const.Inlined}
-                    public readonly bool Equals(Handle other) => this == other;
+                    public readonly bool Equals(Handle16 other) => this == other;
                     {Const.Inlined}
-                    public readonly bool Equals(nuint other) => this == other;
+                    public readonly bool Equals(ushort other) => this == other;
                     {Const.Inlined}
-                    public readonly bool Equals(nint other) => this == other;
+                    public readonly bool Equals(short other) => this == other;
                     {Const.Inlined}
                     public readonly bool Equals(void* other) => this == other;
                 """);
             }
-            static void _CompareTo(StringBuilder sb, in Handle h)
+            static void _CompareTo(StringBuilder sb, in Handle16 h)
             {
                 sb.AppendLine(
                 $"""
@@ -346,9 +346,9 @@ internal static class HandleTemplate
                         sb.AppendLine($"\t\t\t: obj is {baseName} @{baseName} ? CompareTo(@{baseName})");
                 sb.AppendLine(
                 $"""
-                                : obj is Handle h ? CompareTo(h)
-                                    : obj is nuint unsig ? CompareTo(unsig)
-                                        : obj is nint sig ? CompareTo(sig) : 0;
+                                : obj is Handle16 h ? CompareTo(h)
+                                    : obj is ushort unsig ? CompareTo(unsig)
+                                        : obj is short sig ? CompareTo(sig) : 0;
 
                 """);
 
@@ -367,16 +367,16 @@ internal static class HandleTemplate
                     public readonly int CompareTo({h.ClassName} other) => {h.EqualityLogic._CompareTo};
 
                     {Const.Inlined}
-                    public readonly int CompareTo(Handle other) => HandleValue.CompareTo(other);
+                    public readonly int CompareTo(Handle16 other) => Handle16Value.CompareTo(other);
                     {Const.Inlined}
-                    public readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);
+                    public readonly int CompareTo(ushort other) => UnsignedValue.CompareTo(other);
                     {Const.Inlined}
-                    public readonly int CompareTo(nint other) => SignedValue.CompareTo(other);
+                    public readonly int CompareTo(short other) => SignedValue.CompareTo(other);
                     {Const.Inlined}
-                    public readonly int CompareTo(void* other) => UnsignedValue.CompareTo((nuint)other);
+                    public readonly int CompareTo(void* other) => UnsignedValue.CompareTo((ushort)other);
                 """);
             }
-            static void _Operators(StringBuilder sb, in Handle h)
+            static void _Operators(StringBuilder sb, in Handle16 h)
             {
                 sb.AppendLine(
                 $"""
@@ -419,39 +419,39 @@ internal static class HandleTemplate
                 sb.AppendLine(
                 $"""
                     {Const.Inlined}
-                    public static bool operator ==({h.ClassName} a, Handle b) => a.HandleValue == b;
+                    public static bool operator ==({h.ClassName} a, Handle16 b) => a.Handle16Value == b;
                     {Const.Inlined}
-                    public static bool operator !=({h.ClassName} a, Handle b) => a.HandleValue != b;
-
-                    {Const.Inlined}
-                    public static bool operator <({h.ClassName} a, Handle b) => a.HandleValue < b;
-                    {Const.Inlined}
-                    public static bool operator >({h.ClassName} a, Handle b) => a.HandleValue > b;
+                    public static bool operator !=({h.ClassName} a, Handle16 b) => a.Handle16Value != b;
 
                     {Const.Inlined}
-                    public static bool operator <=({h.ClassName} a, Handle b) => a.HandleValue <= b;
+                    public static bool operator <({h.ClassName} a, Handle16 b) => a.Handle16Value < b;
                     {Const.Inlined}
-                    public static bool operator >=({h.ClassName} a, Handle b) => a.HandleValue >= b;
+                    public static bool operator >({h.ClassName} a, Handle16 b) => a.Handle16Value > b;
+
+                    {Const.Inlined}
+                    public static bool operator <=({h.ClassName} a, Handle16 b) => a.Handle16Value <= b;
+                    {Const.Inlined}
+                    public static bool operator >=({h.ClassName} a, Handle16 b) => a.Handle16Value >= b;
 
 
-                    {Const.Inlined}public static bool operator ==({h.ClassName} a, nuint b) => a.UnsignedValue == b;
-                    {Const.Inlined}public static bool operator !=({h.ClassName} a, nuint b) => a.UnsignedValue != b;
+                    {Const.Inlined}public static bool operator ==({h.ClassName} a, ushort b) => a.UnsignedValue == b;
+                    {Const.Inlined}public static bool operator !=({h.ClassName} a, ushort b) => a.UnsignedValue != b;
 
-                    {Const.Inlined}public static bool operator <({h.ClassName} a, nuint b) => a.UnsignedValue < b;
-                    {Const.Inlined}public static bool operator >({h.ClassName} a, nuint b) => a.UnsignedValue > b;
+                    {Const.Inlined}public static bool operator <({h.ClassName} a, ushort b) => a.UnsignedValue < b;
+                    {Const.Inlined}public static bool operator >({h.ClassName} a, ushort b) => a.UnsignedValue > b;
 
-                    {Const.Inlined}public static bool operator <=({h.ClassName} a, nuint b) => a.UnsignedValue <= b;
-                    {Const.Inlined}public static bool operator >=({h.ClassName} a, nuint b) => a.UnsignedValue >= b;
+                    {Const.Inlined}public static bool operator <=({h.ClassName} a, ushort b) => a.UnsignedValue <= b;
+                    {Const.Inlined}public static bool operator >=({h.ClassName} a, ushort b) => a.UnsignedValue >= b;
 
 
-                    {Const.Inlined}public static bool operator ==({h.ClassName} a, nint b) => a.SignedValue == b;
-                    {Const.Inlined}public static bool operator !=({h.ClassName} a, nint b) => a.SignedValue != b;
+                    {Const.Inlined}public static bool operator ==({h.ClassName} a, short b) => a.SignedValue == b;
+                    {Const.Inlined}public static bool operator !=({h.ClassName} a, short b) => a.SignedValue != b;
                 
-                    {Const.Inlined}public static bool operator <({h.ClassName} a, nint b) => a.SignedValue < b;
-                    {Const.Inlined}public static bool operator >({h.ClassName} a, nint b) => a.SignedValue > b;
+                    {Const.Inlined}public static bool operator <({h.ClassName} a, short b) => a.SignedValue < b;
+                    {Const.Inlined}public static bool operator >({h.ClassName} a, short b) => a.SignedValue > b;
                 
-                    {Const.Inlined}public static bool operator <=({h.ClassName} a, nint b) => a.SignedValue <= b;
-                    {Const.Inlined}public static bool operator >=({h.ClassName} a, nint b) => a.SignedValue >= b;
+                    {Const.Inlined}public static bool operator <=({h.ClassName} a, short b) => a.SignedValue <= b;
+                    {Const.Inlined}public static bool operator >=({h.ClassName} a, short b) => a.SignedValue >= b;
 
 
                     {Const.Inlined}public static bool operator ==({h.ClassName} a, void* b) => a.PointerValue == b;
@@ -480,7 +480,7 @@ internal static class HandleTemplate
                 #endregion
             """);
         }
-        static void FormatAndParse(StringBuilder sb, in Handle h)
+        static void FormatAndParse(StringBuilder sb, in Handle16 h)
         {
             string tryParse = h.StringLogic.TryParse.Replace("\r\n", "\r\n\t\t");
             sb.AppendLine(
@@ -525,7 +525,7 @@ internal static class HandleTemplate
                 #endregion
             """);
         }
-        static void Cast(StringBuilder sb, in Handle h)
+        static void Cast(StringBuilder sb, in Handle16 h)
         {
             sb.AppendLine(
             """
@@ -546,19 +546,19 @@ internal static class HandleTemplate
             sb.AppendLine(
             $"""
                 {Const.Inlined}
-                public static explicit operator {h.ClassName}(Handle h) => new(h);
+                public static explicit operator {h.ClassName}(Handle16 h) => new(h);
                 {Const.Inlined}
-                public static implicit operator Handle({h.ClassName} h) => h.HandleValue;
+                public static implicit operator Handle16({h.ClassName} h) => h.Handle16Value;
 
                 {Const.Inlined}
-                public static explicit operator {h.ClassName}(nuint h) => new(h);
+                public static explicit operator {h.ClassName}(ushort h) => new(h);
                 {Const.Inlined}
-                public static explicit operator nuint({h.ClassName} h) => h.UnsignedValue;
+                public static explicit operator ushort({h.ClassName} h) => h.UnsignedValue;
 
                 {Const.Inlined}
-                public static explicit operator {h.ClassName}(nint h) => new(h);
+                public static explicit operator {h.ClassName}(short h) => new(h);
                 {Const.Inlined}
-                public static explicit operator nint({h.ClassName} h) => h.SignedValue;
+                public static explicit operator short({h.ClassName} h) => h.SignedValue;
 
                 {Const.Inlined}
                 public static explicit operator {h.ClassName}(void* h) => new(h);
@@ -582,9 +582,9 @@ internal static class HandleTemplate
         Cast(sb, in h);
     }
 
-    public static void Generate(StringBuilder sb, string @namespace, in Handle h)
+    public static void Generate(StringBuilder sb, string @namespace, in Handle16 h)
     {
-        static void Usings(StringBuilder sb, in Handle h)
+        static void Usings(StringBuilder sb, in Handle16 h)
         {
             sb.AppendLine("// --- Default usings ---");
             foreach (var use in DefaultUsings)
@@ -605,9 +605,9 @@ internal static class HandleTemplate
         sb.Append('}');
     }
 
-    public static void Generate(StringBuilder sb, string @namespace, params ReadOnlySpan<Handle> hSpan)
+    public static void Generate(StringBuilder sb, string @namespace, params ReadOnlySpan<Handle16> hSpan)
     {
-        static void Usings(StringBuilder sb, ReadOnlySpan<Handle> hSpan)
+        static void Usings(StringBuilder sb, ReadOnlySpan<Handle16> hSpan)
         {
             sb.AppendLine("// --- Default usings ---");
             foreach (var use in DefaultUsings)
@@ -640,7 +640,7 @@ internal static class HandleTemplate
         }
     }
 
-    public readonly record struct Handle(
+    public readonly record struct Handle16(
         string ClassName,
         string[]? BaseClassNames,
         string? Comment,
@@ -651,7 +651,7 @@ internal static class HandleTemplate
         EqualityLogic EqualityLogic,
         StringLogic StringLogic)
     {
-        public Handle(string className) : this(
+        public Handle16(string className) : this(
             className,
             null,
             null,
@@ -662,7 +662,7 @@ internal static class HandleTemplate
             new(className),
             new(className))
         { }
-        public Handle(string className, string? comment = null) : this(
+        public Handle16(string className, string? comment = null) : this(
             className,
             null,
             comment,
@@ -673,7 +673,7 @@ internal static class HandleTemplate
             new(className),
             new(className))
         { }
-        public Handle(string className, string[] baseClassNames, string? comment = null) : this(
+        public Handle16(string className, string[] baseClassNames, string? comment = null) : this(
             className,
             baseClassNames,
             comment,
@@ -692,9 +692,9 @@ internal static class HandleTemplate
         string Zero)
     {
         public MathConsts(string className, string? baseName = null) : this(
-            $"({className}){baseName ?? "Handle"}.MinValue",
-            $"({className}){baseName ?? "Handle"}.MaxValue",
-            $"({className}){baseName ?? "Handle"}.Zero")
+            $"({className}){baseName ?? "Handle16"}.MinValue",
+            $"({className}){baseName ?? "Handle16"}.MaxValue",
+            $"({className}){baseName ?? "Handle16"}.Zero")
         { }
     }
     public readonly record struct EqualityLogic(
@@ -708,14 +708,14 @@ internal static class HandleTemplate
         string MoreOrEqual)
     {
         public EqualityLogic(string className, string? baseName = null) : this(
-            $"a.{baseName ?? "Handle"}Value == b.{baseName ?? "Handle"}Value",
-            $"a.{baseName ?? "Handle"}Value != b.{baseName ?? "Handle"}Value",
-            $"{baseName ?? "Handle"}Value.GetHashCode()",
-            $"{baseName ?? "Handle"}Value.CompareTo(other.{baseName ?? "Handle"}Value)",
-            $"a.{baseName ?? "Handle"}Value < b.{baseName ?? "Handle"}Value",
-            $"a.{baseName ?? "Handle"}Value > b.{baseName ?? "Handle"}Value",
-            $"a.{baseName ?? "Handle"}Value <= b.{baseName ?? "Handle"}Value",
-            $"a.{baseName ?? "Handle"}Value >= b.{baseName ?? "Handle"}Value")
+            $"a.{baseName ?? "Handle16"}Value == b.{baseName ?? "Handle16"}Value",
+            $"a.{baseName ?? "Handle16"}Value != b.{baseName ?? "Handle16"}Value",
+            $"{baseName ?? "Handle16"}Value.GetHashCode()",
+            $"{baseName ?? "Handle16"}Value.CompareTo(other.{baseName ?? "Handle16"}Value)",
+            $"a.{baseName ?? "Handle16"}Value < b.{baseName ?? "Handle16"}Value",
+            $"a.{baseName ?? "Handle16"}Value > b.{baseName ?? "Handle16"}Value",
+            $"a.{baseName ?? "Handle16"}Value <= b.{baseName ?? "Handle16"}Value",
+            $"a.{baseName ?? "Handle16"}Value >= b.{baseName ?? "Handle16"}Value")
         { }
     }
     public readonly record struct StringLogic(
@@ -726,13 +726,13 @@ internal static class HandleTemplate
         string TryParse)
     {
         public StringLogic(string className, string? baseName = null) : this(
-            $"{baseName ?? "Handle"}Value.ToString()",
-            $"{baseName ?? "Handle"}Value.ToString(format, provider)",
-            $"{baseName ?? "Handle"}Value.TryFormat(destination, out written, format, provider)",
-            $"({className}){baseName ?? "Handle"}.Parse(s, provider)",
+            $"{baseName ?? "Handle16"}Value.ToString()",
+            $"{baseName ?? "Handle16"}Value.ToString(format, provider)",
+            $"{baseName ?? "Handle16"}Value.TryFormat(destination, out written, format, provider)",
+            $"({className}){baseName ?? "Handle16"}.Parse(s, provider)",
             $$"""
             Unsafe.SkipInit(out result);
-            return {{baseName ?? "Handle"}}.TryParse(s, provider, out Unsafe.As<{{className}}, {{baseName ?? "Handle"}}>(ref result));
+            return {{baseName ?? "Handle16"}}.TryParse(s, provider, out Unsafe.As<{{className}}, {{baseName ?? "Handle16"}}>(ref result));
             """)
         { }
     }

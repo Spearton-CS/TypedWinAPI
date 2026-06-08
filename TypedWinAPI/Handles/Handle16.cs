@@ -11,8 +11,8 @@ namespace TypedWinAPI;
 /// Struct over <see cref="ushort"/> or <see cref="short"/> or <see cref="void"/>*. Abstraction over every Handle.
 /// </summary>
 [
-    StructLayout(LayoutKind.Explicit, Size = 8),
-    DebuggerDisplay("{UnsignedValue.ToString(\"X16\"),nq}"),
+    StructLayout(LayoutKind.Explicit, Size = 2),
+    DebuggerDisplay("{UnsignedValue.ToString(\"X4\"),nq}"),
     DebuggerStepThrough,
     SkipLocalsInit
 ]

@@ -69,11 +69,11 @@ public unsafe readonly struct HSessionToken :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HSessionToken operator <<(HSessionToken a, int shift) => (HSessionToken)a.HandleValue << shift;
+    public static HSessionToken operator <<(HSessionToken a, int shift) => (HSessionToken)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HSessionToken operator >>(HSessionToken a, int shift) => (HSessionToken)a.HandleValue >> shift;
+    public static HSessionToken operator >>(HSessionToken a, int shift) => (HSessionToken)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HSessionToken operator >>>(HSessionToken a, int shift) => (HSessionToken)a.HandleValue >>> shift;
+    public static HSessionToken operator >>>(HSessionToken a, int shift) => (HSessionToken)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HSessionToken operator &(HSessionToken a, HSessionToken b) => (HSessionToken)(a.UnsignedValue & b.UnsignedValue);
@@ -348,11 +348,11 @@ public unsafe readonly struct HPen :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HPen operator <<(HPen a, int shift) => (HPen)a.HandleValue << shift;
+    public static HPen operator <<(HPen a, int shift) => (HPen)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HPen operator >>(HPen a, int shift) => (HPen)a.HandleValue >> shift;
+    public static HPen operator >>(HPen a, int shift) => (HPen)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HPen operator >>>(HPen a, int shift) => (HPen)a.HandleValue >>> shift;
+    public static HPen operator >>>(HPen a, int shift) => (HPen)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HPen operator &(HPen a, HPen b) => (HPen)(a.UnsignedValue & b.UnsignedValue);
@@ -627,11 +627,11 @@ public unsafe readonly struct HPath :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HPath operator <<(HPath a, int shift) => (HPath)a.HandleValue << shift;
+    public static HPath operator <<(HPath a, int shift) => (HPath)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HPath operator >>(HPath a, int shift) => (HPath)a.HandleValue >> shift;
+    public static HPath operator >>(HPath a, int shift) => (HPath)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HPath operator >>>(HPath a, int shift) => (HPath)a.HandleValue >>> shift;
+    public static HPath operator >>>(HPath a, int shift) => (HPath)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HPath operator &(HPath a, HPath b) => (HPath)(a.UnsignedValue & b.UnsignedValue);
@@ -906,11 +906,11 @@ public unsafe readonly struct HMatrix :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMatrix operator <<(HMatrix a, int shift) => (HMatrix)a.HandleValue << shift;
+    public static HMatrix operator <<(HMatrix a, int shift) => (HMatrix)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMatrix operator >>(HMatrix a, int shift) => (HMatrix)a.HandleValue >> shift;
+    public static HMatrix operator >>(HMatrix a, int shift) => (HMatrix)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMatrix operator >>>(HMatrix a, int shift) => (HMatrix)a.HandleValue >>> shift;
+    public static HMatrix operator >>>(HMatrix a, int shift) => (HMatrix)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HMatrix operator &(HMatrix a, HMatrix b) => (HMatrix)(a.UnsignedValue & b.UnsignedValue);
@@ -1185,11 +1185,11 @@ public unsafe readonly struct HGraphics :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HGraphics operator <<(HGraphics a, int shift) => (HGraphics)a.HandleValue << shift;
+    public static HGraphics operator <<(HGraphics a, int shift) => (HGraphics)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HGraphics operator >>(HGraphics a, int shift) => (HGraphics)a.HandleValue >> shift;
+    public static HGraphics operator >>(HGraphics a, int shift) => (HGraphics)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HGraphics operator >>>(HGraphics a, int shift) => (HGraphics)a.HandleValue >>> shift;
+    public static HGraphics operator >>>(HGraphics a, int shift) => (HGraphics)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HGraphics operator &(HGraphics a, HGraphics b) => (HGraphics)(a.UnsignedValue & b.UnsignedValue);
@@ -1464,11 +1464,11 @@ public unsafe readonly struct HImage :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HImage operator <<(HImage a, int shift) => (HImage)a.HandleValue << shift;
+    public static HImage operator <<(HImage a, int shift) => (HImage)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HImage operator >>(HImage a, int shift) => (HImage)a.HandleValue >> shift;
+    public static HImage operator >>(HImage a, int shift) => (HImage)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HImage operator >>>(HImage a, int shift) => (HImage)a.HandleValue >>> shift;
+    public static HImage operator >>>(HImage a, int shift) => (HImage)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HImage operator &(HImage a, HImage b) => (HImage)(a.UnsignedValue & b.UnsignedValue);
@@ -1743,11 +1743,11 @@ public unsafe readonly struct HStringFormat :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HStringFormat operator <<(HStringFormat a, int shift) => (HStringFormat)a.HandleValue << shift;
+    public static HStringFormat operator <<(HStringFormat a, int shift) => (HStringFormat)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HStringFormat operator >>(HStringFormat a, int shift) => (HStringFormat)a.HandleValue >> shift;
+    public static HStringFormat operator >>(HStringFormat a, int shift) => (HStringFormat)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HStringFormat operator >>>(HStringFormat a, int shift) => (HStringFormat)a.HandleValue >>> shift;
+    public static HStringFormat operator >>>(HStringFormat a, int shift) => (HStringFormat)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HStringFormat operator &(HStringFormat a, HStringFormat b) => (HStringFormat)(a.UnsignedValue & b.UnsignedValue);
@@ -2022,11 +2022,11 @@ public unsafe readonly struct HBrush :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HBrush operator <<(HBrush a, int shift) => (HBrush)a.HandleValue << shift;
+    public static HBrush operator <<(HBrush a, int shift) => (HBrush)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HBrush operator >>(HBrush a, int shift) => (HBrush)a.HandleValue >> shift;
+    public static HBrush operator >>(HBrush a, int shift) => (HBrush)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HBrush operator >>>(HBrush a, int shift) => (HBrush)a.HandleValue >>> shift;
+    public static HBrush operator >>>(HBrush a, int shift) => (HBrush)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HBrush operator &(HBrush a, HBrush b) => (HBrush)(a.UnsignedValue & b.UnsignedValue);
@@ -2301,11 +2301,11 @@ public unsafe readonly struct HFontFamily :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HFontFamily operator <<(HFontFamily a, int shift) => (HFontFamily)a.HandleValue << shift;
+    public static HFontFamily operator <<(HFontFamily a, int shift) => (HFontFamily)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HFontFamily operator >>(HFontFamily a, int shift) => (HFontFamily)a.HandleValue >> shift;
+    public static HFontFamily operator >>(HFontFamily a, int shift) => (HFontFamily)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HFontFamily operator >>>(HFontFamily a, int shift) => (HFontFamily)a.HandleValue >>> shift;
+    public static HFontFamily operator >>>(HFontFamily a, int shift) => (HFontFamily)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HFontFamily operator &(HFontFamily a, HFontFamily b) => (HFontFamily)(a.UnsignedValue & b.UnsignedValue);
@@ -2580,11 +2580,11 @@ public unsafe readonly struct HFontCollection :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HFontCollection operator <<(HFontCollection a, int shift) => (HFontCollection)a.HandleValue << shift;
+    public static HFontCollection operator <<(HFontCollection a, int shift) => (HFontCollection)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HFontCollection operator >>(HFontCollection a, int shift) => (HFontCollection)a.HandleValue >> shift;
+    public static HFontCollection operator >>(HFontCollection a, int shift) => (HFontCollection)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HFontCollection operator >>>(HFontCollection a, int shift) => (HFontCollection)a.HandleValue >>> shift;
+    public static HFontCollection operator >>>(HFontCollection a, int shift) => (HFontCollection)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HFontCollection operator &(HFontCollection a, HFontCollection b) => (HFontCollection)(a.UnsignedValue & b.UnsignedValue);
@@ -2859,11 +2859,11 @@ public unsafe readonly struct HFont :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HFont operator <<(HFont a, int shift) => (HFont)a.HandleValue << shift;
+    public static HFont operator <<(HFont a, int shift) => (HFont)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HFont operator >>(HFont a, int shift) => (HFont)a.HandleValue >> shift;
+    public static HFont operator >>(HFont a, int shift) => (HFont)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HFont operator >>>(HFont a, int shift) => (HFont)a.HandleValue >>> shift;
+    public static HFont operator >>>(HFont a, int shift) => (HFont)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HFont operator &(HFont a, HFont b) => (HFont)(a.UnsignedValue & b.UnsignedValue);

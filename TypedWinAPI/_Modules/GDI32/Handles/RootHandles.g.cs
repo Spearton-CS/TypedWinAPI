@@ -69,11 +69,11 @@ public unsafe readonly struct HDC :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HDC operator <<(HDC a, int shift) => (HDC)a.HandleValue << shift;
+    public static HDC operator <<(HDC a, int shift) => (HDC)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HDC operator >>(HDC a, int shift) => (HDC)a.HandleValue >> shift;
+    public static HDC operator >>(HDC a, int shift) => (HDC)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HDC operator >>>(HDC a, int shift) => (HDC)a.HandleValue >>> shift;
+    public static HDC operator >>>(HDC a, int shift) => (HDC)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HDC operator &(HDC a, HDC b) => (HDC)(a.UnsignedValue & b.UnsignedValue);
@@ -348,11 +348,11 @@ public unsafe readonly struct HObj :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HObj operator <<(HObj a, int shift) => (HObj)a.HandleValue << shift;
+    public static HObj operator <<(HObj a, int shift) => (HObj)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HObj operator >>(HObj a, int shift) => (HObj)a.HandleValue >> shift;
+    public static HObj operator >>(HObj a, int shift) => (HObj)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HObj operator >>>(HObj a, int shift) => (HObj)a.HandleValue >>> shift;
+    public static HObj operator >>>(HObj a, int shift) => (HObj)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HObj operator &(HObj a, HObj b) => (HObj)(a.UnsignedValue & b.UnsignedValue);

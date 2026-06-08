@@ -69,11 +69,11 @@ public unsafe readonly struct HMonitor :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMonitor operator <<(HMonitor a, int shift) => (HMonitor)a.HandleValue << shift;
+    public static HMonitor operator <<(HMonitor a, int shift) => (HMonitor)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMonitor operator >>(HMonitor a, int shift) => (HMonitor)a.HandleValue >> shift;
+    public static HMonitor operator >>(HMonitor a, int shift) => (HMonitor)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMonitor operator >>>(HMonitor a, int shift) => (HMonitor)a.HandleValue >>> shift;
+    public static HMonitor operator >>>(HMonitor a, int shift) => (HMonitor)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HMonitor operator &(HMonitor a, HMonitor b) => (HMonitor)(a.UnsignedValue & b.UnsignedValue);

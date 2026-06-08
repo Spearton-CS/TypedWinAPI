@@ -69,11 +69,11 @@ public unsafe readonly struct HInstance :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HInstance operator <<(HInstance a, int shift) => (HInstance)a.HandleValue << shift;
+    public static HInstance operator <<(HInstance a, int shift) => (HInstance)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HInstance operator >>(HInstance a, int shift) => (HInstance)a.HandleValue >> shift;
+    public static HInstance operator >>(HInstance a, int shift) => (HInstance)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HInstance operator >>>(HInstance a, int shift) => (HInstance)a.HandleValue >>> shift;
+    public static HInstance operator >>>(HInstance a, int shift) => (HInstance)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HInstance operator &(HInstance a, HInstance b) => (HInstance)(a.UnsignedValue & b.UnsignedValue);
@@ -348,11 +348,11 @@ public unsafe readonly struct HDevice :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HDevice operator <<(HDevice a, int shift) => (HDevice)a.HandleValue << shift;
+    public static HDevice operator <<(HDevice a, int shift) => (HDevice)(a.HandleValue << shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HDevice operator >>(HDevice a, int shift) => (HDevice)a.HandleValue >> shift;
+    public static HDevice operator >>(HDevice a, int shift) => (HDevice)(a.HandleValue >> shift);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HDevice operator >>>(HDevice a, int shift) => (HDevice)a.HandleValue >>> shift;
+    public static HDevice operator >>>(HDevice a, int shift) => (HDevice)(a.HandleValue >>> shift);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HDevice operator &(HDevice a, HDevice b) => (HDevice)(a.UnsignedValue & b.UnsignedValue);

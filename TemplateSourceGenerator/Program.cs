@@ -1,6 +1,7 @@
 ﻿using System.Text;
 
 using TemplateSourceGenerator.Groups;
+using TemplateSourceGenerator.Templates;
 
 namespace TemplateSourceGenerator;
 
