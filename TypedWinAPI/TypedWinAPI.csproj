@@ -43,44 +43,9 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Update="Handles\Handle.DirectTemplate.tt.txt">
-      <Generator></Generator>
-    </None>
-    <None Update="_Modules\ADVAPI32\Handles\RootHandles.tt">
-      <LastGenOutput>RootHandles.g.cs</LastGenOutput>
+    <None Update="Structs\StructTemplate.tt.txt">
       <Generator>TextTemplatingFileGenerator</Generator>
-    </None>
-    <None Update="_Modules\GDI32\Handles\GdiObjectHandles.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>GdiObjectHandles.g.cs</LastGenOutput>
-    </None>
-    <None Update="_Modules\GDI32\Handles\RootHandles.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RootHandles.g.cs</LastGenOutput>
-    </None>
-    <None Update="_Modules\GDIPlus\Handles\GdipImageHandles.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>GdipImageHandles.g.cs</LastGenOutput>
-    </None>
-    <None Update="_Modules\GDIPlus\Handles\RootHandles.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RootHandles.g.cs</LastGenOutput>
-    </None>
-    <None Update="_Modules\Kernel32\Handles\RootHandles.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RootHandles.g.cs</LastGenOutput>
-    </None>
-    <None Update="_Modules\SHCore\Handles\RootHandles.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RootHandles.g.cs</LastGenOutput>
-    </None>
-    <None Update="_Modules\Shell32\Handles\RootHandles.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RootHandles.g.cs</LastGenOutput>
-    </None>
-    <None Update="_Modules\User32\Handles\RootHandles.tt">
-      <LastGenOutput>RootHandles.g.cs</LastGenOutput>
-      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>StructTemplate.tt.g.cs</LastGenOutput>
     </None>
     <None Update="_Modules\User32\Handles\RootHandles16.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -93,6 +58,7 @@
     <Folder Include="Structs\Large\" />
     <Folder Include="Structs\Small\" />
     <Folder Include="_Modules\ADVAPI32\Enums\" />
+    <Folder Include="_Modules\ADVAPI32\Handles\" />
     <Folder Include="_Modules\ADVAPI32\Structs\Large\" />
     <Folder Include="_Modules\ADVAPI32\Structs\Primitives\" />
     <Folder Include="_Modules\ADVAPI32\Structs\Small\" />
@@ -103,6 +69,8 @@
     <Folder Include="_Modules\DWMAPI\Structs\Primitives\" />
     <Folder Include="_Modules\DWMAPI\Structs\Small\" />
     <Folder Include="_Modules\DWMAPI\_Imports\" />
+    <Folder Include="_Modules\GDI32\Handles\" />
+    <Folder Include="_Modules\GDIPlus\Handles\" />
     <Folder Include="_Modules\GDIPlus\Structs\Large\" />
     <Folder Include="_Modules\IMM32\Enums\" />
     <Folder Include="_Modules\IMM32\Handles\" />
@@ -110,13 +78,16 @@
     <Folder Include="_Modules\IMM32\Structs\Primitives\" />
     <Folder Include="_Modules\IMM32\Structs\Small\" />
     <Folder Include="_Modules\IMM32\_Imports\" />
+    <Folder Include="_Modules\Kernel32\Handles\" />
     <Folder Include="_Modules\MSimg32\Enums\" />
     <Folder Include="_Modules\MSimg32\Handles\" />
     <Folder Include="_Modules\MSimg32\Structs\Large\" />
     <Folder Include="_Modules\MSimg32\Structs\Primitives\" />
+    <Folder Include="_Modules\SHCore\Handles\" />
     <Folder Include="_Modules\SHCore\Structs\Large\" />
     <Folder Include="_Modules\SHCore\Structs\Primitives\" />
     <Folder Include="_Modules\SHCore\Structs\Small\" />
+    <Folder Include="_Modules\Shell32\Handles\" />
     <Folder Include="_Modules\Shell32\Structs\Small\" />
     <Folder Include="_Modules\UXTheme\Enums\" />
     <Folder Include="_Modules\UXTheme\Handles\" />
@@ -135,51 +106,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="_Modules\ADVAPI32\Handles\RootHandles.g.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RootHandles.tt</DependentUpon>
-    </Compile>
-    <Compile Update="_Modules\GDI32\Handles\GdiObjectHandles.g.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>GdiObjectHandles.tt</DependentUpon>
-    </Compile>
-    <Compile Update="_Modules\GDI32\Handles\RootHandles.g.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RootHandles.tt</DependentUpon>
-    </Compile>
-    <Compile Update="_Modules\GDIPlus\Handles\GdipImageHandles.g.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>GdipImageHandles.tt</DependentUpon>
-    </Compile>
-    <Compile Update="_Modules\GDIPlus\Handles\RootHandles.g.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RootHandles.tt</DependentUpon>
-    </Compile>
-    <Compile Update="_Modules\Kernel32\Handles\RootHandles.g.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RootHandles.tt</DependentUpon>
-    </Compile>
-    <Compile Update="_Modules\SHCore\Handles\RootHandles.g.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RootHandles.tt</DependentUpon>
-    </Compile>
-    <Compile Update="_Modules\Shell32\Handles\RootHandles.g.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RootHandles.tt</DependentUpon>
-    </Compile>
-    <Compile Update="_Modules\User32\Handles\RootHandles.g.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RootHandles.tt</DependentUpon>
-    </Compile>
     <Compile Update="_Modules\User32\Handles\RootHandles16.g.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

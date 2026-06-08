@@ -3,15 +3,19 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+using TypedWinAPI.Contracts;
+using TypedWinAPI.Contracts.Ptr;
+
 namespace TypedWinAPI.User32;
 
 [StructLayout(LayoutKind.Explicit, Size = 8)]
 public unsafe readonly struct LParam :
     IEqualityOperators<LParam, LParam, bool>, IEquatable<LParam>,
-    IEqualityOperators<LParam, Handle, bool>, IEquatable<Handle>,
-    IEqualityOperators<LParam, Handle16, bool>, IEquatable<Handle16>,
-    IEqualityOperators<LParam, nint, bool>, IEquatable<nint>,
-    IEqualityOperators<LParam, nuint, bool>, IEquatable<nuint>
+    IEqualityOperators<LParam, Handle, bool>, IEquatable<Handle>, IExplicitCast<LParam, Handle>,
+    IEqualityOperators<LParam, Handle16, bool>, IEquatable<Handle16>, IExplicitCast<LParam, Handle16>,
+    IEqualityOperators<LParam, nint, bool>, IEquatable<nint>, IExplicitCast<LParam, nint>,
+    IEqualityOperators<LParam, nuint, bool>, IEquatable<nuint>, IExplicitCast<LParam, nuint>,
+    IPtrEqualityOperators<LParam, bool>, IPtrEquatable, IPtrExplicitCast<LParam>
 {
     public static LParam Zero
     {
@@ -78,7 +82,8 @@ public unsafe readonly struct LParam :
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator !=(LParam left, Handle16 right) => left.Handle16Value != right;
 
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly bool Equals(void* other) => this == other;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator ==(LParam left, void* right) => left.PointerValue == right;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

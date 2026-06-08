@@ -23,7 +23,7 @@ public readonly record struct Rect(
     [FieldOffset(0)] public readonly int X;
     /// <summary> The y-coordinate of the upper-left corner (aliases <see cref="Top"/>). </summary>
     [FieldOffset(4)] public readonly int Y;
-    /// <summary> The upper-left corner as a <see cref="User32.Point"/> structure. </summary>
+    /// <summary> The upper-left corner as a <see cref="TypedWinAPI.User32.Point"/> structure. </summary>
     [FieldOffset(0)] public readonly Point Location;
 
     /// <summary> Gets the width of the rectangle (Right - Left). </summary>
@@ -38,7 +38,7 @@ public readonly record struct Rect(
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => Bottom - Top;
     }
-    /// <summary> Gets the dimensions of the rectangle as a <see cref="User32.Size"/>. </summary>
+    /// <summary> Gets the dimensions of the rectangle as a <see cref="TypedWinAPI.User32.Size"/>. </summary>
     public readonly Size Size
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

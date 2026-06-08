@@ -1,0 +1,297 @@
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".g.cs" #>
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+using TypedWinAPI.Contracts;
+using TypedWinAPI.Contracts.Ptr;
+
+namespace TypedWinAPI.___;
+
+<#
+	// --- SETTINGS ---
+
+	List<StructDescription> structDescriptions =
+	[
+		new([
+				new("DebuggerDisplay", ["\"EXAMPLE\""])
+			],
+			32,
+			true,
+			"Example",
+			[
+				new("IPtrEquatable", null)
+			],
+			[
+				new(0,
+					"public readonly",
+					"ulong",
+					"FIELD",
+					null)
+			],
+			[
+				new("public",
+					"ulong",
+					"PROP",
+					null,
+					"""
+					return FIELD;
+					""",
+					null, null, false)
+			],
+			[
+				new("public",
+					"ulong",
+					"CONST",
+					"0")
+			],
+			[
+				new([
+						new("UnscopedRef", null)
+					],
+					"public readonly",
+					"ref readonly Example",
+					"FUNC",
+					null,
+					null,
+					null,
+					"""
+					return ref this;
+					""")
+			])
+	];
+
+	foreach (var structDescription in structDescriptions)
+	{
+#>
+<#= structDescription.ToString() #>
+<#
+	}
+#>
+<#+
+	public readonly struct StructDescription(
+		List<AttributeDescription>? attributes,
+		int size,
+		bool isReadOnly,
+		string name,
+		List<ContractDescription>? contracts,
+		List<FieldDescription> fields,
+		List<PropertyDescription>? props,
+		List<ConstDescription>? consts,
+		List<FunctionDescription>? funcs)
+	{
+		
+	}
+
+	public readonly struct AttributeDescription(
+		string name,
+		List<string>? parameters)
+	{
+		public readonly string Name = name;
+		public readonly List<string>? Parameters = parameters;
+
+		public readonly string ToString(int indent = 0)
+		{
+			StringBuilder sb = new();
+			ToString(sb, new string('\t', indent));
+			return sb.ToString();
+		}
+		public readonly void ToString(StringBuilder sb, string tabs = "")
+		{
+			sb.Append(tabs);
+			sb.Append('[');
+
+			sb.Append(Name);
+			sb.Append('(');
+
+			if (Parameters is not null && Parameters.Count > 0)
+				for (int i = 0, last = Parameters.Count - 1; i < Parameters.Count; i++)
+				{
+					sb.Append(Parameters[i]);
+					if (i != last)
+						sb.Append(", ");
+				}
+
+			sb.Append(')');
+
+			sb.Append(']');
+		}
+	}
+
+	public readonly struct ContractDescription(
+		string name,
+		List<string>? generics)
+	{
+		public readonly string Name = name;
+		public readonly List<string>? Generics = generics;
+
+		public readonly string ToString(int indent = 1)
+		{
+			StringBuilder sb = new();
+			ToString(sb, new string('\t', indent));
+			return sb.ToString();
+		}
+		public readonly void ToString(StringBuilder sb, string tabs = "\t")
+		{
+			sb.Append(tabs);
+			sb.Append(Name);
+			if (Generics is not null && Generics.Count > 0)
+			{
+				sb.Append('<');
+				for (int i = 0, last = Generics.Count - 1; i < Generics.Count; i++)
+				{
+					sb.Append(Generics[i]);
+					if (i != last)
+						sb.Append(',');
+				}
+				sb.Append('>');
+			}
+		}
+	}
+
+	public readonly struct FieldDescription(
+		int offset,
+		string accessibility,
+		string type,
+		string name,
+		string? value)
+	{
+		public readonly int Offset = offset;
+		public readonly string Accessibility = accessibility;
+		public readonly string Type = type;
+		public readonly string Name = name;
+		public readonly string? Value = value;
+	}
+
+	public readonly struct ConstDescription(
+		string accessibility,
+		string type,
+		string name,
+		string value)
+	{
+		public readonly string Accessibility = accessibility;
+		public readonly string Type = type;
+		public readonly string Name = name;
+		public readonly string Value = value;
+	}
+
+	public readonly struct PropertyDescription(
+		string accessibility,
+		string type,
+		string name,
+		string? getAccessibility, string getBody,
+		string? setAccessibility, string? setBody, bool setIsInit)
+	{
+		public readonly string Accessibility = accessibility;
+		public readonly string Type = type;
+		public readonly string Name = name;
+		public readonly string GetAccessibility = getAccessibility ?? accessibility;
+		public readonly string GetBody = getBody;
+		public readonly string? SetAccessibility = setBody is not null ? setAccessibility ?? accessibility : null;
+		public readonly string? SetBody = setBody;
+		public readonly bool SetIsInit = setIsInit;
+
+		public readonly string ToString(int indent = 1)
+		{
+			StringBuilder sb = new();
+			ToString(sb, new string('\t', indent));
+			return sb.ToString();
+		}
+		public readonly void ToString(StringBuilder sb, string tabs = "\t")
+		{
+			sb.Append(tabs);
+			sb.Append(Accessibility); sb.Append(' ');
+			sb.Append(Type); sb.Append(' ');
+			sb.Append(Name);
+			sb.AppendLine();
+			sb.Append(tabs);
+			sb.Append('{');
+			sb.Append('}');
+		}
+	}
+
+	public readonly struct FunctionDescription(
+		List<AttributeDescription>? attributes,
+		string accessibility,
+		string? returnName,
+		string name,
+		List<string>? generics,
+		List<string>? parameters,
+		List<string>? genericsStricts,
+		string body)
+	{
+		public readonly List<AttributeDescription>? Attributes = attributes;
+		public readonly string Accessibility = accessibility;
+		public readonly string ReturnName = returnName ?? "void";
+		public readonly string Name = name;
+		public readonly List<string>? Generics = generics;
+		public readonly List<string>? Parameters = parameters;
+		public readonly List<string>? GenericsStricts = genericsStricts;
+		public readonly string Body = body;
+
+		public readonly string ToString(int indent = 1)
+		{
+			StringBuilder sb = new();
+			ToString(sb, new string('\t', indent));
+			return sb.ToString();
+		}
+		public readonly void ToString(StringBuilder sb, string tabs = "\t")
+		{
+			if (Attributes is not null && Attributes.Count > 0)
+				foreach (var attr in Attributes)
+				{
+					attr.ToString(sb, tabs);
+					sb.AppendLine();
+				}
+			sb.Append(tabs);
+			sb.Append(Accessibility); sb.Append(' ');
+			sb.Append(ReturnName); sb.Append(' ');
+			sb.Append(Name);
+			if (Generics is not null && Generics.Count > 0)
+			{
+				sb.Append('<');
+				for (int i = 0, last = Generics.Count - 1; i < Generics.Count; i++)
+				{
+					sb.Append(Generics[i]);
+					if (i != last)
+						sb.Append(", ");
+				}
+				sb.Append('>');
+			}
+			sb.Append('(');
+			if (Parameters is not null && Parameters.Count > 0)
+				for (int i = 0, last = Parameters.Count - 1; i < Parameters.Count; i++)
+				{
+					sb.Append(Parameters[i]);
+					if (i != last)
+						sb.Append(", ");
+				}
+			sb.Append(')');
+			sb.AppendLine();
+			sb.Append(tabs);
+			if (GenericsStricts is not null && GenericsStricts.Count > 0)
+			{
+				sb.Append('\t');
+				for (int i = 0, last = GenericsStricts.Count - 1; i < GenericsStricts.Count; i++)
+				{
+					sb.Append(GenericsStricts[i]);
+					sb.Append(' ');
+				}
+				sb.AppendLine();
+				sb.Append(tabs);
+			}
+			sb.Append('{');
+			sb.AppendLine();
+			sb.Append(tabs); sb.Append('\t');
+			sb.Append(Body.Replace("\r\n", $"{tabs}\t"));
+			sb.AppendLine();
+			sb.Append('}');
+		}
+	}
+#>

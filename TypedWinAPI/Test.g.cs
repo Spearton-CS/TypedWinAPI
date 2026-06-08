@@ -6,10 +6,10 @@ using System.Runtime.InteropServices;
 using TypedWinAPI.Contracts;
 using TypedWinAPI.Contracts.Ptr;
 
-namespace TypedWinAPI.User32;
+namespace TypedWinAPI.User32A;
 
 /// <summary>
-/// Handle to a User32 window
+/// Handle to a window
 /// </summary>
 [
 	// --- Default attributes ---
@@ -304,7 +304,7 @@ public unsafe readonly struct HWND :
 }
 
 /// <summary>
-/// Handle to a User32 menu
+/// Handle to a menu
 /// </summary>
 [
 	// --- Default attributes ---
@@ -599,7 +599,7 @@ public unsafe readonly struct HMenu :
 }
 
 /// <summary>
-/// Handle to a User32 cursor
+/// Handle to a cursor
 /// </summary>
 [
 	// --- Default attributes ---
@@ -894,7 +894,7 @@ public unsafe readonly struct HCursor :
 }
 
 /// <summary>
-/// Handle to a User32 icon
+/// Handle to a icon
 /// </summary>
 [
 	// --- Default attributes ---
