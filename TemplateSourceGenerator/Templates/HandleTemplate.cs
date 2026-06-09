@@ -589,20 +589,26 @@ internal static class HandleTemplate
             sb.AppendLine("// --- Default usings ---");
             foreach (var use in DefaultUsings)
                 sb.AppendLine($"using {use};");
-            if (h.Usings is not null)
+            if (h.Usings is not null && h.Usings.Length > 0)
             {
                 sb.AppendLine("// --- Custom usings ---");
                 foreach (var use in h.Usings)
                     sb.AppendLine($"using {use};");
             }
         }
+
+        sb.AppendLine("#nullable enable");
         Usings(sb, in h);
-        sb.AppendLine();
-        sb.AppendLine($"namespace TypedWinAPI.{@namespace};");
-        sb.AppendLine();
+        sb.AppendLine(
+        $"""
+
+        namespace TypedWinAPI.{@namespace};
+
+        """);
         GenerateDefinition(sb, in h);
         GenerateBody(sb, in h);
-        sb.Append('}');
+        sb.AppendLine("}");
+        sb.Append("#nullable restore");
     }
 
     public static void Generate(StringBuilder sb, string @namespace, params ReadOnlySpan<Handle> hSpan)
@@ -613,17 +619,22 @@ internal static class HandleTemplate
             foreach (var use in DefaultUsings)
                 sb.AppendLine($"using {use};");
             foreach (ref readonly var h in hSpan)
-                if (h.Usings is not null)
+                if (h.Usings is not null && h.Usings.Length > 0)
                 {
                     sb.AppendLine("// --- Custom usings ---");
                     foreach (var use in h.Usings)
                         sb.AppendLine($"using {use};");
                 }
         }
+
+        sb.AppendLine("#nullable enable");
         Usings(sb, hSpan);
-        sb.AppendLine();
-        sb.AppendLine($"namespace TypedWinAPI.{@namespace};");
-        sb.AppendLine();
+        sb.AppendLine(
+        $"""
+
+        namespace TypedWinAPI.{@namespace};
+
+        """);
 
         for (int i = 0, last = hSpan.Length; i < hSpan.Length; i++)
         {
@@ -631,13 +642,15 @@ internal static class HandleTemplate
             GenerateDefinition(sb, in h);
             GenerateBody(sb, in h);
             if (i != last)
-            {
-                sb.AppendLine("}");
-                sb.AppendLine();
-            }
+                sb.AppendLine(
+                """
+                }
+
+                """);
             else
-                sb.Append('}');
+                sb.AppendLine("}");
         }
+        sb.Append("#nullable restore");
     }
 
     public readonly record struct Handle(

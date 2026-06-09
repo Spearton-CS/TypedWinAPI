@@ -15,24 +15,24 @@ internal static class Program
         try
         {
 #endif
-            StringBuilder sb = new();
+        StringBuilder sb = new();
 
-            Console.WriteLineInfo("Starting generation...");
-            ADVAPI32.Generate(sb);
-            sb.Clear();
-            GDI32.Generate(sb);
-            sb.Clear();
-            GDIPlus.Generate(sb);
-            sb.Clear();
-            Kernel32.Generate(sb);
-            sb.Clear();
-            MSimg32.Generate(sb);
-            sb.Clear();
-            SHCore.Generate(sb);
-            sb.Clear();
-            Shell32.Generate(sb);
-            sb.Clear();
-            User32.Generate(sb);
+        Console.WriteLineInfo("Starting generation...");
+        ADVAPI32.Generate(sb);
+        sb.Clear();
+        GDI32.Generate(sb);
+        sb.Clear();
+        GDIPlus.Generate(sb);
+        sb.Clear();
+        Kernel32.Generate(sb);
+        sb.Clear();
+        MSimg32.Generate(sb);
+        sb.Clear();
+        SHCore.Generate(sb);
+        sb.Clear();
+        Shell32.Generate(sb);
+        sb.Clear();
+        User32.Generate(sb);
 #if !DEBUG
         }
         catch (Exception ex)

@@ -12,30 +12,32 @@ internal static class User32
         try
         {
 #endif
-            Console.WriteLineInfo("Starting generation for User32...");
+        Console.WriteLineInfo("Starting generation for User32...");
 
-            HandleTemplate.Generate(sb, "User32",
-                new("HWND", "Handle to an User32 window"),
-                new("HMenu", "Handle to an User32 menu"),
-                new("HCursor", "Handle to an User32 cursor"),
-                new("HIcon", "Handle to an User32 icon"));
+        HandleTemplate.Generate(sb, "User32",
+            new("HWND", "Handle to an User32 window"),
+            new("HMenu", "Handle to an User32 menu"),
+            new("HCursor", "Handle to an User32 cursor"),
+            new("HIcon", "Handle to an User32 icon"));
 
-            Console.WriteLineSuccess("Generation done for User32, saving...");
+        Console.WriteLineSuccess("Generation done for User32, saving...");
 
-            File.WriteAllText(Path.GetFullPath($"{Program.TypedWinAPI_DIR}/_Modules/User32/Handles/RootHandles.g.cs"), sb.ToString());
+        File.WriteAllText(Path.GetFullPath($"{Program.TypedWinAPI_DIR}/_Modules/User32/Handles/RootHandles.g.cs"), sb.ToString());
 
-            Console.WriteLineSuccess("Saved generation for User32");
+        Console.WriteLineSuccess("Saved generation for User32");
 
-            Console.WriteLineInfo("Starting generation for User32 (16-bit)...");
+        sb.Clear();
 
-            Handle16Template.Generate(sb, "User32",
-                new Handle16Template.Handle16("ATOM", "Handle16 to an User32 ..."));
+        Console.WriteLineInfo("Starting generation for User32 (16-bit)...");
 
-            Console.WriteLineSuccess("Generation done for User32 (16-bit), saving...");
+        Handle16Template.Generate(sb, "User32",
+            new Handle16Template.Handle16("ATOM", "Handle16 to an User32 ..."));
 
-            File.WriteAllText(Path.GetFullPath($"{Program.TypedWinAPI_DIR}/_Modules/User32/Handles/RootHandles16.g.cs"), sb.ToString());
+        Console.WriteLineSuccess("Generation done for User32 (16-bit), saving...");
 
-            Console.WriteLineSuccess("Saved generation for User32 (16-bit)");
+        File.WriteAllText(Path.GetFullPath($"{Program.TypedWinAPI_DIR}/_Modules/User32/Handles/RootHandles16.g.cs"), sb.ToString());
+
+        Console.WriteLineSuccess("Saved generation for User32 (16-bit)");
 #if !DEBUG
         }
         catch (Exception ex)

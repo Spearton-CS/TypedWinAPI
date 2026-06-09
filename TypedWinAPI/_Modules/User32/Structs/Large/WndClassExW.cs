@@ -9,7 +9,7 @@ namespace TypedWinAPI.User32;
 public unsafe struct WndClassExW()
 {
     /// <summary> The size, in bytes, of this structure. </summary>
-    [FieldOffset(0)] public uint cbSize = 80/*(uint)sizeof(WndClassExW)*/;
+    [FieldOffset(0)] public uint cbSize = 80;
     /// <summary> The class style(s). </summary>
     [FieldOffset(4)] public ClassStyles style;
     /// <summary> A pointer to the window procedure (WndProc). </summary>
