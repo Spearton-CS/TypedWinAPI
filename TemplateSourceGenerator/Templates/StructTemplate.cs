@@ -208,7 +208,7 @@ internal static class StructTemplate
                     /// <summary>
                     /// {field.Comment?.Replace("\r\n", "\r\n\t/// ") ?? $"Field of type {field.Type.Replace('<', '[').Replace('>', ']')} on offset {field.Offset}"}
                     /// </summary>
-                    [FieldOffset({field.Offset})] {field.Accessibility} {field.Type} {field.Name}{(field.DefaultValue is not null ? $"= {field.DefaultValue}" : string.Empty)};
+                    [FieldOffset({field.Offset})] {field.Accessibility} {field.Type} {field.Name}{(field.DefaultValue is not null ? $" = {field.DefaultValue}" : string.Empty)};
                 """);
             sb.AppendLine(
             """
@@ -296,8 +296,8 @@ internal static class StructTemplate
                     """);
                 }
                 sb.AppendLine(
-                """
-                    }
+                $$"""
+                    }{{(prop.DefaultValue is not null ? $" = {prop.DefaultValue};" : string.Empty)}}
                 """);
             }
             sb.AppendLine(
@@ -319,7 +319,7 @@ internal static class StructTemplate
                 $"""
                     /// <summary>
                     /// {func.Comment?.Replace("\r\n", "\r\n\t/// ") ?? $"Function with return type {func.ReturnType.Replace('<', '[').Replace('>', ']')}"}
-                    /// <summary>
+                    /// </summary>
                 """);
                 if (func.Attributes is not null && func.Attributes.Length > 0)
                 {

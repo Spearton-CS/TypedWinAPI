@@ -1,3 +1,4 @@
+#nullable enable
 // --- Default usings ---
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -286,3 +287,4 @@ public unsafe readonly struct HProcess :
 
     #endregion
 }
+#nullable restore
