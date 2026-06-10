@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 using TemplateSourceGenerator.Groups;
 using TemplateSourceGenerator.Templates;
@@ -9,6 +10,29 @@ internal static class Program
 {
     public const string TypedWinAPI_DIR = "../../../../TypedWinAPI";
 
+    internal static void Generate(StringBuilder sb, [ConstantExpected] string path, [ConstantExpected] string displayName, Action<StringBuilder> gen)
+    {
+        try
+        {
+            Console.WriteLineInfo($"Starting generation for {displayName}");
+            gen(sb);
+            Console.WriteLineSuccess($"Generation done for {displayName}, saving...");
+            File.WriteAllText(Path.GetFullPath($"{TypedWinAPI_DIR}/{path}"), sb.ToString());
+            sb.Clear();
+            Console.WriteLineSuccess($"Generation saved for {displayName}");
+        }
+#if !DEBUG
+        catch (Exception ex)
+        {
+            Console.WriteLineError($"Caught an exception during generation for an {displayName}:\r\n{ex}");
+        }
+#endif
+        finally
+        {
+            sb.Clear();
+        }
+    }
+
     static void Main()
     {
 #if !DEBUG
@@ -18,26 +42,29 @@ internal static class Program
         StringBuilder sb = new();
 
         Console.WriteLineInfo("Starting generation...");
+
         ADVAPI32.Generate(sb);
-        sb.Clear();
+
         GDI32.Generate(sb);
-        sb.Clear();
+
         GDIPlus.Generate(sb);
-        sb.Clear();
+
         Kernel32.Generate(sb);
-        sb.Clear();
+
         MSimg32.Generate(sb);
-        sb.Clear();
+
         SHCore.Generate(sb);
-        sb.Clear();
+
         Shell32.Generate(sb);
-        sb.Clear();
+
         User32.Generate(sb);
+
+        Console.WriteLineSuccess("Generation ended");
 #if !DEBUG
         }
         catch (Exception ex)
         {
-            Console.WriteLineError($"Caught an error during generation:\r\n{ex}");
+            Console.WriteLineError($"Caught an exception during generation:\r\n{ex}");
         }
 #endif
     }

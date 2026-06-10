@@ -32,9 +32,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Handles\Handle16.DirectTemplate.tt.txt">
-      <Generator></Generator>
-    </None>
     <None Update="LICENSE.TXT">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>

@@ -48,6 +48,24 @@ public unsafe struct Bitmap :
 
 		return true;
     }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly override string ToString()
+    {
+        return
+            $$"""
+            Bitmap: {
+                bmType: {{bmType}}
+                bmWidth: {{bmWidth}}
+                bmHeight: {{bmHeight}}
+                bmWidthBytes: {{bmWidthBytes}}
+                bmPlanes: {{bmPlanes}}
+                bmBitsPixel: {{bmBitsPixel}}
+                bmBits: {{(nuint)bmBits:X16}}
+            }
+            """;
+    }
+
     public static bool operator !=(Bitmap a, Bitmap b)
     {
         return !(a == b);

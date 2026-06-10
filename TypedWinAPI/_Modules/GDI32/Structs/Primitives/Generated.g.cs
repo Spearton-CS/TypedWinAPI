@@ -20,6 +20,8 @@ namespace TypedWinAPI.GDI32;
 	StructLayout(LayoutKind.Explicit, Size = 4)
 ]
 public readonly unsafe struct Color()  :
+	// --- Custom contracts ---
+	IExplicitCast<Color, uint>,
     IReadOnlyStructContracts<Color>
 {
     #region IReadOnlyStructContracts
@@ -44,6 +46,22 @@ public readonly unsafe struct Color()  :
 
 		return true;
     }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly override string ToString()
+    {
+        return
+            $$"""
+            Color: {
+                Value: {{Value}}
+                R: {{R}}
+                G: {{G}}
+                B: {{B}}
+                A: {{A}}
+            }
+            """;
+    }
+
     public static bool operator !=(Color a, Color b)
     {
         return !(a == b);

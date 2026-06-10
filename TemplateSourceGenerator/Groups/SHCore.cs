@@ -8,26 +8,10 @@ internal static class SHCore
 {
     public static void Generate(StringBuilder sb)
     {
-#if !DEBUG
-        try
+        Program.Generate(sb, "_Modules/SHCore/Handles/RootHandles.g.cs", "SHCore (Root)", static (sb) =>
         {
-#endif
-        Console.WriteLineInfo("Starting generation for SHCore...");
-
-        HandleTemplate.Generate(sb, "SHCore",
-            new HandleTemplate.Handle("HMonitor", "Handle to a SHCore monitor"));
-
-        Console.WriteLineSuccess("Generation done for SHCore, saving...");
-
-        File.WriteAllText(Path.GetFullPath($"{Program.TypedWinAPI_DIR}/_Modules/SHCore/Handles/RootHandles.g.cs"), sb.ToString());
-
-        Console.WriteLineSuccess("Saved generation for SHCore");
-#if !DEBUG
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLineError($"Caught an error during generation for an SHCore:\r\n{ex}");
-        }
-#endif
+            HandleTemplate.Generate(sb, "SHCore",
+                new HandleTemplate.Handle("HMonitor", "Handle to a SHCore monitor"));
+        });
     }
 }

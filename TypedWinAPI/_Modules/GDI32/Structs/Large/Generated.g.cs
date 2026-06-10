@@ -56,6 +56,28 @@ public unsafe struct BitmapInfo()  :
 
 		return true;
     }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly override string ToString()
+    {
+        return
+            $$"""
+            BitmapInfo: {
+                biSize: {{biSize}}
+                biWidth: {{biWidth}}
+                biHeight: {{biHeight}}
+                biPlanes: {{biPlanes}}
+                biBitCount: {{biBitCount}}
+                biCompression: {{biCompression}}
+                biSizeImage: {{biSizeImage}}
+                biXPelsPerMeter: {{biXPelsPerMeter}}
+                biYPelsPerMeter: {{biYPelsPerMeter}}
+                biClrUsed: {{biClrUsed}}
+                biClrImportant: {{biClrImportant}}
+            }
+            """;
+    }
+
     public static bool operator !=(BitmapInfo a, BitmapInfo b)
     {
         return !(a == b);

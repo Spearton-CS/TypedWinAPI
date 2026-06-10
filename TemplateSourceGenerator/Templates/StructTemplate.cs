@@ -114,6 +114,46 @@ internal static class StructTemplate
             sb.AppendLine(
             $$"""
                 }
+                
+                {{Const.Inlined}}
+                public readonly override string ToString()
+                {
+            """);
+            if (s.CustomBehavior._ToString is not null)
+            {
+                sb.Append("\t\t");
+                sb.AppendLine(s.CustomBehavior._ToString.Replace("\r\n", "\r\n\t\t"));
+            }
+            else
+            {
+                sb.AppendLine(
+                    $$"""
+                            return
+                                $${{@""""""""}}
+                                {{s.ClassName}}: {
+                    """);
+                foreach (var field in s.Fields)
+                    sb.AppendLine(
+                    $$$"""
+                                    {{{field.Name}}}: {{{{{(field.Type[^1] == '*' || field.Type.StartsWith("delegate*", StringComparison.Ordinal) ? $"(nuint){field.Name}:X16" : field.Name)}}}}}
+                    """);
+                if (s.Properties is not null && s.Properties.Length > 0)
+                    foreach (var prop in s.Properties)
+                        if (!prop.IsAbstract)
+                            sb.AppendLine(
+                            $$$"""
+                                            {{{prop.Name}}}: {{{{{(prop.Type[^1] == '*' || prop.Type.StartsWith("delegate*", StringComparison.Ordinal) ? $"(nuint){prop.Name}:X16" : prop.Name)}}}}}
+                            """);
+                sb.AppendLine(
+                    $$"""
+                                }
+                                {{@""""""""}};
+                    """);
+            }
+            sb.AppendLine(
+            $$"""
+                }
+
                 public static bool operator !=({{s.ClassName}} a, {{s.ClassName}} b)
                 {
                     {{s.CustomBehavior.NonEqual?.Replace("\r\n", "\r\n\t\t") ?? "return !(a == b);"}}
