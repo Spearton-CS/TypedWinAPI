@@ -96,11 +96,12 @@ internal static class StructTemplate
             else
             {
                 foreach (var field in s.Fields)
-                    sb.AppendLine(
-                    $"""
-                            if (a.{field.Name} != b.{field.Name})
-                                return false;
-                    """);
+                    if (!field.Type.StartsWith("fixed", StringComparison.Ordinal))
+                        sb.AppendLine(
+                        $"""
+                                if (a.{field.Name} != b.{field.Name})
+                                    return false;
+                        """);
                 if (s.Properties is not null && s.Properties.Length > 0)
                     foreach (var prop in s.Properties)
                         if (!prop.IsAbstract)
@@ -133,10 +134,11 @@ internal static class StructTemplate
                                 {{s.ClassName}}: {
                     """);
                 foreach (var field in s.Fields)
-                    sb.AppendLine(
-                    $$$"""
-                                    {{{field.Name}}}: {{{{{(field.Type[^1] == '*' || field.Type.StartsWith("delegate*", StringComparison.Ordinal) ? $"(nuint){field.Name}:X16" : field.Name)}}}}}
-                    """);
+                    if (!field.Type.StartsWith("fixed", StringComparison.Ordinal))
+                        sb.AppendLine(
+                        $$$"""
+                                        {{{field.Name}}}: {{{{{(field.Type[^1] == '*' || field.Type.StartsWith("delegate*", StringComparison.Ordinal) ? $"(nuint){field.Name}:X16" : field.Name)}}}}}
+                        """);
                 if (s.Properties is not null && s.Properties.Length > 0)
                     foreach (var prop in s.Properties)
                         if (!prop.IsAbstract)
