@@ -1,1128 +1,1019 @@
-#nullable enable
-// --- Default usings ---
+﻿#nullable enable
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TypedWinAPI.Contracts;
-using TypedWinAPI.Contracts.Ptr;
+using System.Numerics;
 
 namespace TypedWinAPI.User32;
 
 /// <summary>
-/// Handle to an User32 window
+/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over HWND
 /// </summary>
-[
-	// --- Default attributes ---
-	StructLayout(LayoutKind.Explicit, Size = 8),
-	DebuggerDisplay("{ToString(),nq}"),
+[StructLayout(LayoutKind.Explicit, Size = 8),
+	DebuggerDisplay("{UnsignedValue.ToString(\"X16\"),nq}"),
 	DebuggerStepThrough,
-	SkipLocalsInit
-]
+	SkipLocalsInit]
 public unsafe readonly struct HWND :
-    // --- Default contracts ---
-    IHandleTSelfContracts<HWND>,
-    IHandleTBaseHandleContracts<HWND, Handle>,
-    IHandleContracts<HWND>
+	IEqualityOperators<HWND, HWND, bool>, IEquatable<HWND>,
+		IEqualityOperators<HWND, Handle, bool>, IEquatable<Handle>,
+	    IEqualityOperators<HWND, nuint, bool>, IEquatable<nuint>,
+    IEqualityOperators<HWND, nint, bool>, IEquatable<nint>,
+
+#if ManagedObjects
+	IComparable,
+#endif
+	IComparisonOperators<HWND, HWND, bool>, IComparable<HWND>,
+		IComparisonOperators<HWND, Handle, bool>, IComparable<Handle>,
+	    IComparisonOperators<HWND, nuint, bool>, IComparable<nuint>,
+    IComparisonOperators<HWND, nint, bool>, IComparable<nint>
 {
-    #region Construct
+	#region Construct
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HWND() => HandleValue = default;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HWND(Handle h) => HandleValue = h;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HWND(void* ptr) => PointerValue = ptr;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HWND(nuint unsig) => UnsignedValue = unsig;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HWND(nint sig) => SignedValue = sig;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HWND() => PointerValue = null;
 
-    #endregion
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HWND(void* ptr) => PointerValue = ptr;
 
-    #region Fields
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HWND(nuint unsig) => UnsignedValue = unsig;
 
-    [FieldOffset(0)] public readonly Handle HandleValue;
-    [FieldOffset(0)] public readonly void* PointerValue;
-    [FieldOffset(0)] public readonly nuint UnsignedValue;
-    [FieldOffset(0)] public readonly nint SignedValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HWND(nint sig) => SignedValue = sig;
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HWND(Handle @base) => PointerValue = @base.PointerValue;
+	
+	#endregion
 
-    #endregion
+	#region Fields
 
-    #region Math
+	[FieldOffset(0)] public readonly void* PointerValue;
 
-    public static HWND MinValue
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (HWND)Handle.MinValue;
-    }
+	[FieldOffset(0)] public readonly nuint UnsignedValue;
 
-    public static HWND MaxValue
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (HWND)Handle.MaxValue;
-    }
+	[FieldOffset(0)] public readonly nint SignedValue;
 
-    public static HWND Zero
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (HWND)Handle.Zero;
-    }
+	#endregion
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator <<(HWND a, int shift) => (HWND)(a.HandleValue << shift);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator >>(HWND a, int shift) => (HWND)(a.HandleValue >> shift);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator >>>(HWND a, int shift) => (HWND)(a.HandleValue >>> shift);
+	#region Equality
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator &(HWND a, HWND b) => (HWND)(a.UnsignedValue & b.UnsignedValue);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator |(HWND a, HWND b) => (HWND)(a.UnsignedValue | b.UnsignedValue);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator ^(HWND a, HWND b) => (HWND)(a.UnsignedValue ^ b.UnsignedValue);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator ~(HWND a) => (HWND)~a.UnsignedValue;
+#if ManagedObjects
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly override bool Equals([NotNullWhen(true)] object? obj)
+	{
+		if (obj is HWND other)
+			return this == other;
+				else if (obj is Handle @Handle)
+			return this == @Handle;
+				else if (obj is nuint unsig)
+			return this == unsig;
+		else if (obj is nint sig)
+			return this == sig;
+		else
+			return false;
+	}
+#endif
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(HWND other) => this == other;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(Handle other) => this == other;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(nuint other) => this == other;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(nint other) => this == other;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(void* other) => this == other;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator &(HWND a, Handle b) => (HWND)(a.HandleValue & b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator |(HWND a, Handle b) => (HWND)(a.HandleValue | b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator ^(HWND a, Handle b) => (HWND)(a.HandleValue ^ b);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HWND a, HWND b) => a.PointerValue == b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HWND a, HWND b) => a.PointerValue != b.PointerValue;
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HWND a, Handle b) => a.PointerValue == b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HWND a, Handle b) => a.PointerValue != b.PointerValue;
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HWND a, void* b) => a.PointerValue == b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HWND a, void* b) => a.PointerValue != b;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator &(HWND a, nuint b) => (HWND)(a.UnsignedValue & b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator |(HWND a, nuint b) => (HWND)(a.UnsignedValue | b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator ^(HWND a, nuint b) => (HWND)(a.UnsignedValue ^ b);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HWND a, nuint b) => a.UnsignedValue == b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HWND a, nuint b) => a.UnsignedValue != b;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator &(HWND a, nint b) => (HWND)(a.SignedValue & b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator |(HWND a, nint b) => (HWND)(a.SignedValue | b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator ^(HWND a, nint b) => (HWND)(a.SignedValue ^ b);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HWND a, nint b) => a.SignedValue == b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HWND a, nint b) => a.SignedValue != b;
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly override int GetHashCode() => UnsignedValue.GetHashCode();
+
+	#endregion
+
+	#region Comparability
+
+#if ManagedObjects
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(object? obj)
+	{
+		if (obj is HWND other)
+			return CompareTo(other);
+				else if (obj is Handle @Handle)
+			return CompareTo(@Handle);
+				else if (obj is nuint unsig)
+			return CompareTo(unsig);
+		else if (obj is nint sig)
+			return CompareTo(sig);
+		else
+			return 0;
+	}
+#endif
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(HWND other) => UnsignedValue.CompareTo(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(Handle other) => UnsignedValue.CompareTo(other.UnsignedValue);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(nint other) => SignedValue.CompareTo(other);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(void* other) => UnsignedValue.CompareTo((nuint)other);
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HWND a, HWND b) => a.PointerValue < b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HWND a, HWND b) => a.PointerValue > b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HWND a, HWND b) => a.PointerValue <= b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HWND a, HWND b) => a.PointerValue >= b.PointerValue;
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HWND a, Handle b) => a.PointerValue < b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HWND a, Handle b) => a.PointerValue > b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HWND a, Handle b) => a.PointerValue <= b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HWND a, Handle b) => a.PointerValue >= b.PointerValue;
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HWND a, void* b) => a.PointerValue < b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HWND a, void* b) => a.PointerValue > b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HWND a, void* b) => a.PointerValue <= b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HWND a, void* b) => a.PointerValue >= b;
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HWND a, nuint b) => a.UnsignedValue < b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HWND a, nuint b) => a.UnsignedValue > b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HWND a, nuint b) => a.UnsignedValue <= b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HWND a, nuint b) => a.UnsignedValue >= b;
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HWND a, nint b) => a.SignedValue < b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HWND a, nint b) => a.SignedValue > b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HWND a, nint b) => a.SignedValue <= b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HWND a, nint b) => a.SignedValue >= b;
+
+	#endregion
+
+#if ManagedStrings
+	#region Format and Parse
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly override string ToString() => UnsignedValue.ToString("X16");
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator &(HWND a, void* b) => (HWND)(a.UnsignedValue & (nuint)b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator |(HWND a, void* b) => (HWND)(a.UnsignedValue | (nuint)b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND operator ^(HWND a, void* b) => (HWND)(a.UnsignedValue ^ (nuint)b);
-
-    #endregion
-
-	#region Equality and Comparability
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly override bool Equals([NotNullWhen(true)] object? obj)
-        => obj is HWND other ? this == other
-                : obj is Handle h ? this == h
-                    : obj is nuint unsig ? this == unsig
-                        : obj is nint sig && this == sig;
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(HWND other) => this == other;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(Handle other) => this == other;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(nuint other) => this == other;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(nint other) => this == other;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(void* other) => this == other;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo([NotNullWhen(true)] object? obj)
-        => obj is HWND other ? CompareTo(other)
-                : obj is Handle h ? CompareTo(h)
-                    : obj is nuint unsig ? CompareTo(unsig)
-                        : obj is nint sig ? CompareTo(sig) : 0;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(HWND other) => HandleValue.CompareTo(other.HandleValue);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(Handle other) => HandleValue.CompareTo(other);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(nint other) => SignedValue.CompareTo(other);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(void* other) => UnsignedValue.CompareTo((nuint)other);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator ==(HWND a, HWND b) => a.HandleValue == b.HandleValue;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator !=(HWND a, HWND b) => a.HandleValue != b.HandleValue;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <(HWND a, HWND b) => a.HandleValue < b.HandleValue;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >(HWND a, HWND b) => a.HandleValue > b.HandleValue;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <=(HWND a, HWND b) => a.HandleValue <= b.HandleValue;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >=(HWND a, HWND b) => a.HandleValue >= b.HandleValue;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator ==(HWND a, Handle b) => a.HandleValue == b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator !=(HWND a, Handle b) => a.HandleValue != b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <(HWND a, Handle b) => a.HandleValue < b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >(HWND a, Handle b) => a.HandleValue > b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <=(HWND a, Handle b) => a.HandleValue <= b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >=(HWND a, Handle b) => a.HandleValue >= b;
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator ==(HWND a, nuint b) => a.UnsignedValue == b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator !=(HWND a, nuint b) => a.UnsignedValue != b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <(HWND a, nuint b) => a.UnsignedValue < b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >(HWND a, nuint b) => a.UnsignedValue > b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <=(HWND a, nuint b) => a.UnsignedValue <= b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >=(HWND a, nuint b) => a.UnsignedValue >= b;
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator ==(HWND a, nint b) => a.SignedValue == b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator !=(HWND a, nint b) => a.SignedValue != b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <(HWND a, nint b) => a.SignedValue < b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >(HWND a, nint b) => a.SignedValue > b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <=(HWND a, nint b) => a.SignedValue <= b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >=(HWND a, nint b) => a.SignedValue >= b;
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator ==(HWND a, void* b) => a.PointerValue == b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator !=(HWND a, void* b) => a.PointerValue != b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <(HWND a, void* b) => a.PointerValue < b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >(HWND a, void* b) => a.PointerValue > b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <=(HWND a, void* b) => a.PointerValue <= b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >=(HWND a, void* b) => a.PointerValue >= b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly override int GetHashCode() => HandleValue.GetHashCode();
-
-    #endregion
-
-    #region Format and Parse
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly override string ToString() => HandleValue.ToString();
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly string ToString(string? format, IFormatProvider? provider = null) => HandleValue.ToString(format, provider);
+    public readonly string ToString(string? format, IFormatProvider? provider = null) => UnsignedValue.ToString(format, provider);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool TryFormat(Span<char> destination, scoped out int written, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
-        => HandleValue.TryFormat(destination, out written, format, provider);
+        => UnsignedValue.TryFormat(destination, out written, format, provider);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool TryFormat(Span<byte> destination, scoped out int written, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
-        => HandleValue.TryFormat(destination, out written, format, provider);
+        => UnsignedValue.TryFormat(destination, out written, format, provider);
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND Parse(string s, IFormatProvider? provider = null) => (HWND)Handle.Parse(s, provider);
+    public static HWND Parse(string s, IFormatProvider? provider = null) => (HWND)nuint.Parse(s, provider);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParse(string s, IFormatProvider? provider, scoped out HWND result)
     {
         Unsafe.SkipInit(out result);
-		return Handle.TryParse(s, provider, out Unsafe.As<HWND, Handle>(ref result));
+        return nuint.TryParse(s, provider, out Unsafe.As<HWND, nuint>(ref result));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND Parse(ReadOnlySpan<char> s, IFormatProvider? provider = null) => (HWND)Handle.Parse(s, provider);
+    public static HWND Parse(ReadOnlySpan<char> s, IFormatProvider? provider = null) => (HWND)nuint.Parse(s, provider);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, scoped out HWND result)
     {
         Unsafe.SkipInit(out result);
-		return Handle.TryParse(s, provider, out Unsafe.As<HWND, Handle>(ref result));
+        return nuint.TryParse(s, provider, out Unsafe.As<HWND, nuint>(ref result));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND Parse(ReadOnlySpan<byte> s, IFormatProvider? provider = null) => (HWND)Handle.Parse(s, provider);
+    public static HWND Parse(ReadOnlySpan<byte> s, IFormatProvider? provider = null) => (HWND)nuint.Parse(s, provider);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParse(ReadOnlySpan<byte> s, IFormatProvider? provider, scoped out HWND result)
+    public static bool TryParse(ReadOnlySpan<byte> s, IFormatProvider provider, scoped out HWND result)
     {
         Unsafe.SkipInit(out result);
-		return Handle.TryParse(s, provider, out Unsafe.As<HWND, Handle>(ref result));
+        return nuint.TryParse(s, provider, out Unsafe.As<HWND, nuint>(ref result));
     }
 
-    #endregion
+	#endregion
+#endif
 
-    #region Cast
+	#region Cast
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static explicit operator HWND(Handle @base) => new(@base);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator HWND(void* ptr) => new(ptr);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator HWND(Handle h) => new(h);
+    public static explicit operator HWND(nuint unsig) => new(unsig);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator Handle(HWND h) => h.HandleValue;
+    public static explicit operator HWND(nint sig) => new(sig);
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator HWND(nuint h) => new(h);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static implicit operator Handle(HWND self) => new(self.PointerValue);
+	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator void*(HWND h) => h.PointerValue;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator nuint(HWND h) => h.UnsignedValue;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator HWND(nint h) => new(h);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator nint(HWND h) => h.SignedValue;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator HWND(void* h) => new(h);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator void*(HWND h) => h.PointerValue;
-
-    #endregion
+	#endregion
 }
-
 /// <summary>
-/// Handle to an User32 menu
+/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over HMenu
 /// </summary>
-[
-	// --- Default attributes ---
-	StructLayout(LayoutKind.Explicit, Size = 8),
-	DebuggerDisplay("{ToString(),nq}"),
+[StructLayout(LayoutKind.Explicit, Size = 8),
+	DebuggerDisplay("{UnsignedValue.ToString(\"X16\"),nq}"),
 	DebuggerStepThrough,
-	SkipLocalsInit
-]
+	SkipLocalsInit]
 public unsafe readonly struct HMenu :
-    // --- Default contracts ---
-    IHandleTSelfContracts<HMenu>,
-    IHandleTBaseHandleContracts<HMenu, Handle>,
-    IHandleContracts<HMenu>
+	IEqualityOperators<HMenu, HMenu, bool>, IEquatable<HMenu>,
+		IEqualityOperators<HMenu, Handle, bool>, IEquatable<Handle>,
+	    IEqualityOperators<HMenu, nuint, bool>, IEquatable<nuint>,
+    IEqualityOperators<HMenu, nint, bool>, IEquatable<nint>,
+
+#if ManagedObjects
+	IComparable,
+#endif
+	IComparisonOperators<HMenu, HMenu, bool>, IComparable<HMenu>,
+		IComparisonOperators<HMenu, Handle, bool>, IComparable<Handle>,
+	    IComparisonOperators<HMenu, nuint, bool>, IComparable<nuint>,
+    IComparisonOperators<HMenu, nint, bool>, IComparable<nint>
 {
-    #region Construct
+	#region Construct
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HMenu() => HandleValue = default;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HMenu(Handle h) => HandleValue = h;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HMenu(void* ptr) => PointerValue = ptr;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HMenu(nuint unsig) => UnsignedValue = unsig;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HMenu(nint sig) => SignedValue = sig;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HMenu() => PointerValue = null;
 
-    #endregion
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HMenu(void* ptr) => PointerValue = ptr;
 
-    #region Fields
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HMenu(nuint unsig) => UnsignedValue = unsig;
 
-    [FieldOffset(0)] public readonly Handle HandleValue;
-    [FieldOffset(0)] public readonly void* PointerValue;
-    [FieldOffset(0)] public readonly nuint UnsignedValue;
-    [FieldOffset(0)] public readonly nint SignedValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HMenu(nint sig) => SignedValue = sig;
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HMenu(Handle @base) => PointerValue = @base.PointerValue;
+	
+	#endregion
 
-    #endregion
+	#region Fields
 
-    #region Math
+	[FieldOffset(0)] public readonly void* PointerValue;
 
-    public static HMenu MinValue
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (HMenu)Handle.MinValue;
-    }
+	[FieldOffset(0)] public readonly nuint UnsignedValue;
 
-    public static HMenu MaxValue
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (HMenu)Handle.MaxValue;
-    }
+	[FieldOffset(0)] public readonly nint SignedValue;
 
-    public static HMenu Zero
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (HMenu)Handle.Zero;
-    }
+	#endregion
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator <<(HMenu a, int shift) => (HMenu)(a.HandleValue << shift);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator >>(HMenu a, int shift) => (HMenu)(a.HandleValue >> shift);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator >>>(HMenu a, int shift) => (HMenu)(a.HandleValue >>> shift);
+	#region Equality
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator &(HMenu a, HMenu b) => (HMenu)(a.UnsignedValue & b.UnsignedValue);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator |(HMenu a, HMenu b) => (HMenu)(a.UnsignedValue | b.UnsignedValue);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator ^(HMenu a, HMenu b) => (HMenu)(a.UnsignedValue ^ b.UnsignedValue);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator ~(HMenu a) => (HMenu)~a.UnsignedValue;
+#if ManagedObjects
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly override bool Equals([NotNullWhen(true)] object? obj)
+	{
+		if (obj is HMenu other)
+			return this == other;
+				else if (obj is Handle @Handle)
+			return this == @Handle;
+				else if (obj is nuint unsig)
+			return this == unsig;
+		else if (obj is nint sig)
+			return this == sig;
+		else
+			return false;
+	}
+#endif
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(HMenu other) => this == other;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(Handle other) => this == other;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(nuint other) => this == other;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(nint other) => this == other;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(void* other) => this == other;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator &(HMenu a, Handle b) => (HMenu)(a.HandleValue & b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator |(HMenu a, Handle b) => (HMenu)(a.HandleValue | b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator ^(HMenu a, Handle b) => (HMenu)(a.HandleValue ^ b);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HMenu a, HMenu b) => a.PointerValue == b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HMenu a, HMenu b) => a.PointerValue != b.PointerValue;
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HMenu a, Handle b) => a.PointerValue == b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HMenu a, Handle b) => a.PointerValue != b.PointerValue;
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HMenu a, void* b) => a.PointerValue == b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HMenu a, void* b) => a.PointerValue != b;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator &(HMenu a, nuint b) => (HMenu)(a.UnsignedValue & b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator |(HMenu a, nuint b) => (HMenu)(a.UnsignedValue | b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator ^(HMenu a, nuint b) => (HMenu)(a.UnsignedValue ^ b);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HMenu a, nuint b) => a.UnsignedValue == b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HMenu a, nuint b) => a.UnsignedValue != b;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator &(HMenu a, nint b) => (HMenu)(a.SignedValue & b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator |(HMenu a, nint b) => (HMenu)(a.SignedValue | b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator ^(HMenu a, nint b) => (HMenu)(a.SignedValue ^ b);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HMenu a, nint b) => a.SignedValue == b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HMenu a, nint b) => a.SignedValue != b;
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly override int GetHashCode() => UnsignedValue.GetHashCode();
+
+	#endregion
+
+	#region Comparability
+
+#if ManagedObjects
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(object? obj)
+	{
+		if (obj is HMenu other)
+			return CompareTo(other);
+				else if (obj is Handle @Handle)
+			return CompareTo(@Handle);
+				else if (obj is nuint unsig)
+			return CompareTo(unsig);
+		else if (obj is nint sig)
+			return CompareTo(sig);
+		else
+			return 0;
+	}
+#endif
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(HMenu other) => UnsignedValue.CompareTo(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(Handle other) => UnsignedValue.CompareTo(other.UnsignedValue);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(nint other) => SignedValue.CompareTo(other);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(void* other) => UnsignedValue.CompareTo((nuint)other);
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HMenu a, HMenu b) => a.PointerValue < b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HMenu a, HMenu b) => a.PointerValue > b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HMenu a, HMenu b) => a.PointerValue <= b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HMenu a, HMenu b) => a.PointerValue >= b.PointerValue;
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HMenu a, Handle b) => a.PointerValue < b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HMenu a, Handle b) => a.PointerValue > b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HMenu a, Handle b) => a.PointerValue <= b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HMenu a, Handle b) => a.PointerValue >= b.PointerValue;
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HMenu a, void* b) => a.PointerValue < b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HMenu a, void* b) => a.PointerValue > b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HMenu a, void* b) => a.PointerValue <= b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HMenu a, void* b) => a.PointerValue >= b;
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HMenu a, nuint b) => a.UnsignedValue < b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HMenu a, nuint b) => a.UnsignedValue > b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HMenu a, nuint b) => a.UnsignedValue <= b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HMenu a, nuint b) => a.UnsignedValue >= b;
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HMenu a, nint b) => a.SignedValue < b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HMenu a, nint b) => a.SignedValue > b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HMenu a, nint b) => a.SignedValue <= b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HMenu a, nint b) => a.SignedValue >= b;
+
+	#endregion
+
+#if ManagedStrings
+	#region Format and Parse
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly override string ToString() => UnsignedValue.ToString("X16");
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator &(HMenu a, void* b) => (HMenu)(a.UnsignedValue & (nuint)b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator |(HMenu a, void* b) => (HMenu)(a.UnsignedValue | (nuint)b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu operator ^(HMenu a, void* b) => (HMenu)(a.UnsignedValue ^ (nuint)b);
-
-    #endregion
-
-	#region Equality and Comparability
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly override bool Equals([NotNullWhen(true)] object? obj)
-        => obj is HMenu other ? this == other
-                : obj is Handle h ? this == h
-                    : obj is nuint unsig ? this == unsig
-                        : obj is nint sig && this == sig;
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(HMenu other) => this == other;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(Handle other) => this == other;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(nuint other) => this == other;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(nint other) => this == other;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(void* other) => this == other;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo([NotNullWhen(true)] object? obj)
-        => obj is HMenu other ? CompareTo(other)
-                : obj is Handle h ? CompareTo(h)
-                    : obj is nuint unsig ? CompareTo(unsig)
-                        : obj is nint sig ? CompareTo(sig) : 0;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(HMenu other) => HandleValue.CompareTo(other.HandleValue);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(Handle other) => HandleValue.CompareTo(other);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(nint other) => SignedValue.CompareTo(other);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(void* other) => UnsignedValue.CompareTo((nuint)other);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator ==(HMenu a, HMenu b) => a.HandleValue == b.HandleValue;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator !=(HMenu a, HMenu b) => a.HandleValue != b.HandleValue;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <(HMenu a, HMenu b) => a.HandleValue < b.HandleValue;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >(HMenu a, HMenu b) => a.HandleValue > b.HandleValue;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <=(HMenu a, HMenu b) => a.HandleValue <= b.HandleValue;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >=(HMenu a, HMenu b) => a.HandleValue >= b.HandleValue;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator ==(HMenu a, Handle b) => a.HandleValue == b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator !=(HMenu a, Handle b) => a.HandleValue != b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <(HMenu a, Handle b) => a.HandleValue < b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >(HMenu a, Handle b) => a.HandleValue > b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <=(HMenu a, Handle b) => a.HandleValue <= b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >=(HMenu a, Handle b) => a.HandleValue >= b;
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator ==(HMenu a, nuint b) => a.UnsignedValue == b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator !=(HMenu a, nuint b) => a.UnsignedValue != b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <(HMenu a, nuint b) => a.UnsignedValue < b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >(HMenu a, nuint b) => a.UnsignedValue > b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <=(HMenu a, nuint b) => a.UnsignedValue <= b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >=(HMenu a, nuint b) => a.UnsignedValue >= b;
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator ==(HMenu a, nint b) => a.SignedValue == b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator !=(HMenu a, nint b) => a.SignedValue != b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <(HMenu a, nint b) => a.SignedValue < b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >(HMenu a, nint b) => a.SignedValue > b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <=(HMenu a, nint b) => a.SignedValue <= b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >=(HMenu a, nint b) => a.SignedValue >= b;
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator ==(HMenu a, void* b) => a.PointerValue == b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator !=(HMenu a, void* b) => a.PointerValue != b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <(HMenu a, void* b) => a.PointerValue < b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >(HMenu a, void* b) => a.PointerValue > b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <=(HMenu a, void* b) => a.PointerValue <= b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >=(HMenu a, void* b) => a.PointerValue >= b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly override int GetHashCode() => HandleValue.GetHashCode();
-
-    #endregion
-
-    #region Format and Parse
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly override string ToString() => HandleValue.ToString();
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly string ToString(string? format, IFormatProvider? provider = null) => HandleValue.ToString(format, provider);
+    public readonly string ToString(string? format, IFormatProvider? provider = null) => UnsignedValue.ToString(format, provider);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool TryFormat(Span<char> destination, scoped out int written, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
-        => HandleValue.TryFormat(destination, out written, format, provider);
+        => UnsignedValue.TryFormat(destination, out written, format, provider);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool TryFormat(Span<byte> destination, scoped out int written, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
-        => HandleValue.TryFormat(destination, out written, format, provider);
+        => UnsignedValue.TryFormat(destination, out written, format, provider);
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu Parse(string s, IFormatProvider? provider = null) => (HMenu)Handle.Parse(s, provider);
+    public static HMenu Parse(string s, IFormatProvider? provider = null) => (HMenu)nuint.Parse(s, provider);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParse(string s, IFormatProvider? provider, scoped out HMenu result)
     {
         Unsafe.SkipInit(out result);
-		return Handle.TryParse(s, provider, out Unsafe.As<HMenu, Handle>(ref result));
+        return nuint.TryParse(s, provider, out Unsafe.As<HMenu, nuint>(ref result));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu Parse(ReadOnlySpan<char> s, IFormatProvider? provider = null) => (HMenu)Handle.Parse(s, provider);
+    public static HMenu Parse(ReadOnlySpan<char> s, IFormatProvider? provider = null) => (HMenu)nuint.Parse(s, provider);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, scoped out HMenu result)
     {
         Unsafe.SkipInit(out result);
-		return Handle.TryParse(s, provider, out Unsafe.As<HMenu, Handle>(ref result));
+        return nuint.TryParse(s, provider, out Unsafe.As<HMenu, nuint>(ref result));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HMenu Parse(ReadOnlySpan<byte> s, IFormatProvider? provider = null) => (HMenu)Handle.Parse(s, provider);
+    public static HMenu Parse(ReadOnlySpan<byte> s, IFormatProvider? provider = null) => (HMenu)nuint.Parse(s, provider);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParse(ReadOnlySpan<byte> s, IFormatProvider? provider, scoped out HMenu result)
+    public static bool TryParse(ReadOnlySpan<byte> s, IFormatProvider provider, scoped out HMenu result)
     {
         Unsafe.SkipInit(out result);
-		return Handle.TryParse(s, provider, out Unsafe.As<HMenu, Handle>(ref result));
+        return nuint.TryParse(s, provider, out Unsafe.As<HMenu, nuint>(ref result));
     }
 
-    #endregion
+	#endregion
+#endif
 
-    #region Cast
+	#region Cast
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static explicit operator HMenu(Handle @base) => new(@base);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator HMenu(void* ptr) => new(ptr);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator HMenu(Handle h) => new(h);
+    public static explicit operator HMenu(nuint unsig) => new(unsig);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator Handle(HMenu h) => h.HandleValue;
+    public static explicit operator HMenu(nint sig) => new(sig);
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator HMenu(nuint h) => new(h);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static implicit operator Handle(HMenu self) => new(self.PointerValue);
+	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator void*(HMenu h) => h.PointerValue;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator nuint(HMenu h) => h.UnsignedValue;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator HMenu(nint h) => new(h);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator nint(HMenu h) => h.SignedValue;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator HMenu(void* h) => new(h);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator void*(HMenu h) => h.PointerValue;
-
-    #endregion
+	#endregion
 }
-
 /// <summary>
-/// Handle to an User32 cursor
+/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over HCursor
 /// </summary>
-[
-	// --- Default attributes ---
-	StructLayout(LayoutKind.Explicit, Size = 8),
-	DebuggerDisplay("{ToString(),nq}"),
+[StructLayout(LayoutKind.Explicit, Size = 8),
+	DebuggerDisplay("{UnsignedValue.ToString(\"X16\"),nq}"),
 	DebuggerStepThrough,
-	SkipLocalsInit
-]
+	SkipLocalsInit]
 public unsafe readonly struct HCursor :
-    // --- Default contracts ---
-    IHandleTSelfContracts<HCursor>,
-    IHandleTBaseHandleContracts<HCursor, Handle>,
-    IHandleContracts<HCursor>
+	IEqualityOperators<HCursor, HCursor, bool>, IEquatable<HCursor>,
+		IEqualityOperators<HCursor, Handle, bool>, IEquatable<Handle>,
+	    IEqualityOperators<HCursor, nuint, bool>, IEquatable<nuint>,
+    IEqualityOperators<HCursor, nint, bool>, IEquatable<nint>,
+
+#if ManagedObjects
+	IComparable,
+#endif
+	IComparisonOperators<HCursor, HCursor, bool>, IComparable<HCursor>,
+		IComparisonOperators<HCursor, Handle, bool>, IComparable<Handle>,
+	    IComparisonOperators<HCursor, nuint, bool>, IComparable<nuint>,
+    IComparisonOperators<HCursor, nint, bool>, IComparable<nint>
 {
-    #region Construct
+	#region Construct
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HCursor() => HandleValue = default;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HCursor(Handle h) => HandleValue = h;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HCursor(void* ptr) => PointerValue = ptr;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HCursor(nuint unsig) => UnsignedValue = unsig;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HCursor(nint sig) => SignedValue = sig;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HCursor() => PointerValue = null;
 
-    #endregion
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HCursor(void* ptr) => PointerValue = ptr;
 
-    #region Fields
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HCursor(nuint unsig) => UnsignedValue = unsig;
 
-    [FieldOffset(0)] public readonly Handle HandleValue;
-    [FieldOffset(0)] public readonly void* PointerValue;
-    [FieldOffset(0)] public readonly nuint UnsignedValue;
-    [FieldOffset(0)] public readonly nint SignedValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HCursor(nint sig) => SignedValue = sig;
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HCursor(Handle @base) => PointerValue = @base.PointerValue;
+	
+	#endregion
 
-    #endregion
+	#region Fields
 
-    #region Math
+	[FieldOffset(0)] public readonly void* PointerValue;
 
-    public static HCursor MinValue
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (HCursor)Handle.MinValue;
-    }
+	[FieldOffset(0)] public readonly nuint UnsignedValue;
 
-    public static HCursor MaxValue
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (HCursor)Handle.MaxValue;
-    }
+	[FieldOffset(0)] public readonly nint SignedValue;
 
-    public static HCursor Zero
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (HCursor)Handle.Zero;
-    }
+	#endregion
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator <<(HCursor a, int shift) => (HCursor)(a.HandleValue << shift);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator >>(HCursor a, int shift) => (HCursor)(a.HandleValue >> shift);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator >>>(HCursor a, int shift) => (HCursor)(a.HandleValue >>> shift);
+	#region Equality
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator &(HCursor a, HCursor b) => (HCursor)(a.UnsignedValue & b.UnsignedValue);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator |(HCursor a, HCursor b) => (HCursor)(a.UnsignedValue | b.UnsignedValue);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator ^(HCursor a, HCursor b) => (HCursor)(a.UnsignedValue ^ b.UnsignedValue);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator ~(HCursor a) => (HCursor)~a.UnsignedValue;
+#if ManagedObjects
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly override bool Equals([NotNullWhen(true)] object? obj)
+	{
+		if (obj is HCursor other)
+			return this == other;
+				else if (obj is Handle @Handle)
+			return this == @Handle;
+				else if (obj is nuint unsig)
+			return this == unsig;
+		else if (obj is nint sig)
+			return this == sig;
+		else
+			return false;
+	}
+#endif
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(HCursor other) => this == other;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(Handle other) => this == other;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(nuint other) => this == other;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(nint other) => this == other;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(void* other) => this == other;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator &(HCursor a, Handle b) => (HCursor)(a.HandleValue & b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator |(HCursor a, Handle b) => (HCursor)(a.HandleValue | b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator ^(HCursor a, Handle b) => (HCursor)(a.HandleValue ^ b);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HCursor a, HCursor b) => a.PointerValue == b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HCursor a, HCursor b) => a.PointerValue != b.PointerValue;
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HCursor a, Handle b) => a.PointerValue == b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HCursor a, Handle b) => a.PointerValue != b.PointerValue;
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HCursor a, void* b) => a.PointerValue == b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HCursor a, void* b) => a.PointerValue != b;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator &(HCursor a, nuint b) => (HCursor)(a.UnsignedValue & b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator |(HCursor a, nuint b) => (HCursor)(a.UnsignedValue | b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator ^(HCursor a, nuint b) => (HCursor)(a.UnsignedValue ^ b);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HCursor a, nuint b) => a.UnsignedValue == b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HCursor a, nuint b) => a.UnsignedValue != b;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator &(HCursor a, nint b) => (HCursor)(a.SignedValue & b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator |(HCursor a, nint b) => (HCursor)(a.SignedValue | b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator ^(HCursor a, nint b) => (HCursor)(a.SignedValue ^ b);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HCursor a, nint b) => a.SignedValue == b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HCursor a, nint b) => a.SignedValue != b;
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly override int GetHashCode() => UnsignedValue.GetHashCode();
+
+	#endregion
+
+	#region Comparability
+
+#if ManagedObjects
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(object? obj)
+	{
+		if (obj is HCursor other)
+			return CompareTo(other);
+				else if (obj is Handle @Handle)
+			return CompareTo(@Handle);
+				else if (obj is nuint unsig)
+			return CompareTo(unsig);
+		else if (obj is nint sig)
+			return CompareTo(sig);
+		else
+			return 0;
+	}
+#endif
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(HCursor other) => UnsignedValue.CompareTo(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(Handle other) => UnsignedValue.CompareTo(other.UnsignedValue);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(nint other) => SignedValue.CompareTo(other);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(void* other) => UnsignedValue.CompareTo((nuint)other);
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HCursor a, HCursor b) => a.PointerValue < b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HCursor a, HCursor b) => a.PointerValue > b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HCursor a, HCursor b) => a.PointerValue <= b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HCursor a, HCursor b) => a.PointerValue >= b.PointerValue;
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HCursor a, Handle b) => a.PointerValue < b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HCursor a, Handle b) => a.PointerValue > b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HCursor a, Handle b) => a.PointerValue <= b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HCursor a, Handle b) => a.PointerValue >= b.PointerValue;
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HCursor a, void* b) => a.PointerValue < b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HCursor a, void* b) => a.PointerValue > b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HCursor a, void* b) => a.PointerValue <= b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HCursor a, void* b) => a.PointerValue >= b;
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HCursor a, nuint b) => a.UnsignedValue < b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HCursor a, nuint b) => a.UnsignedValue > b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HCursor a, nuint b) => a.UnsignedValue <= b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HCursor a, nuint b) => a.UnsignedValue >= b;
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HCursor a, nint b) => a.SignedValue < b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HCursor a, nint b) => a.SignedValue > b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HCursor a, nint b) => a.SignedValue <= b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HCursor a, nint b) => a.SignedValue >= b;
+
+	#endregion
+
+#if ManagedStrings
+	#region Format and Parse
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly override string ToString() => UnsignedValue.ToString("X16");
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator &(HCursor a, void* b) => (HCursor)(a.UnsignedValue & (nuint)b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator |(HCursor a, void* b) => (HCursor)(a.UnsignedValue | (nuint)b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor operator ^(HCursor a, void* b) => (HCursor)(a.UnsignedValue ^ (nuint)b);
-
-    #endregion
-
-	#region Equality and Comparability
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly override bool Equals([NotNullWhen(true)] object? obj)
-        => obj is HCursor other ? this == other
-                : obj is Handle h ? this == h
-                    : obj is nuint unsig ? this == unsig
-                        : obj is nint sig && this == sig;
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(HCursor other) => this == other;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(Handle other) => this == other;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(nuint other) => this == other;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(nint other) => this == other;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(void* other) => this == other;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo([NotNullWhen(true)] object? obj)
-        => obj is HCursor other ? CompareTo(other)
-                : obj is Handle h ? CompareTo(h)
-                    : obj is nuint unsig ? CompareTo(unsig)
-                        : obj is nint sig ? CompareTo(sig) : 0;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(HCursor other) => HandleValue.CompareTo(other.HandleValue);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(Handle other) => HandleValue.CompareTo(other);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(nint other) => SignedValue.CompareTo(other);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(void* other) => UnsignedValue.CompareTo((nuint)other);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator ==(HCursor a, HCursor b) => a.HandleValue == b.HandleValue;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator !=(HCursor a, HCursor b) => a.HandleValue != b.HandleValue;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <(HCursor a, HCursor b) => a.HandleValue < b.HandleValue;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >(HCursor a, HCursor b) => a.HandleValue > b.HandleValue;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <=(HCursor a, HCursor b) => a.HandleValue <= b.HandleValue;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >=(HCursor a, HCursor b) => a.HandleValue >= b.HandleValue;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator ==(HCursor a, Handle b) => a.HandleValue == b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator !=(HCursor a, Handle b) => a.HandleValue != b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <(HCursor a, Handle b) => a.HandleValue < b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >(HCursor a, Handle b) => a.HandleValue > b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <=(HCursor a, Handle b) => a.HandleValue <= b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >=(HCursor a, Handle b) => a.HandleValue >= b;
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator ==(HCursor a, nuint b) => a.UnsignedValue == b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator !=(HCursor a, nuint b) => a.UnsignedValue != b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <(HCursor a, nuint b) => a.UnsignedValue < b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >(HCursor a, nuint b) => a.UnsignedValue > b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <=(HCursor a, nuint b) => a.UnsignedValue <= b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >=(HCursor a, nuint b) => a.UnsignedValue >= b;
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator ==(HCursor a, nint b) => a.SignedValue == b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator !=(HCursor a, nint b) => a.SignedValue != b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <(HCursor a, nint b) => a.SignedValue < b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >(HCursor a, nint b) => a.SignedValue > b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <=(HCursor a, nint b) => a.SignedValue <= b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >=(HCursor a, nint b) => a.SignedValue >= b;
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator ==(HCursor a, void* b) => a.PointerValue == b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator !=(HCursor a, void* b) => a.PointerValue != b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <(HCursor a, void* b) => a.PointerValue < b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >(HCursor a, void* b) => a.PointerValue > b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <=(HCursor a, void* b) => a.PointerValue <= b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >=(HCursor a, void* b) => a.PointerValue >= b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly override int GetHashCode() => HandleValue.GetHashCode();
-
-    #endregion
-
-    #region Format and Parse
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly override string ToString() => HandleValue.ToString();
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly string ToString(string? format, IFormatProvider? provider = null) => HandleValue.ToString(format, provider);
+    public readonly string ToString(string? format, IFormatProvider? provider = null) => UnsignedValue.ToString(format, provider);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool TryFormat(Span<char> destination, scoped out int written, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
-        => HandleValue.TryFormat(destination, out written, format, provider);
+        => UnsignedValue.TryFormat(destination, out written, format, provider);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool TryFormat(Span<byte> destination, scoped out int written, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
-        => HandleValue.TryFormat(destination, out written, format, provider);
+        => UnsignedValue.TryFormat(destination, out written, format, provider);
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor Parse(string s, IFormatProvider? provider = null) => (HCursor)Handle.Parse(s, provider);
+    public static HCursor Parse(string s, IFormatProvider? provider = null) => (HCursor)nuint.Parse(s, provider);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParse(string s, IFormatProvider? provider, scoped out HCursor result)
     {
         Unsafe.SkipInit(out result);
-		return Handle.TryParse(s, provider, out Unsafe.As<HCursor, Handle>(ref result));
+        return nuint.TryParse(s, provider, out Unsafe.As<HCursor, nuint>(ref result));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor Parse(ReadOnlySpan<char> s, IFormatProvider? provider = null) => (HCursor)Handle.Parse(s, provider);
+    public static HCursor Parse(ReadOnlySpan<char> s, IFormatProvider? provider = null) => (HCursor)nuint.Parse(s, provider);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, scoped out HCursor result)
     {
         Unsafe.SkipInit(out result);
-		return Handle.TryParse(s, provider, out Unsafe.As<HCursor, Handle>(ref result));
+        return nuint.TryParse(s, provider, out Unsafe.As<HCursor, nuint>(ref result));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HCursor Parse(ReadOnlySpan<byte> s, IFormatProvider? provider = null) => (HCursor)Handle.Parse(s, provider);
+    public static HCursor Parse(ReadOnlySpan<byte> s, IFormatProvider? provider = null) => (HCursor)nuint.Parse(s, provider);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParse(ReadOnlySpan<byte> s, IFormatProvider? provider, scoped out HCursor result)
+    public static bool TryParse(ReadOnlySpan<byte> s, IFormatProvider provider, scoped out HCursor result)
     {
         Unsafe.SkipInit(out result);
-		return Handle.TryParse(s, provider, out Unsafe.As<HCursor, Handle>(ref result));
+        return nuint.TryParse(s, provider, out Unsafe.As<HCursor, nuint>(ref result));
     }
 
-    #endregion
+	#endregion
+#endif
 
-    #region Cast
+	#region Cast
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static explicit operator HCursor(Handle @base) => new(@base);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator HCursor(void* ptr) => new(ptr);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator HCursor(Handle h) => new(h);
+    public static explicit operator HCursor(nuint unsig) => new(unsig);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator Handle(HCursor h) => h.HandleValue;
+    public static explicit operator HCursor(nint sig) => new(sig);
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator HCursor(nuint h) => new(h);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static implicit operator Handle(HCursor self) => new(self.PointerValue);
+	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator void*(HCursor h) => h.PointerValue;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator nuint(HCursor h) => h.UnsignedValue;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator HCursor(nint h) => new(h);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator nint(HCursor h) => h.SignedValue;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator HCursor(void* h) => new(h);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator void*(HCursor h) => h.PointerValue;
-
-    #endregion
+	#endregion
 }
-
 /// <summary>
-/// Handle to an User32 icon
+/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over HIcon
 /// </summary>
-[
-	// --- Default attributes ---
-	StructLayout(LayoutKind.Explicit, Size = 8),
-	DebuggerDisplay("{ToString(),nq}"),
+[StructLayout(LayoutKind.Explicit, Size = 8),
+	DebuggerDisplay("{UnsignedValue.ToString(\"X16\"),nq}"),
 	DebuggerStepThrough,
-	SkipLocalsInit
-]
+	SkipLocalsInit]
 public unsafe readonly struct HIcon :
-    // --- Default contracts ---
-    IHandleTSelfContracts<HIcon>,
-    IHandleTBaseHandleContracts<HIcon, Handle>,
-    IHandleContracts<HIcon>
+	IEqualityOperators<HIcon, HIcon, bool>, IEquatable<HIcon>,
+		IEqualityOperators<HIcon, Handle, bool>, IEquatable<Handle>,
+	    IEqualityOperators<HIcon, nuint, bool>, IEquatable<nuint>,
+    IEqualityOperators<HIcon, nint, bool>, IEquatable<nint>,
+
+#if ManagedObjects
+	IComparable,
+#endif
+	IComparisonOperators<HIcon, HIcon, bool>, IComparable<HIcon>,
+		IComparisonOperators<HIcon, Handle, bool>, IComparable<Handle>,
+	    IComparisonOperators<HIcon, nuint, bool>, IComparable<nuint>,
+    IComparisonOperators<HIcon, nint, bool>, IComparable<nint>
 {
-    #region Construct
+	#region Construct
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HIcon() => HandleValue = default;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HIcon(Handle h) => HandleValue = h;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HIcon(void* ptr) => PointerValue = ptr;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HIcon(nuint unsig) => UnsignedValue = unsig;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HIcon(nint sig) => SignedValue = sig;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HIcon() => PointerValue = null;
 
-    #endregion
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HIcon(void* ptr) => PointerValue = ptr;
 
-    #region Fields
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HIcon(nuint unsig) => UnsignedValue = unsig;
 
-    [FieldOffset(0)] public readonly Handle HandleValue;
-    [FieldOffset(0)] public readonly void* PointerValue;
-    [FieldOffset(0)] public readonly nuint UnsignedValue;
-    [FieldOffset(0)] public readonly nint SignedValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HIcon(nint sig) => SignedValue = sig;
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public HIcon(Handle @base) => PointerValue = @base.PointerValue;
+	
+	#endregion
 
-    #endregion
+	#region Fields
 
-    #region Math
+	[FieldOffset(0)] public readonly void* PointerValue;
 
-    public static HIcon MinValue
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (HIcon)Handle.MinValue;
-    }
+	[FieldOffset(0)] public readonly nuint UnsignedValue;
 
-    public static HIcon MaxValue
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (HIcon)Handle.MaxValue;
-    }
+	[FieldOffset(0)] public readonly nint SignedValue;
 
-    public static HIcon Zero
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (HIcon)Handle.Zero;
-    }
+	#endregion
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator <<(HIcon a, int shift) => (HIcon)(a.HandleValue << shift);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator >>(HIcon a, int shift) => (HIcon)(a.HandleValue >> shift);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator >>>(HIcon a, int shift) => (HIcon)(a.HandleValue >>> shift);
+	#region Equality
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator &(HIcon a, HIcon b) => (HIcon)(a.UnsignedValue & b.UnsignedValue);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator |(HIcon a, HIcon b) => (HIcon)(a.UnsignedValue | b.UnsignedValue);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator ^(HIcon a, HIcon b) => (HIcon)(a.UnsignedValue ^ b.UnsignedValue);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator ~(HIcon a) => (HIcon)~a.UnsignedValue;
+#if ManagedObjects
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly override bool Equals([NotNullWhen(true)] object? obj)
+	{
+		if (obj is HIcon other)
+			return this == other;
+				else if (obj is Handle @Handle)
+			return this == @Handle;
+				else if (obj is nuint unsig)
+			return this == unsig;
+		else if (obj is nint sig)
+			return this == sig;
+		else
+			return false;
+	}
+#endif
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(HIcon other) => this == other;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(Handle other) => this == other;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(nuint other) => this == other;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(nint other) => this == other;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(void* other) => this == other;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator &(HIcon a, Handle b) => (HIcon)(a.HandleValue & b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator |(HIcon a, Handle b) => (HIcon)(a.HandleValue | b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator ^(HIcon a, Handle b) => (HIcon)(a.HandleValue ^ b);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HIcon a, HIcon b) => a.PointerValue == b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HIcon a, HIcon b) => a.PointerValue != b.PointerValue;
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HIcon a, Handle b) => a.PointerValue == b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HIcon a, Handle b) => a.PointerValue != b.PointerValue;
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HIcon a, void* b) => a.PointerValue == b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HIcon a, void* b) => a.PointerValue != b;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator &(HIcon a, nuint b) => (HIcon)(a.UnsignedValue & b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator |(HIcon a, nuint b) => (HIcon)(a.UnsignedValue | b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator ^(HIcon a, nuint b) => (HIcon)(a.UnsignedValue ^ b);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HIcon a, nuint b) => a.UnsignedValue == b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HIcon a, nuint b) => a.UnsignedValue != b;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator &(HIcon a, nint b) => (HIcon)(a.SignedValue & b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator |(HIcon a, nint b) => (HIcon)(a.SignedValue | b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator ^(HIcon a, nint b) => (HIcon)(a.SignedValue ^ b);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(HIcon a, nint b) => a.SignedValue == b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(HIcon a, nint b) => a.SignedValue != b;
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly override int GetHashCode() => UnsignedValue.GetHashCode();
+
+	#endregion
+
+	#region Comparability
+
+#if ManagedObjects
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(object? obj)
+	{
+		if (obj is HIcon other)
+			return CompareTo(other);
+				else if (obj is Handle @Handle)
+			return CompareTo(@Handle);
+				else if (obj is nuint unsig)
+			return CompareTo(unsig);
+		else if (obj is nint sig)
+			return CompareTo(sig);
+		else
+			return 0;
+	}
+#endif
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(HIcon other) => UnsignedValue.CompareTo(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(Handle other) => UnsignedValue.CompareTo(other.UnsignedValue);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(nint other) => SignedValue.CompareTo(other);
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly int CompareTo(void* other) => UnsignedValue.CompareTo((nuint)other);
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HIcon a, HIcon b) => a.PointerValue < b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HIcon a, HIcon b) => a.PointerValue > b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HIcon a, HIcon b) => a.PointerValue <= b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HIcon a, HIcon b) => a.PointerValue >= b.PointerValue;
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HIcon a, Handle b) => a.PointerValue < b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HIcon a, Handle b) => a.PointerValue > b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HIcon a, Handle b) => a.PointerValue <= b.PointerValue;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HIcon a, Handle b) => a.PointerValue >= b.PointerValue;
+	
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HIcon a, void* b) => a.PointerValue < b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HIcon a, void* b) => a.PointerValue > b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HIcon a, void* b) => a.PointerValue <= b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HIcon a, void* b) => a.PointerValue >= b;
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HIcon a, nuint b) => a.UnsignedValue < b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HIcon a, nuint b) => a.UnsignedValue > b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HIcon a, nuint b) => a.UnsignedValue <= b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HIcon a, nuint b) => a.UnsignedValue >= b;
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <(HIcon a, nint b) => a.SignedValue < b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >(HIcon a, nint b) => a.SignedValue > b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator <=(HIcon a, nint b) => a.SignedValue <= b;
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator >=(HIcon a, nint b) => a.SignedValue >= b;
+
+	#endregion
+
+#if ManagedStrings
+	#region Format and Parse
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly override string ToString() => UnsignedValue.ToString("X16");
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator &(HIcon a, void* b) => (HIcon)(a.UnsignedValue & (nuint)b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator |(HIcon a, void* b) => (HIcon)(a.UnsignedValue | (nuint)b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon operator ^(HIcon a, void* b) => (HIcon)(a.UnsignedValue ^ (nuint)b);
-
-    #endregion
-
-	#region Equality and Comparability
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly override bool Equals([NotNullWhen(true)] object? obj)
-        => obj is HIcon other ? this == other
-                : obj is Handle h ? this == h
-                    : obj is nuint unsig ? this == unsig
-                        : obj is nint sig && this == sig;
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(HIcon other) => this == other;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(Handle other) => this == other;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(nuint other) => this == other;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(nint other) => this == other;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(void* other) => this == other;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo([NotNullWhen(true)] object? obj)
-        => obj is HIcon other ? CompareTo(other)
-                : obj is Handle h ? CompareTo(h)
-                    : obj is nuint unsig ? CompareTo(unsig)
-                        : obj is nint sig ? CompareTo(sig) : 0;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(HIcon other) => HandleValue.CompareTo(other.HandleValue);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(Handle other) => HandleValue.CompareTo(other);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(nint other) => SignedValue.CompareTo(other);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(void* other) => UnsignedValue.CompareTo((nuint)other);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator ==(HIcon a, HIcon b) => a.HandleValue == b.HandleValue;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator !=(HIcon a, HIcon b) => a.HandleValue != b.HandleValue;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <(HIcon a, HIcon b) => a.HandleValue < b.HandleValue;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >(HIcon a, HIcon b) => a.HandleValue > b.HandleValue;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <=(HIcon a, HIcon b) => a.HandleValue <= b.HandleValue;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >=(HIcon a, HIcon b) => a.HandleValue >= b.HandleValue;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator ==(HIcon a, Handle b) => a.HandleValue == b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator !=(HIcon a, Handle b) => a.HandleValue != b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <(HIcon a, Handle b) => a.HandleValue < b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >(HIcon a, Handle b) => a.HandleValue > b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <=(HIcon a, Handle b) => a.HandleValue <= b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >=(HIcon a, Handle b) => a.HandleValue >= b;
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator ==(HIcon a, nuint b) => a.UnsignedValue == b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator !=(HIcon a, nuint b) => a.UnsignedValue != b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <(HIcon a, nuint b) => a.UnsignedValue < b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >(HIcon a, nuint b) => a.UnsignedValue > b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <=(HIcon a, nuint b) => a.UnsignedValue <= b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >=(HIcon a, nuint b) => a.UnsignedValue >= b;
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator ==(HIcon a, nint b) => a.SignedValue == b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator !=(HIcon a, nint b) => a.SignedValue != b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <(HIcon a, nint b) => a.SignedValue < b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >(HIcon a, nint b) => a.SignedValue > b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <=(HIcon a, nint b) => a.SignedValue <= b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >=(HIcon a, nint b) => a.SignedValue >= b;
-
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator ==(HIcon a, void* b) => a.PointerValue == b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator !=(HIcon a, void* b) => a.PointerValue != b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <(HIcon a, void* b) => a.PointerValue < b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >(HIcon a, void* b) => a.PointerValue > b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator <=(HIcon a, void* b) => a.PointerValue <= b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]public static bool operator >=(HIcon a, void* b) => a.PointerValue >= b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly override int GetHashCode() => HandleValue.GetHashCode();
-
-    #endregion
-
-    #region Format and Parse
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly override string ToString() => HandleValue.ToString();
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly string ToString(string? format, IFormatProvider? provider = null) => HandleValue.ToString(format, provider);
+    public readonly string ToString(string? format, IFormatProvider? provider = null) => UnsignedValue.ToString(format, provider);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool TryFormat(Span<char> destination, scoped out int written, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
-        => HandleValue.TryFormat(destination, out written, format, provider);
+        => UnsignedValue.TryFormat(destination, out written, format, provider);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool TryFormat(Span<byte> destination, scoped out int written, ReadOnlySpan<char> format = default, IFormatProvider? provider = null)
-        => HandleValue.TryFormat(destination, out written, format, provider);
+        => UnsignedValue.TryFormat(destination, out written, format, provider);
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon Parse(string s, IFormatProvider? provider = null) => (HIcon)Handle.Parse(s, provider);
+    public static HIcon Parse(string s, IFormatProvider? provider = null) => (HIcon)nuint.Parse(s, provider);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParse(string s, IFormatProvider? provider, scoped out HIcon result)
     {
         Unsafe.SkipInit(out result);
-		return Handle.TryParse(s, provider, out Unsafe.As<HIcon, Handle>(ref result));
+        return nuint.TryParse(s, provider, out Unsafe.As<HIcon, nuint>(ref result));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon Parse(ReadOnlySpan<char> s, IFormatProvider? provider = null) => (HIcon)Handle.Parse(s, provider);
+    public static HIcon Parse(ReadOnlySpan<char> s, IFormatProvider? provider = null) => (HIcon)nuint.Parse(s, provider);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, scoped out HIcon result)
     {
         Unsafe.SkipInit(out result);
-		return Handle.TryParse(s, provider, out Unsafe.As<HIcon, Handle>(ref result));
+        return nuint.TryParse(s, provider, out Unsafe.As<HIcon, nuint>(ref result));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HIcon Parse(ReadOnlySpan<byte> s, IFormatProvider? provider = null) => (HIcon)Handle.Parse(s, provider);
+    public static HIcon Parse(ReadOnlySpan<byte> s, IFormatProvider? provider = null) => (HIcon)nuint.Parse(s, provider);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParse(ReadOnlySpan<byte> s, IFormatProvider? provider, scoped out HIcon result)
+    public static bool TryParse(ReadOnlySpan<byte> s, IFormatProvider provider, scoped out HIcon result)
     {
         Unsafe.SkipInit(out result);
-		return Handle.TryParse(s, provider, out Unsafe.As<HIcon, Handle>(ref result));
+        return nuint.TryParse(s, provider, out Unsafe.As<HIcon, nuint>(ref result));
     }
 
-    #endregion
+	#endregion
+#endif
 
-    #region Cast
+	#region Cast
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static explicit operator HIcon(Handle @base) => new(@base);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator HIcon(void* ptr) => new(ptr);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator HIcon(Handle h) => new(h);
+    public static explicit operator HIcon(nuint unsig) => new(unsig);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator Handle(HIcon h) => h.HandleValue;
+    public static explicit operator HIcon(nint sig) => new(sig);
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator HIcon(nuint h) => new(h);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static implicit operator Handle(HIcon self) => new(self.PointerValue);
+	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator void*(HIcon h) => h.PointerValue;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator nuint(HIcon h) => h.UnsignedValue;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator HIcon(nint h) => new(h);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator nint(HIcon h) => h.SignedValue;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator HIcon(void* h) => new(h);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator void*(HIcon h) => h.PointerValue;
-
-    #endregion
+	#endregion
 }
 
 #nullable restore

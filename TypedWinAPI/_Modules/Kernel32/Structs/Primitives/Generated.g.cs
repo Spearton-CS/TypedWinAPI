@@ -4,9 +4,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TypedWinAPI.Contracts;
-using TypedWinAPI.Contracts.Struct;
-using TypedWinAPI.Contracts.Ptr;
 // --- Custom usings ---
 using System.Numerics;
 
@@ -24,9 +21,7 @@ namespace TypedWinAPI.Kernel32;
 public readonly unsafe struct DeviceIoControlCode()  :
 	// --- Custom contracts ---
 	IEqualityOperators<DeviceIoControlCode, uint, bool>,
-	IEquatable<uint>,
-	IExplicitCast<DeviceIoControlCode, uint>,
-    IReadOnlyStructContracts<DeviceIoControlCode>
+	IEquatable<uint>
 {
     #region IReadOnlyStructContracts
 

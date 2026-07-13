@@ -3,8 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-using TypedWinAPI.Contracts;
-
 namespace TypedWinAPI;
 
 /// <summary>
@@ -16,8 +14,7 @@ namespace TypedWinAPI;
     DebuggerStepThrough,
     SkipLocalsInit
 ]
-public unsafe readonly struct Handle16 :
-    IHandle16TSelfContracts<Handle16>, IHandle16Contracts<Handle16>
+public unsafe readonly struct Handle16
 {
     #region Construct
 

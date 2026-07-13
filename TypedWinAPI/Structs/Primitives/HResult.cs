@@ -3,8 +3,6 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-using TypedWinAPI.Contracts;
-
 namespace TypedWinAPI;
 
 [
@@ -13,8 +11,7 @@ namespace TypedWinAPI;
 ]
 public readonly record struct HResult([field: FieldOffset(0)] int Raw) :
     IEqualityOperators<HResult, HResult, bool>, IEquatable<HResult>,
-    IEqualityOperators<HResult, int, bool>, IEquatable<int>,
-    IExplicitCast<HResult, int>
+    IEqualityOperators<HResult, int, bool>, IEquatable<int>
 {
     #region Consts
 

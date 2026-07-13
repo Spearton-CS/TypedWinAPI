@@ -5,8 +5,6 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-using TypedWinAPI.Contracts;
-
 namespace TypedWinAPI;
 
 /// <summary>
@@ -25,10 +23,7 @@ public readonly struct Bool4 :
     IEqualityOperators<Bool4, Bool4, bool>, IEquatable<Bool4>,
     IEqualityOperators<Bool4, bool, bool>, IEquatable<bool>,
     IFormattable, ISpanFormattable, IUtf8SpanFormattable,
-    IParsable<Bool4>, ISpanParsable<Bool4>, IUtf8SpanParsable<Bool4>,
-
-    IImplicitCast<Bool4, bool>,
-    IExplicitCast<Bool4, uint>, IExplicitCast<Bool4, int>
+    IParsable<Bool4>, ISpanParsable<Bool4>, IUtf8SpanParsable<Bool4>
 {
     #region Construction
 

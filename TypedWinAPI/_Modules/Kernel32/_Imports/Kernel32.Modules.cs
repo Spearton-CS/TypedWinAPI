@@ -12,6 +12,7 @@ unsafe partial class Kernel32
     /// <returns>A <see cref="Handle"/> to the module, or a null handle if the function fails.</returns>
     [LibraryImport(DLL, SetLastError = true)]
     public static partial HInstance GetModuleHandleW(char* lpModuleName);
+#if ManagedStrings
     /// <summary>
     /// Retrieves a module handle for the specified module using a managed string.
     /// </summary>
@@ -19,6 +20,7 @@ unsafe partial class Kernel32
     /// <returns>A <see cref="Handle"/> to the module.</returns>
     [LibraryImport(DLL, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
     public static partial HInstance GetModuleHandleW(string lpModuleName);
+#endif
 
     /// <summary>
     /// Retrieves the module handle for the current process.

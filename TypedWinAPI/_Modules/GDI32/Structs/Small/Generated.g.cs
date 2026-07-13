@@ -4,9 +4,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TypedWinAPI.Contracts;
-using TypedWinAPI.Contracts.Struct;
-using TypedWinAPI.Contracts.Ptr;
 
 namespace TypedWinAPI.GDI32;
 
@@ -19,8 +16,7 @@ namespace TypedWinAPI.GDI32;
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 32)
 ]
-public unsafe struct Bitmap :
-    IStructContracts<Bitmap>
+public unsafe struct Bitmap
 {
     #region IReadOnlyStructContracts
 

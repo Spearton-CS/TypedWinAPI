@@ -1,32 +1,47 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-
-using TypedWinAPI.Contracts;
 
 namespace TypedWinAPI;
 
 /// <summary>
-/// Struct over <see cref="nuint"/> or <see cref="nint"/> or <see cref="void"/>*. Abstraction over every Handle.
+/// Struct over <see cref="nuint"/> or <see cref="nint"/> or <see langword="void"/>*. Abstraction over every Handle.
 /// </summary>
-[
-    StructLayout(LayoutKind.Explicit, Size = 8),
+[StructLayout(LayoutKind.Explicit, Size = 8),
     DebuggerDisplay("{UnsignedValue.ToString(\"X16\"),nq}"),
     DebuggerStepThrough,
-    SkipLocalsInit
-]
+    SkipLocalsInit]
 public unsafe readonly struct Handle :
-    IHandleTSelfContracts<Handle>, IHandleContracts<Handle>
+    IEqualityOperators<Handle, Handle, bool>, IEquatable<Handle>,
+    IEqualityOperators<Handle, nuint, bool>, IEquatable<nuint>,
+    IEqualityOperators<Handle, nint, bool>, IEquatable<nint>,
+
+#if ManagedObjects
+    IComparable,
+#endif
+    IComparisonOperators<Handle, Handle, bool>, IComparable<Handle>,
+    IComparisonOperators<Handle, nuint, bool>, IComparable<nuint>,
+    IComparisonOperators<Handle, nint, bool>, IComparable<nint>,
+
+    IMinMaxValue<Handle>,
+    IShiftOperators<Handle, int, Handle>,
+    IBitwiseOperators<Handle, Handle, Handle>,
+    IBitwiseOperators<Handle, nuint, Handle>,
+    IBitwiseOperators<Handle, nint, Handle>
 {
     #region Construct
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Handle() => PointerValue = null;
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Handle(void* ptr) => PointerValue = ptr;
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Handle(nuint unsig) => UnsignedValue = unsig;
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Handle(nint sig) => SignedValue = sig;
 
@@ -35,7 +50,9 @@ public unsafe readonly struct Handle :
     #region Fields
 
     [FieldOffset(0)] public readonly void* PointerValue;
+
     [FieldOffset(0)] public readonly nuint UnsignedValue;
+
     [FieldOffset(0)] public readonly nint SignedValue;
 
     #endregion
@@ -100,11 +117,13 @@ public unsafe readonly struct Handle :
 
     #region Equality
 
+#if ManagedObjects
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly override bool Equals([NotNullWhen(true)] object? obj)
         => obj is Handle h ? this == h
             : obj is nuint unsig ? this == unsig
                 : obj is nint sig && this == sig;
+#endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool Equals(Handle other) => this == other;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -141,12 +160,14 @@ public unsafe readonly struct Handle :
 
     #region Comparability
 
+#if ManagedObjects
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly int CompareTo(object? obj)
         => obj is Handle h ? CompareTo(h)
             : obj is nuint unsig ? CompareTo(unsig)
                 : obj is nint sig ? CompareTo(sig)
                     : 0;
+#endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly int CompareTo(Handle other) => UnsignedValue.CompareTo(other.UnsignedValue);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -194,6 +215,7 @@ public unsafe readonly struct Handle :
 
     #endregion
 
+#if ManagedStrings
     #region Format and Parse
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -236,6 +258,7 @@ public unsafe readonly struct Handle :
     }
 
     #endregion
+#endif
 
     #region Cast
 

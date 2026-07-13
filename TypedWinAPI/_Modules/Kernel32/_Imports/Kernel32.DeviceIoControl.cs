@@ -3,11 +3,11 @@ using System.Runtime.InteropServices;
 
 namespace TypedWinAPI.Kernel32;
 
-unsafe partial class KernelDeviceIoControl
+unsafe partial class Kernel32
 {
     #region Common
 
-    [LibraryImport(Kernel32.DLL, SetLastError = true)]
+    [LibraryImport(DLL, SetLastError = true)]
     public static partial Bool4 DeviceIoControl(
         HDevice hDevice, DeviceIoControlCode dwIoControlCode,
         void* lpInBuffer, uint nInBufferSize,

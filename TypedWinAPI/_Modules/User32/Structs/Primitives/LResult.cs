@@ -3,19 +3,15 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-using TypedWinAPI.Contracts;
-using TypedWinAPI.Contracts.Ptr;
-
 namespace TypedWinAPI.User32;
 
 [StructLayout(LayoutKind.Explicit, Size = 8)]
 public unsafe readonly struct LResult :
     IEqualityOperators<LResult, LResult, bool>, IEquatable<LResult>,
-    IEqualityOperators<LResult, Handle, bool>, IEquatable<Handle>, IExplicitCast<LResult, Handle>,
-    IEqualityOperators<LResult, Handle16, bool>, IEquatable<Handle16>, IExplicitCast<LResult, Handle16>,
-    IEqualityOperators<LResult, nint, bool>, IEquatable<nint>, IExplicitCast<LResult, nint>,
-    IEqualityOperators<LResult, nuint, bool>, IEquatable<nuint>, IExplicitCast<LResult, nuint>,
-    IPtrEqualityOperators<LResult, bool>, IPtrEquatable, IPtrExplicitCast<LResult>
+    IEqualityOperators<LResult, Handle, bool>, IEquatable<Handle>,
+    IEqualityOperators<LResult, Handle16, bool>, IEquatable<Handle16>,
+    IEqualityOperators<LResult, nint, bool>, IEquatable<nint>,
+    IEqualityOperators<LResult, nuint, bool>, IEquatable<nuint>
 {
     public static LResult Zero
     {

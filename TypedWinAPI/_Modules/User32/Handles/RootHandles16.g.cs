@@ -4,8 +4,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TypedWinAPI.Contracts;
-using TypedWinAPI.Contracts.Ptr;
 
 namespace TypedWinAPI.User32;
 
@@ -19,11 +17,7 @@ namespace TypedWinAPI.User32;
 	DebuggerStepThrough,
 	SkipLocalsInit
 ]
-public unsafe readonly struct ATOM :
-    // --- Default contracts ---
-    IHandle16TSelfContracts<ATOM>,
-    IHandle16TBaseHandle16Contracts<ATOM, Handle16>,
-    IHandle16Contracts<ATOM>
+public unsafe readonly struct ATOM
 {
     #region Construct
 

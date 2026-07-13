@@ -4,9 +4,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TypedWinAPI.Contracts;
-using TypedWinAPI.Contracts.Struct;
-using TypedWinAPI.Contracts.Ptr;
 // --- Custom usings ---
 using System.Numerics;
 
@@ -25,15 +22,10 @@ public readonly unsafe struct RectF :
 	// --- Custom contracts ---
 	IEqualityOperators<RectF, User32.Rect, bool>,
 	IEquatable<User32.Rect>,
-	IImplicitCastFrom<RectF, User32.Rect>,
-	IExplicitCastTo<RectF, User32.Rect>,
 	IEqualityOperators<RectF, (float X, float Y, float Width, float Height), bool>,
 	IEquatable<(float X, float Y, float Width, float Height)>,
-	IExplicitCast<RectF, (float X, float Y, float Width, float Height)>,
 	IEqualityOperators<RectF, (int X, int Y, int Width, int Height), bool>,
-	IEquatable<(int X, int Y, int Width, int Height)>,
-	IExplicitCast<RectF, (int X, int Y, int Width, int Height)>,
-    IReadOnlyStructContracts<RectF>
+	IEquatable<(int X, int Y, int Width, int Height)>
 {
     #region IReadOnlyStructContracts
 
@@ -340,8 +332,7 @@ public readonly unsafe struct RectF :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 24)
 ]
-public unsafe struct StartupInput()  :
-    IStructContracts<StartupInput>
+public unsafe struct StartupInput()
 {
     #region IReadOnlyStructContracts
 
@@ -441,8 +432,7 @@ public unsafe struct StartupInput()  :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 16)
 ]
-public unsafe struct StartupOutput()  :
-    IStructContracts<StartupOutput>
+public unsafe struct StartupOutput()
 {
     #region IReadOnlyStructContracts
 

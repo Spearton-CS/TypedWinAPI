@@ -3,19 +3,15 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-using TypedWinAPI.Contracts;
-using TypedWinAPI.Contracts.Ptr;
-
 namespace TypedWinAPI.User32;
 
 [StructLayout(LayoutKind.Explicit, Size = 8)]
 public unsafe readonly struct LParam :
     IEqualityOperators<LParam, LParam, bool>, IEquatable<LParam>,
-    IEqualityOperators<LParam, Handle, bool>, IEquatable<Handle>, IExplicitCast<LParam, Handle>,
-    IEqualityOperators<LParam, Handle16, bool>, IEquatable<Handle16>, IExplicitCast<LParam, Handle16>,
-    IEqualityOperators<LParam, nint, bool>, IEquatable<nint>, IExplicitCast<LParam, nint>,
-    IEqualityOperators<LParam, nuint, bool>, IEquatable<nuint>, IExplicitCast<LParam, nuint>,
-    IPtrEqualityOperators<LParam, bool>, IPtrEquatable, IPtrExplicitCast<LParam>
+    IEqualityOperators<LParam, Handle, bool>, IEquatable<Handle>,
+    IEqualityOperators<LParam, Handle16, bool>, IEquatable<Handle16>,
+    IEqualityOperators<LParam, nint, bool>, IEquatable<nint>,
+    IEqualityOperators<LParam, nuint, bool>, IEquatable<nuint>
 {
     public static LParam Zero
     {

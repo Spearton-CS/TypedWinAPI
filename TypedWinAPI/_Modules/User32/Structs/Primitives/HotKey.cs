@@ -2,14 +2,12 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-using TypedWinAPI.Contracts;
-
 namespace TypedWinAPI.User32;
 
 [StructLayout(LayoutKind.Explicit, Size = 4)]
 public readonly struct HotKey
     : IEqualityOperators<HotKey, HotKey, bool>, IEquatable<HotKey>,
-        IEqualityOperators<HotKey, uint, bool>, IEquatable<uint>, IExplicitCast<HotKey, uint>
+        IEqualityOperators<HotKey, uint, bool>, IEquatable<uint>
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HotKey(uint raw) => Raw = raw;

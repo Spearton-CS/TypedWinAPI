@@ -4,9 +4,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TypedWinAPI.Contracts;
-using TypedWinAPI.Contracts.Struct;
-using TypedWinAPI.Contracts.Ptr;
 
 namespace TypedWinAPI.Kernel32;
 
@@ -19,8 +16,7 @@ namespace TypedWinAPI.Kernel32;
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 20)
 ]
-public unsafe struct DiskFormatParameters :
-    IStructContracts<DiskFormatParameters>
+public unsafe struct DiskFormatParameters
 {
     #region IReadOnlyStructContracts
 
@@ -128,8 +124,7 @@ public unsafe struct DiskFormatParameters :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 24)
 ]
-public unsafe struct DiskGeometry :
-    IStructContracts<DiskGeometry>
+public unsafe struct DiskGeometry
 {
     #region IReadOnlyStructContracts
 
@@ -237,8 +232,7 @@ public unsafe struct DiskGeometry :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 32)
 ]
-public unsafe struct DiskGeometryEx :
-    IStructContracts<DiskGeometryEx>
+public unsafe struct DiskGeometryEx
 {
     #region IReadOnlyStructContracts
 
@@ -322,8 +316,7 @@ public unsafe struct DiskGeometryEx :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 16)
 ]
-public unsafe struct FsFileZeroDataInformation :
-    IStructContracts<FsFileZeroDataInformation>
+public unsafe struct FsFileZeroDataInformation
 {
     #region IReadOnlyStructContracts
 
@@ -407,8 +400,7 @@ public unsafe struct FsFileZeroDataInformation :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 32)
 ]
-public unsafe struct FsMoveFileParams :
-    IStructContracts<FsMoveFileParams>
+public unsafe struct FsMoveFileParams
 {
     #region IReadOnlyStructContracts
 
@@ -508,8 +500,7 @@ public unsafe struct FsMoveFileParams :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 16)
 ]
-public unsafe struct FsReparseDataBuffer :
-    IStructContracts<FsReparseDataBuffer>
+public unsafe struct FsReparseDataBuffer
 {
     #region IReadOnlyStructContracts
 
@@ -643,8 +634,7 @@ public unsafe struct FsReparseDataBuffer :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 8)
 ]
-public unsafe struct FsReparseDataBufferHeader :
-    IStructContracts<FsReparseDataBufferHeader>
+public unsafe struct FsReparseDataBufferHeader
 {
     #region IReadOnlyStructContracts
 
@@ -722,8 +712,7 @@ public unsafe struct FsReparseDataBufferHeader :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 24)
 ]
-public unsafe struct MountMgrMountPoint :
-    IStructContracts<MountMgrMountPoint>
+public unsafe struct MountMgrMountPoint
 {
     #region IReadOnlyStructContracts
 
@@ -834,8 +823,7 @@ public unsafe struct MountMgrMountPoint :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 32)
 ]
-public unsafe struct PartitionInformation :
-    IStructContracts<PartitionInformation>
+public unsafe struct PartitionInformation
 {
     #region IReadOnlyStructContracts
 
@@ -967,8 +955,7 @@ public unsafe struct PartitionInformation :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 12)
 ]
-public unsafe struct StorageDeviceNumber :
-    IStructContracts<StorageDeviceNumber>
+public unsafe struct StorageDeviceNumber
 {
     #region IReadOnlyStructContracts
 
@@ -1060,8 +1047,7 @@ public unsafe struct StorageDeviceNumber :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 8)
 ]
-public unsafe struct StorageHotplugInfo()  :
-    IStructContracts<StorageHotplugInfo>
+public unsafe struct StorageHotplugInfo()
 {
     #region IReadOnlyStructContracts
 
@@ -1169,8 +1155,7 @@ public unsafe struct StorageHotplugInfo()  :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 12)
 ]
-public unsafe struct StoragePropertyQuery :
-    IStructContracts<StoragePropertyQuery>
+public unsafe struct StoragePropertyQuery
 {
     #region IReadOnlyStructContracts
 

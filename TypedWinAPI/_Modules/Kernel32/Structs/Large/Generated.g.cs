@@ -4,9 +4,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TypedWinAPI.Contracts;
-using TypedWinAPI.Contracts.Struct;
-using TypedWinAPI.Contracts.Ptr;
 
 namespace TypedWinAPI.Kernel32;
 
@@ -20,8 +17,7 @@ namespace TypedWinAPI.Kernel32;
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 48)
 ]
-public unsafe struct VideoModeInformation()  :
-    IStructContracts<VideoModeInformation>
+public unsafe struct VideoModeInformation()
 {
     #region IReadOnlyStructContracts
 
@@ -169,8 +165,7 @@ public unsafe struct VideoModeInformation()  :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 40)
 ]
-public unsafe struct DriveLayoutGpt :
-    IStructContracts<DriveLayoutGpt>
+public unsafe struct DriveLayoutGpt
 {
     #region IReadOnlyStructContracts
 
@@ -270,8 +265,7 @@ public unsafe struct DriveLayoutGpt :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 192)
 ]
-public unsafe struct DriveLayoutInformationEx :
-    IStructContracts<DriveLayoutInformationEx>
+public unsafe struct DriveLayoutInformationEx
 {
     #region IReadOnlyStructContracts
 
@@ -379,8 +373,7 @@ public unsafe struct DriveLayoutInformationEx :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 40)
 ]
-public unsafe struct DriveLayoutMbr :
-    IStructContracts<DriveLayoutMbr>
+public unsafe struct DriveLayoutMbr
 {
     #region IReadOnlyStructContracts
 
@@ -473,8 +466,7 @@ public unsafe struct DriveLayoutMbr :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 144)
 ]
-public unsafe struct PartitionInformationEx :
-    IStructContracts<PartitionInformationEx>
+public unsafe struct PartitionInformationEx
 {
     #region IReadOnlyStructContracts
 
@@ -598,8 +590,7 @@ public unsafe struct PartitionInformationEx :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 112)
 ]
-public unsafe struct PartitionInformationGpt :
-    IStructContracts<PartitionInformationGpt>
+public unsafe struct PartitionInformationGpt
 {
     #region IReadOnlyStructContracts
 
@@ -696,8 +687,7 @@ public unsafe struct PartitionInformationGpt :
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 112)
 ]
-public unsafe struct PartitionInformationMbr :
-    IStructContracts<PartitionInformationMbr>
+public unsafe struct PartitionInformationMbr
 {
     #region IReadOnlyStructContracts
 

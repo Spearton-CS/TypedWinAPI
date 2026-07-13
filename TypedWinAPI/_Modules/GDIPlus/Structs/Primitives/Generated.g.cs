@@ -4,9 +4,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TypedWinAPI.Contracts;
-using TypedWinAPI.Contracts.Struct;
-using TypedWinAPI.Contracts.Ptr;
 // --- Custom usings ---
 using System.Numerics;
 // --- Custom usings ---
@@ -23,10 +20,7 @@ namespace TypedWinAPI.GDIPlus;
 	SkipLocalsInit,
 	StructLayout(LayoutKind.Explicit, Size = 4)
 ]
-public readonly unsafe struct GraphicsContainerState()  :
-	// --- Custom contracts ---
-	IExplicitCast<GraphicsContainerState, uint>,
-    IReadOnlyStructContracts<GraphicsContainerState>
+public readonly unsafe struct GraphicsContainerState()
 {
     #region IReadOnlyStructContracts
 
@@ -145,11 +139,8 @@ public readonly unsafe struct Color()  :
 	// --- Custom contracts ---
 	IEqualityOperators<Color, uint, bool>,
 	IEquatable<uint>,
-	IExplicitCast<Color, uint>,
 	IEqualityOperators<Color, GDI32.Color, bool>,
-	IEquatable<GDI32.Color>,
-	IExplicitCast<Color, GDI32.Color>,
-    IReadOnlyStructContracts<Color>
+	IEquatable<GDI32.Color>
 {
     #region IReadOnlyStructContracts
 
@@ -433,15 +424,10 @@ public readonly unsafe struct PointF :
 	// --- Custom contracts ---
 	IEqualityOperators<PointF, User32.Point, bool>,
 	IEquatable<User32.Point>,
-	IImplicitCastFrom<PointF, User32.Point>,
-	IExplicitCastTo<PointF, User32.Point>,
 	IEqualityOperators<PointF, (float X, float Y), bool>,
 	IEquatable<(float X, float Y)>,
-	IExplicitCast<PointF, (float X, float Y)>,
 	IEqualityOperators<PointF, (int X, int Y), bool>,
-	IEquatable<(int X, int Y)>,
-	IExplicitCast<PointF, (int X, int Y)>,
-    IReadOnlyStructContracts<PointF>
+	IEquatable<(int X, int Y)>
 {
     #region IReadOnlyStructContracts
 
