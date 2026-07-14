@@ -11,14 +11,14 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Numerics;
 
-namespace TypedWinAPI.Shell32;
+namespace TypedWinAPI.User32;
 
 <#
 	Generate(
 	new Handle(
-		"HProcess", null,
-		["Handle"]));
+		"ATOM", null,
+		["Handle16"]));
 #>
 
 #nullable restore
-<#@ include file="$(ProjectDir)/Handles/Handle.tt" #>
+<#@ include file="$(ProjectDir)/Handles/Handle16.tt" #>

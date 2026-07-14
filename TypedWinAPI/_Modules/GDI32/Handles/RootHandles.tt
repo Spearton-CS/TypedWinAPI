@@ -14,10 +14,11 @@ using System.Numerics;
 namespace TypedWinAPI.GDI32;
 
 <#
-	Generate(new Handle(
+	Generate(
+	new Handle(
 		"HDC", null,
-		["Handle"]));
-	Generate(new Handle(
+		["Handle"]),
+	new Handle(
 		"HObj", null,
 		["Handle"]));
 #>

@@ -23,6 +23,12 @@ public unsafe readonly struct HProcess :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HProcess>, ISpanParsable<HProcess>, IUtf8SpanParsable<HProcess>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HProcess, HProcess, bool>, IComparable<HProcess>,
 		IComparisonOperators<HProcess, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HProcess, nuint, bool>, IComparable<nuint>,

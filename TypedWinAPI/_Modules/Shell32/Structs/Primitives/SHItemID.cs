@@ -4,9 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace TypedWinAPI.Shell32;
 
-[StructLayout(LayoutKind.Explicit, Size = 2)]
-public unsafe readonly record struct SHItemID(
-    [field: FieldOffset(0)] ushort cb)
+public unsafe partial struct SHItemID
 {
     public readonly bool IsTerminator
     {

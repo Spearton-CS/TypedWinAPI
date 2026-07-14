@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -14,7 +15,28 @@ namespace TypedWinAPI;
     DebuggerStepThrough,
     SkipLocalsInit
 ]
-public unsafe readonly struct Handle16
+public unsafe readonly struct Handle16 :
+    IEqualityOperators<Handle16, Handle16, bool>, IEquatable<Handle16>,
+    IEqualityOperators<Handle16, ushort, bool>, IEquatable<ushort>,
+    IEqualityOperators<Handle16, short, bool>, IEquatable<short>,
+
+#if ManagedObjects
+    IComparable,
+#endif
+    IComparisonOperators<Handle16, Handle16, bool>, IComparable<Handle16>,
+    IComparisonOperators<Handle16, ushort, bool>, IComparable<ushort>,
+    IComparisonOperators<Handle16, short, bool>, IComparable<short>,
+
+#if ManagedStrings
+    IParsable<Handle16>, ISpanParsable<Handle16>, IUtf8SpanParsable<Handle16>,
+    IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
+    IMinMaxValue<Handle16>,
+    IShiftOperators<Handle16, int, Handle16>,
+    IBitwiseOperators<Handle16, Handle16, Handle16>,
+    IBitwiseOperators<Handle16, ushort, Handle16>,
+    IBitwiseOperators<Handle16, short, Handle16>
 {
     #region Construct
 
@@ -83,30 +105,23 @@ public unsafe readonly struct Handle16
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Handle16 operator ^(Handle16 a, short b) => (Handle16)(short)(a.SignedValue ^ b);
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Handle16 operator &(Handle16 a, void* b) => (Handle16)(ushort)(a.UnsignedValue & (ushort)b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Handle16 operator |(Handle16 a, void* b) => (Handle16)(ushort)(a.UnsignedValue | (ushort)b);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Handle16 operator ^(Handle16 a, void* b) => (Handle16)(ushort)(a.UnsignedValue ^ (ushort)b);
-
     #endregion
 
     #region Equality
 
+#if ManagedObjects
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly override bool Equals([NotNullWhen(true)] object? obj)
         => obj is Handle16 h ? this == h
             : obj is ushort unsig ? this == unsig
                 : obj is short sig && this == sig;
+#endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool Equals(Handle16 other) => this == other;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool Equals(ushort other) => this == other;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool Equals(short other) => this == other;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(void* other) => this == other;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator ==(Handle16 a, Handle16 b) => a.UnsignedValue == b.UnsignedValue;
@@ -124,31 +139,27 @@ public unsafe readonly struct Handle16
     public static bool operator !=(Handle16 a, short b) => a.SignedValue != b;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator ==(Handle16 a, void* b) => (void*)a.UnsignedValue == b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator !=(Handle16 a, void* b) => (void*)a.UnsignedValue != b;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly override int GetHashCode() => UnsignedValue.GetHashCode();
 
     #endregion
 
     #region Comparability
 
+#if ManagedObjects
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly int CompareTo(object? obj)
         => obj is Handle16 h ? CompareTo(h)
             : obj is ushort unsig ? CompareTo(unsig)
                 : obj is short sig ? CompareTo(sig)
                     : 0;
+#endif
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly int CompareTo(Handle16 other) => UnsignedValue.CompareTo(other.UnsignedValue);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly int CompareTo(ushort other) => UnsignedValue.CompareTo(other);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly int CompareTo(short other) => SignedValue.CompareTo(other);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int CompareTo(void* other) => UnsignedValue.CompareTo((ushort)other);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator <(Handle16 a, Handle16 b) => a.UnsignedValue < b.UnsignedValue;
@@ -177,17 +188,9 @@ public unsafe readonly struct Handle16
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator >=(Handle16 a, short b) => a.SignedValue >= b;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <(Handle16 a, void* b) => (void*)a.UnsignedValue < b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >(Handle16 a, void* b) => (void*)a.UnsignedValue > b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <=(Handle16 a, void* b) => (void*)a.UnsignedValue <= b;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator >=(Handle16 a, void* b) => (void*)a.UnsignedValue >= b;
-
     #endregion
 
+#if ManagedStrings
     #region Format and Parse
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -230,6 +233,7 @@ public unsafe readonly struct Handle16
     }
 
     #endregion
+#endif
 
     #region Cast
 

@@ -14,37 +14,38 @@ using System.Numerics;
 namespace TypedWinAPI.GDIPlus;
 
 <#
-	Generate(new Handle(
+	Generate(
+	new Handle(
 		"HSessionToken", null,
-		["Handle"]));
-	Generate(new Handle(
+		["Handle"]),
+	new Handle(
 		"HPen", null,
-		["Handle"]));
-	Generate(new Handle(
+		["Handle"]),
+	new Handle(
 		"HPath", null,
-		["Handle"]));
-	Generate(new Handle(
+		["Handle"]),
+	new Handle(
 		"HMatrix", null,
-		["Handle"]));
-	Generate(new Handle(
+		["Handle"]),
+	new Handle(
 		"HGraphics", null,
-		["Handle"]));
-	Generate(new Handle(
+		["Handle"]),
+	new Handle(
 		"HImage", null,
-		["Handle"]));
-	Generate(new Handle(
+		["Handle"]),
+	new Handle(
 		"HStringFormat", null,
-		["Handle"]));
-	Generate(new Handle(
+		["Handle"]),
+	new Handle(
 		"HBrush", null,
-		["Handle"]));
-	Generate(new Handle(
+		["Handle"]),
+	new Handle(
 		"HFontFamily", null,
-		["Handle"]));
-	Generate(new Handle(
+		["Handle"]),
+	new Handle(
 		"HFontCollection", null,
-		["Handle"]));
-	Generate(new Handle(
+		["Handle"]),
+	new Handle(
 		"HFont", null,
 		["Handle"]));
 #>

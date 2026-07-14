@@ -14,22 +14,23 @@ using System.Numerics;
 namespace TypedWinAPI.GDI32;
 
 <#
-	Generate(new Handle(
+	Generate(
+	new Handle(
 		"HRegion", null,
-		["HObj", "Handle"]));
-	Generate(new Handle(
+		["HObj", "Handle"]),
+	new Handle(
 		"HPen", null,
-		["HObj", "Handle"]));
-	Generate(new Handle(
+		["HObj", "Handle"]),
+	new Handle(
 		"HPalette", null,
-		["HObj", "Handle"]));
-	Generate(new Handle(
+		["HObj", "Handle"]),
+	new Handle(
 		"HFont", null,
-		["HObj", "Handle"]));
-	Generate(new Handle(
+		["HObj", "Handle"]),
+	new Handle(
 		"HBrush", null,
-		["HObj", "Handle"]));
-	Generate(new Handle(
+		["HObj", "Handle"]),
+	new Handle(
 		"HBitmap", null,
 		["HObj", "Handle"]));
 #>

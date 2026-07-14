@@ -23,6 +23,12 @@ public unsafe readonly struct HKey :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HKey>, ISpanParsable<HKey>, IUtf8SpanParsable<HKey>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HKey, HKey, bool>, IComparable<HKey>,
 		IComparisonOperators<HKey, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HKey, nuint, bool>, IComparable<nuint>,

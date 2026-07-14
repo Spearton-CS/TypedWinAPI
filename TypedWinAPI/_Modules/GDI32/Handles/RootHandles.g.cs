@@ -23,6 +23,12 @@ public unsafe readonly struct HDC :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HDC>, ISpanParsable<HDC>, IUtf8SpanParsable<HDC>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HDC, HDC, bool>, IComparable<HDC>,
 		IComparisonOperators<HDC, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HDC, nuint, bool>, IComparable<nuint>,
@@ -275,6 +281,12 @@ public unsafe readonly struct HObj :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HObj>, ISpanParsable<HObj>, IUtf8SpanParsable<HObj>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HObj, HObj, bool>, IComparable<HObj>,
 		IComparisonOperators<HObj, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HObj, nuint, bool>, IComparable<nuint>,

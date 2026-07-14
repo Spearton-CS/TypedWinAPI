@@ -23,6 +23,12 @@ public unsafe readonly struct HSessionToken :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HSessionToken>, ISpanParsable<HSessionToken>, IUtf8SpanParsable<HSessionToken>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HSessionToken, HSessionToken, bool>, IComparable<HSessionToken>,
 		IComparisonOperators<HSessionToken, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HSessionToken, nuint, bool>, IComparable<nuint>,
@@ -275,6 +281,12 @@ public unsafe readonly struct HPen :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HPen>, ISpanParsable<HPen>, IUtf8SpanParsable<HPen>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HPen, HPen, bool>, IComparable<HPen>,
 		IComparisonOperators<HPen, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HPen, nuint, bool>, IComparable<nuint>,
@@ -527,6 +539,12 @@ public unsafe readonly struct HPath :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HPath>, ISpanParsable<HPath>, IUtf8SpanParsable<HPath>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HPath, HPath, bool>, IComparable<HPath>,
 		IComparisonOperators<HPath, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HPath, nuint, bool>, IComparable<nuint>,
@@ -779,6 +797,12 @@ public unsafe readonly struct HMatrix :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HMatrix>, ISpanParsable<HMatrix>, IUtf8SpanParsable<HMatrix>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HMatrix, HMatrix, bool>, IComparable<HMatrix>,
 		IComparisonOperators<HMatrix, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HMatrix, nuint, bool>, IComparable<nuint>,
@@ -1031,6 +1055,12 @@ public unsafe readonly struct HGraphics :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HGraphics>, ISpanParsable<HGraphics>, IUtf8SpanParsable<HGraphics>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HGraphics, HGraphics, bool>, IComparable<HGraphics>,
 		IComparisonOperators<HGraphics, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HGraphics, nuint, bool>, IComparable<nuint>,
@@ -1283,6 +1313,12 @@ public unsafe readonly struct HImage :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HImage>, ISpanParsable<HImage>, IUtf8SpanParsable<HImage>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HImage, HImage, bool>, IComparable<HImage>,
 		IComparisonOperators<HImage, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HImage, nuint, bool>, IComparable<nuint>,
@@ -1535,6 +1571,12 @@ public unsafe readonly struct HStringFormat :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HStringFormat>, ISpanParsable<HStringFormat>, IUtf8SpanParsable<HStringFormat>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HStringFormat, HStringFormat, bool>, IComparable<HStringFormat>,
 		IComparisonOperators<HStringFormat, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HStringFormat, nuint, bool>, IComparable<nuint>,
@@ -1787,6 +1829,12 @@ public unsafe readonly struct HBrush :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HBrush>, ISpanParsable<HBrush>, IUtf8SpanParsable<HBrush>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HBrush, HBrush, bool>, IComparable<HBrush>,
 		IComparisonOperators<HBrush, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HBrush, nuint, bool>, IComparable<nuint>,
@@ -2039,6 +2087,12 @@ public unsafe readonly struct HFontFamily :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HFontFamily>, ISpanParsable<HFontFamily>, IUtf8SpanParsable<HFontFamily>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HFontFamily, HFontFamily, bool>, IComparable<HFontFamily>,
 		IComparisonOperators<HFontFamily, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HFontFamily, nuint, bool>, IComparable<nuint>,
@@ -2291,6 +2345,12 @@ public unsafe readonly struct HFontCollection :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HFontCollection>, ISpanParsable<HFontCollection>, IUtf8SpanParsable<HFontCollection>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HFontCollection, HFontCollection, bool>, IComparable<HFontCollection>,
 		IComparisonOperators<HFontCollection, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HFontCollection, nuint, bool>, IComparable<nuint>,
@@ -2543,6 +2603,12 @@ public unsafe readonly struct HFont :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HFont>, ISpanParsable<HFont>, IUtf8SpanParsable<HFont>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HFont, HFont, bool>, IComparable<HFont>,
 		IComparisonOperators<HFont, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HFont, nuint, bool>, IComparable<nuint>,

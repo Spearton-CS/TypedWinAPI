@@ -6,8 +6,10 @@ using System.Runtime.InteropServices;
 namespace TypedWinAPI;
 
 [
-    StructLayout(LayoutKind.Explicit, Size = 4),
-    DebuggerDisplay("{ToString(),nq}")
+#if ManagedStrings
+    DebuggerDisplay("{ToString(),nq}"),
+#endif
+    StructLayout(LayoutKind.Explicit, Size = 4)
 ]
 public readonly record struct HResult([field: FieldOffset(0)] int Raw) :
     IEqualityOperators<HResult, HResult, bool>, IEquatable<HResult>,
@@ -70,12 +72,14 @@ public readonly record struct HResult([field: FieldOffset(0)] int Raw) :
 
     #endregion
 
+#if ManagedObjects
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly void ThrowIfFailed()
     {
         if (IsError)
             Marshal.ThrowExceptionForHR(Raw);
     }
+#endif
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator true(HResult hresult) => hresult.IsSuccess;
@@ -94,7 +98,9 @@ public readonly record struct HResult([field: FieldOffset(0)] int Raw) :
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HResult(int raw) => new(raw);
 
+#if ManagedStrings
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override string ToString() => IsSuccess ? $"Success (0x{Raw:X8})" : $"Error (0x{Raw:X8})";
+#endif
     public override int GetHashCode() => Raw;
 }

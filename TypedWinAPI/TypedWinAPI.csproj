@@ -5,30 +5,35 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	<IsAotCompatible>True</IsAotCompatible>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<Version>1.0.0.1</Version>
     <Title>TypedWinAPI</Title>
     <Authors>Spearton-CS</Authors>
     <PackageReadmeFile>README.MD</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.TXT</PackageLicenseFile>
-    <IncludeSymbols>True</IncludeSymbols>
+    <IncludeSymbols>False</IncludeSymbols>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageProjectUrl>https://github.com/Spearton-CS/TypedWinAPI</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Spearton-CS/TypedWinAPI</RepositoryUrl>
+	<RepositoryType>git</RepositoryType>
     <PackageTags>windows;nativeaot;unsafe;api;winapi;zero;cost;abstraction;.net10;.net;10</PackageTags>
+	<Description>.NET 10+ thin library for strong typing over Windows API.
+Compatible with NativeAOT and trimming.</Description>
+	<PackageReleaseNotes>T4-revival for Handles and struct layouts;
+Removed useless interfaces (e.g., IExplicitCast&lt;TSelf, TOther&gt;);
+Custom defines;
+... For more - see Github repository commit history</PackageReleaseNotes>
+	<EmbedAllSources>True</EmbedAllSources>
+	<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <PropertyGroup>
 	<DefineConstants>$(DefineConstants);ManagedObjects;ManagedStrings</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <IsAotCompatible>True</IsAotCompatible>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <IsAotCompatible>True</IsAotCompatible>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,6 +41,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Handles\Handle16.tt">
+      <Generator></Generator>
+    </None>
     <None Update="Handles\Handle.tt">
       <Generator></Generator>
     </None>
@@ -46,6 +54,12 @@
     <None Update="README.MD">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
+    </None>
+    <None Update="Structs\Primitives\Primitive.tt">
+      <Generator></Generator>
+    </None>
+    <None Update="Structs\Struct.tt">
+      <Generator></Generator>
     </None>
     <None Update="_Modules\ADVAPI32\Handles\RootHandles.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -77,6 +91,14 @@
     </None>
     <None Update="_Modules\Shell32\Handles\RootHandles.tt">
       <LastGenOutput>RootHandles.g.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <None Update="_Modules\Shell32\Structs\Primitives\Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Generated.g.cs</LastGenOutput>
+    </None>
+    <None Update="_Modules\User32\Handles\RootHandles16.tt">
+      <LastGenOutput>RootHandles16.g.cs</LastGenOutput>
       <Generator>TextTemplatingFileGenerator</Generator>
     </None>
     <None Update="_Modules\User32\Handles\RootHandles.tt">
@@ -125,6 +147,11 @@
 
   <ItemGroup>
     <None Include="_Modules\Kernel32\_Imports\Kernel32.DeviceIoControl.cs" />
+    <None Include="_Modules\Shell32\Structs\Primitives\Generated.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Generated.tt</DependentUpon>
+    </None>
     <None Include="_Modules\User32\Handles\RootHandles.g.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -177,10 +204,20 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>RootHandles.tt</DependentUpon>
     </Compile>
+    <Compile Update="_Modules\Shell32\Structs\Primitives\Generated.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Generated.tt</DependentUpon>
+    </Compile>
     <Compile Update="_Modules\User32\Handles\RootHandles.g.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>RootHandles.tt</DependentUpon>
+    </Compile>
+    <Compile Update="_Modules\User32\Handles\RootHandles16.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RootHandles16.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 

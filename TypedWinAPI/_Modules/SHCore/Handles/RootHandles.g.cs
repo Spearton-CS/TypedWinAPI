@@ -23,6 +23,12 @@ public unsafe readonly struct HMonitor :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HMonitor>, ISpanParsable<HMonitor>, IUtf8SpanParsable<HMonitor>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HMonitor, HMonitor, bool>, IComparable<HMonitor>,
 		IComparisonOperators<HMonitor, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HMonitor, nuint, bool>, IComparable<nuint>,

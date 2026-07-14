@@ -16,14 +16,18 @@ namespace TypedWinAPI;
 /// and provides seamless integration with .NET <see cref="bool"/>.
 /// </remarks>
 [
-    StructLayout(LayoutKind.Explicit, Size = 4),
-    DebuggerDisplay("{ToString(),nq}")
+#if ManagedStrings
+    DebuggerDisplay("{ToString(),nq}"),
+#endif
+    StructLayout(LayoutKind.Explicit, Size = 4)
 ]
 public readonly struct Bool4 :
-    IEqualityOperators<Bool4, Bool4, bool>, IEquatable<Bool4>,
-    IEqualityOperators<Bool4, bool, bool>, IEquatable<bool>,
+#if ManagedStrings
     IFormattable, ISpanFormattable, IUtf8SpanFormattable,
-    IParsable<Bool4>, ISpanParsable<Bool4>, IUtf8SpanParsable<Bool4>
+    IParsable<Bool4>, ISpanParsable<Bool4>, IUtf8SpanParsable<Bool4>,
+#endif
+    IEqualityOperators<Bool4, Bool4, bool>, IEquatable<Bool4>,
+    IEqualityOperators<Bool4, bool, bool>, IEquatable<bool>
 {
     #region Construction
 
@@ -79,10 +83,12 @@ public readonly struct Bool4 :
 
     #region Equality
 
+#if ManagedObjects
     /// <summary> Compares this instance to a specified object. </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override readonly bool Equals([NotNullWhen(true)] object? obj)
         => obj is Bool4 win32 ? this == win32 : obj is bool dotnet && this == dotnet;
+#endif
 
     /// <summary> Compares this instance to another <see cref="Bool4"/>. </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -110,6 +116,7 @@ public readonly struct Bool4 :
 
     #endregion
 
+#if ManagedStrings
     #region Format and Parse
 
     /// <summary> Returns the string representation of the boolean value. </summary>
@@ -270,6 +277,7 @@ public readonly struct Bool4 :
     static bool IUtf8SpanParsable<Bool4>.TryParse(ReadOnlySpan<byte> s, IFormatProvider? provider, scoped out Bool4 result) => TryParse(s, out result);
 
     #endregion
+#endif
 
     #region Cast
 

@@ -25,6 +25,11 @@ public unsafe readonly struct Handle :
     IComparisonOperators<Handle, nuint, bool>, IComparable<nuint>,
     IComparisonOperators<Handle, nint, bool>, IComparable<nint>,
 
+#if ManagedStrings
+    IParsable<Handle>, ISpanParsable<Handle>, IUtf8SpanParsable<Handle>,
+    IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
     IMinMaxValue<Handle>,
     IShiftOperators<Handle, int, Handle>,
     IBitwiseOperators<Handle, Handle, Handle>,

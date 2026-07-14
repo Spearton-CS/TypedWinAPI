@@ -1,0 +1,140 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" compilerOptions="/langversion:latest /nullable:enable" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ include file="$(ProjectDir)/Structs/Struct.tt" #>
+<#+
+	public void Generate(params Struct[] metas)
+	{
+		foreach (Struct meta in metas)
+		{
+#>
+/// <summary>
+/// <#= meta.XAML_Comment ?? $"Blittable (unmanaged) struct with size {meta.Size}. Abstraction over {meta.Name}" #>
+/// </summary>
+[StructLayout(LayoutKind.Explicit, Size = <#= meta.Size #>)]
+unsafe <#= meta.Flags.HasFlag(StructFlags.ReadOnly) ? "readonly " : "" #>partial struct <#= meta.Name #> :
+	IEqualityOperators<<#= meta.Name #>, <#= meta.Name #>, bool>, IEquatable<<#= meta.Name #>>
+{
+	<#+
+	if (!meta.Flags.HasFlag(StructFlags.ConstructorOverride))
+	{
+	#>
+	#region Construct
+
+	public <#= meta.Name #>(
+	<#+
+	for (int i = 0; i < meta.Fields.Length; i++)
+	{
+		Field field = meta.Fields[i];
+	#>
+	<#= field.Type #> <#= field.Name #><#= (i != (meta.Fields.Length - 1)) ? "," : "" #>
+	<#+
+	}
+	#>
+	)
+	{
+		<#+
+		foreach (Field field in meta.Fields)
+		{
+		#>
+		this.<#= field.Name #> = <#= field.Name #>;
+
+		<#+
+		}
+		#>
+	}
+
+	#endregion
+	<#+
+	}
+	#>
+
+	#region Fields
+
+	<#+
+	foreach (Field field in meta.Fields)
+	{
+	#>
+	[FieldOffset(<#= field.Offset #>)] public <#= (field.ReadOnly || meta.Flags.HasFlag(StructFlags.ReadOnly)) ? "readonly " : "" #><#= field.Type #> <#= field.Name #>;
+
+	<#+
+	}
+	#>
+	#endregion
+
+	<#+
+	if (!meta.Flags.HasFlag(StructFlags.EqualsOverride))
+	{
+	#>
+	#region Equality
+
+#if ManagedObjects
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly override bool Equals(object? obj) => obj is <#= meta.Name #> other ? Equals(other) : false;
+#endif
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly bool Equals(<#= meta.Name #> other) => this == other;
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator ==(<#= meta.Name #> a, <#= meta.Name #> b)
+	{
+		return
+		<#+
+		for (int i = 0; i < meta.Fields.Length; i++)
+		{
+			Field field = meta.Fields[i];
+		#>
+		a.<#= field.Name #> == b.<#= field.Name #> <#= (i != (meta.Fields.Length - 1)) ? "&&\r\n" : "" #>
+		<#+
+		}
+		#>;
+	}
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool operator !=(<#= meta.Name #> a, <#= meta.Name #> b)
+	{
+		return
+		<#+
+		for (int i = 0; i < meta.Fields.Length; i++)
+		{
+			Field field = meta.Fields[i];
+		#>
+		a.<#= field.Name #> != b.<#= field.Name #> <#= (i != (meta.Fields.Length - 1)) ? "||\r\n" : "" #>
+		<#+
+		}
+		#>;
+	}
+
+	#endregion
+	<#+
+	}
+	#>
+
+#if ManagedStrings
+	#region Format And Parse
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public readonly override string ToString() =>
+	$$"""
+	<#= meta.Name #>
+	{
+		<#+
+		for (int i = 0; i < meta.Fields.Length; i++)
+		{
+			Field field = meta.Fields[i];
+		#>
+		<#= field.Name #>: {{<#= field.Name #>}}<#= (i != (meta.Fields.Length - 1)) ? ",\r\n" : "" #>
+		<#+
+		}
+	#>}
+	""";
+
+	#endregion
+#endif
+}
+
+<#+
+		}
+	}
+#>

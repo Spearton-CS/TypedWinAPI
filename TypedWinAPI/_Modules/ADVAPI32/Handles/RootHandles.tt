@@ -14,7 +14,8 @@ using System.Numerics;
 namespace TypedWinAPI.ADVAPI32;
 
 <#
-	Generate(new Handle(
+	Generate(
+	new Handle(
 		"HKey", null,
 		["Handle"]));
 #>

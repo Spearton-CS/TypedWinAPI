@@ -23,6 +23,12 @@ public unsafe readonly struct HInstance :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HInstance>, ISpanParsable<HInstance>, IUtf8SpanParsable<HInstance>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HInstance, HInstance, bool>, IComparable<HInstance>,
 		IComparisonOperators<HInstance, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HInstance, nuint, bool>, IComparable<nuint>,
@@ -275,6 +281,12 @@ public unsafe readonly struct HDevice :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HDevice>, ISpanParsable<HDevice>, IUtf8SpanParsable<HDevice>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HDevice, HDevice, bool>, IComparable<HDevice>,
 		IComparisonOperators<HDevice, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HDevice, nuint, bool>, IComparable<nuint>,
@@ -527,6 +539,12 @@ public unsafe readonly struct HFile :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HFile>, ISpanParsable<HFile>, IUtf8SpanParsable<HFile>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HFile, HFile, bool>, IComparable<HFile>,
 		IComparisonOperators<HFile, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HFile, nuint, bool>, IComparable<nuint>,

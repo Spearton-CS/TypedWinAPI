@@ -24,6 +24,12 @@ public unsafe readonly struct HRegion :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HRegion>, ISpanParsable<HRegion>, IUtf8SpanParsable<HRegion>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HRegion, HRegion, bool>, IComparable<HRegion>,
 		IComparisonOperators<HRegion, HObj, bool>, IComparable<HObj>,
 		IComparisonOperators<HRegion, Handle, bool>, IComparable<Handle>,
@@ -306,6 +312,12 @@ public unsafe readonly struct HPen :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HPen>, ISpanParsable<HPen>, IUtf8SpanParsable<HPen>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HPen, HPen, bool>, IComparable<HPen>,
 		IComparisonOperators<HPen, HObj, bool>, IComparable<HObj>,
 		IComparisonOperators<HPen, Handle, bool>, IComparable<Handle>,
@@ -588,6 +600,12 @@ public unsafe readonly struct HPalette :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HPalette>, ISpanParsable<HPalette>, IUtf8SpanParsable<HPalette>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HPalette, HPalette, bool>, IComparable<HPalette>,
 		IComparisonOperators<HPalette, HObj, bool>, IComparable<HObj>,
 		IComparisonOperators<HPalette, Handle, bool>, IComparable<Handle>,
@@ -870,6 +888,12 @@ public unsafe readonly struct HFont :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HFont>, ISpanParsable<HFont>, IUtf8SpanParsable<HFont>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HFont, HFont, bool>, IComparable<HFont>,
 		IComparisonOperators<HFont, HObj, bool>, IComparable<HObj>,
 		IComparisonOperators<HFont, Handle, bool>, IComparable<Handle>,
@@ -1152,6 +1176,12 @@ public unsafe readonly struct HBrush :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HBrush>, ISpanParsable<HBrush>, IUtf8SpanParsable<HBrush>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HBrush, HBrush, bool>, IComparable<HBrush>,
 		IComparisonOperators<HBrush, HObj, bool>, IComparable<HObj>,
 		IComparisonOperators<HBrush, Handle, bool>, IComparable<Handle>,
@@ -1434,6 +1464,12 @@ public unsafe readonly struct HBitmap :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HBitmap>, ISpanParsable<HBitmap>, IUtf8SpanParsable<HBitmap>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HBitmap, HBitmap, bool>, IComparable<HBitmap>,
 		IComparisonOperators<HBitmap, HObj, bool>, IComparable<HObj>,
 		IComparisonOperators<HBitmap, Handle, bool>, IComparable<Handle>,

@@ -14,16 +14,17 @@ using System.Numerics;
 namespace TypedWinAPI.User32;
 
 <#
-	Generate(new Handle(
+	Generate(
+	new Handle(
 		"HWND", null,
-		["Handle"]));
-	Generate(new Handle(
+		["Handle"]),
+	new Handle(
 		"HMenu", null,
-		["Handle"]));
-	Generate(new Handle(
+		["Handle"]),
+	new Handle(
 		"HCursor", null,
-		["Handle"]));
-	Generate(new Handle(
+		["Handle"]),
+	new Handle(
 		"HIcon", null,
 		["Handle"]));
 #>

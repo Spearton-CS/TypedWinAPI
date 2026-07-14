@@ -23,6 +23,12 @@ public unsafe readonly struct HBitmap :
 #if ManagedObjects
 	IComparable,
 #endif
+
+#if ManagedStrings
+	IParsable<HBitmap>, ISpanParsable<HBitmap>, IUtf8SpanParsable<HBitmap>,
+	IFormattable, ISpanFormattable, IUtf8SpanFormattable,
+#endif
+
 	IComparisonOperators<HBitmap, HBitmap, bool>, IComparable<HBitmap>,
 		IComparisonOperators<HBitmap, Handle, bool>, IComparable<Handle>,
 	    IComparisonOperators<HBitmap, nuint, bool>, IComparable<nuint>,

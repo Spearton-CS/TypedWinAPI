@@ -14,13 +14,14 @@ using System.Numerics;
 namespace TypedWinAPI.Kernel32;
 
 <#
-	Generate(new Handle(
+	Generate(
+	new Handle(
 		"HInstance", null,
-		["Handle"]));
-	Generate(new Handle(
+		["Handle"]),
+	new Handle(
 		"HDevice", null,
-		["Handle"]));
-	Generate(new Handle(
+		["Handle"]),
+	new Handle(
 		"HFile", null,
 		["Handle"]));
 #>
