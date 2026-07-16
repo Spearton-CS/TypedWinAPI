@@ -8,7 +8,7 @@ using System.Numerics;
 namespace TypedWinAPI.User32;
 
 /// <summary>
-/// Struct over <see cref="ushort"/>, or <see cref="ushort"/> or <see langword="void"/>*. Abstraction over ATOM
+/// Struct over <see cref="ushort"/>, or <see cref="ushort"/> or <see langword="void"/>*. Abstraction over Win32 ATOM
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 2),
 	DebuggerDisplay("{UnsignedValue.ToString(\"X4\"),nq}"),
@@ -16,8 +16,8 @@ namespace TypedWinAPI.User32;
 	SkipLocalsInit]
 public unsafe readonly struct ATOM :
 	IEqualityOperators<ATOM, ATOM, bool>, IEquatable<ATOM>,
-		IEqualityOperators<ATOM, Handle16, bool>, IEquatable<Handle16>,
-	    IEqualityOperators<ATOM, ushort, bool>, IEquatable<ushort>,
+	IEqualityOperators<ATOM, Handle16, bool>, IEquatable<Handle16>,
+    IEqualityOperators<ATOM, ushort, bool>, IEquatable<ushort>,
     IEqualityOperators<ATOM, short, bool>, IEquatable<short>,
 
 #if ManagedObjects
@@ -30,8 +30,8 @@ public unsafe readonly struct ATOM :
 #endif
 
 	IComparisonOperators<ATOM, ATOM, bool>, IComparable<ATOM>,
-		IComparisonOperators<ATOM, Handle16, bool>, IComparable<Handle16>,
-	    IComparisonOperators<ATOM, ushort, bool>, IComparable<ushort>,
+	IComparisonOperators<ATOM, Handle16, bool>, IComparable<Handle16>,
+    IComparisonOperators<ATOM, ushort, bool>, IComparable<ushort>,
     IComparisonOperators<ATOM, short, bool>, IComparable<short>
 {
 	#region Construct
@@ -44,10 +44,10 @@ public unsafe readonly struct ATOM :
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public ATOM(short sig) => SignedValue = sig;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public ATOM(Handle16 @base) => UnsignedValue = @base.UnsignedValue;
-	
+
 	#endregion
 
 	#region Fields
@@ -66,9 +66,9 @@ public unsafe readonly struct ATOM :
 	{
 		if (obj is ATOM other)
 			return this == other;
-				else if (obj is Handle16 @Handle16)
+		else if (obj is Handle16 @Handle16)
 			return this == @Handle16;
-				else if (obj is ushort unsig)
+		else if (obj is ushort unsig)
 			return this == unsig;
 		else if (obj is short sig)
 			return this == sig;
@@ -78,9 +78,9 @@ public unsafe readonly struct ATOM :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(ATOM other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(Handle16 other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(ushort other) => this == other;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(short other) => this == other;
@@ -89,12 +89,12 @@ public unsafe readonly struct ATOM :
 	public static bool operator ==(ATOM a, ATOM b) => a.UnsignedValue == b.UnsignedValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(ATOM a, ATOM b) => a.UnsignedValue != b.UnsignedValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(ATOM a, Handle16 b) => a.UnsignedValue == b.UnsignedValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(ATOM a, Handle16 b) => a.UnsignedValue != b.UnsignedValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(ATOM a, ushort b) => a.UnsignedValue == b;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -118,9 +118,9 @@ public unsafe readonly struct ATOM :
 	{
 		if (obj is ATOM other)
 			return CompareTo(other);
-				else if (obj is Handle16 @Handle16)
+		else if (obj is Handle16 @Handle16)
 			return CompareTo(@Handle16);
-				else if (obj is ushort unsig)
+		else if (obj is ushort unsig)
 			return CompareTo(unsig);
 		else if (obj is short sig)
 			return CompareTo(sig);
@@ -130,9 +130,9 @@ public unsafe readonly struct ATOM :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(ATOM other) => UnsignedValue.CompareTo(other);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(Handle16 other) => UnsignedValue.CompareTo(other.UnsignedValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(ushort other) => UnsignedValue.CompareTo(other);
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(short other) => SignedValue.CompareTo(other);
@@ -146,7 +146,7 @@ public unsafe readonly struct ATOM :
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(ATOM a, ATOM b) => a.UnsignedValue >= b.UnsignedValue;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(ATOM a, Handle16 b) => a.UnsignedValue < b.UnsignedValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >(ATOM a, Handle16 b) => a.UnsignedValue > b.UnsignedValue;
@@ -154,7 +154,7 @@ public unsafe readonly struct ATOM :
 	public static bool operator <=(ATOM a, Handle16 b) => a.UnsignedValue <= b.UnsignedValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(ATOM a, Handle16 b) => a.UnsignedValue >= b.UnsignedValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(ATOM a, ushort b) => a.UnsignedValue < b;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -222,18 +222,18 @@ public unsafe readonly struct ATOM :
 
 	#region Cast
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static explicit operator ATOM(Handle16 @base) => new(@base);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator ATOM(void* ptr) => new((ushort)ptr);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator ATOM(ushort unsig) => new(unsig);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator ATOM(short sig) => new(sig);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static implicit operator Handle16(ATOM self) => new(self.UnsignedValue);
-	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator void*(ATOM h) => (void*)h.UnsignedValue;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator ushort(ATOM h) => h.UnsignedValue;

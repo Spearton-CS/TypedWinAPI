@@ -10,7 +10,7 @@
 		{
 #>
 /// <summary>
-/// <#= meta.XAML_Comment ?? $"Struct over <see cref=\"ushort\"/>, or <see cref=\"ushort\"/> or <see langword=\"void\"/>*. Abstraction over {meta.Name}" #>
+/// <#= meta.XAML_Comment ?? $"Struct over <see cref=\"ushort\"/>, or <see cref=\"ushort\"/> or <see langword=\"void\"/>*. Abstraction over Win32 {meta.Name}" #>
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 2),
 	DebuggerDisplay("{UnsignedValue.ToString(\"X4\"),nq}"),
@@ -18,14 +18,14 @@
 	SkipLocalsInit]
 public unsafe readonly struct <#= meta.Name #> :
 	IEqualityOperators<<#= meta.Name #>, <#= meta.Name #>, bool>, IEquatable<<#= meta.Name #>>,
-	<#+
+<#+
 	foreach (string @base in meta.Base)
 	{
-	#>
+#>
 	IEqualityOperators<<#= meta.Name #>, <#= @base #>, bool>, IEquatable<<#= @base #>>,
-	<#+
+<#+
 	}
-	#>
+#>
     IEqualityOperators<<#= meta.Name #>, ushort, bool>, IEquatable<ushort>,
     IEqualityOperators<<#= meta.Name #>, short, bool>, IEquatable<short>,
 
@@ -39,14 +39,14 @@ public unsafe readonly struct <#= meta.Name #> :
 #endif
 
 	IComparisonOperators<<#= meta.Name #>, <#= meta.Name #>, bool>, IComparable<<#= meta.Name #>>,
-	<#+
+<#+
 	foreach (string @base in meta.Base)
 	{
-	#>
+#>
 	IComparisonOperators<<#= meta.Name #>, <#= @base #>, bool>, IComparable<<#= @base #>>,
-	<#+
+<#+
 	}
-	#>
+#>
     IComparisonOperators<<#= meta.Name #>, ushort, bool>, IComparable<ushort>,
     IComparisonOperators<<#= meta.Name #>, short, bool>, IComparable<short>
 {
@@ -60,16 +60,16 @@ public unsafe readonly struct <#= meta.Name #> :
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public <#= meta.Name #>(short sig) => SignedValue = sig;
-	<#+
+<#+
 	foreach (string @base in meta.Base)
 	{
-	#>
+#>
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public <#= meta.Name #>(<#= @base #> @base) => UnsignedValue = @base.UnsignedValue;
-	<#+
+<#+
 	}
-	#>
+#>
 
 	#endregion
 
@@ -89,15 +89,15 @@ public unsafe readonly struct <#= meta.Name #> :
 	{
 		if (obj is <#= meta.Name #> other)
 			return this == other;
-		<#+
+<#+
 		foreach (string @base in meta.Base)
 		{
-		#>
+#>
 		else if (obj is <#= @base #> @<#= @base #>)
 			return this == @<#= @base #>;
-		<#+
+<#+
 		}
-		#>
+#>
 		else if (obj is ushort unsig)
 			return this == unsig;
 		else if (obj is short sig)
@@ -108,15 +108,15 @@ public unsafe readonly struct <#= meta.Name #> :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(<#= meta.Name #> other) => this == other;
-	<#+
+<#+
 	foreach (string @base in meta.Base)
 	{
-	#>
+#>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(<#= @base #> other) => this == other;
-	<#+
+<#+
 	}
-	#>
+#>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(ushort other) => this == other;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -126,18 +126,18 @@ public unsafe readonly struct <#= meta.Name #> :
 	public static bool operator ==(<#= meta.Name #> a, <#= meta.Name #> b) => a.UnsignedValue == b.UnsignedValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(<#= meta.Name #> a, <#= meta.Name #> b) => a.UnsignedValue != b.UnsignedValue;
-	<#+
+<#+
 	foreach (string @base in meta.Base)
 	{
-	#>
+#>
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(<#= meta.Name #> a, <#= @base #> b) => a.UnsignedValue == b.UnsignedValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(<#= meta.Name #> a, <#= @base #> b) => a.UnsignedValue != b.UnsignedValue;
-	<#+
+<#+
 	}
-	#>
+#>
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(<#= meta.Name #> a, ushort b) => a.UnsignedValue == b;
@@ -162,15 +162,15 @@ public unsafe readonly struct <#= meta.Name #> :
 	{
 		if (obj is <#= meta.Name #> other)
 			return CompareTo(other);
-		<#+
+<#+
 		foreach (string @base in meta.Base)
 		{
-		#>
+#>
 		else if (obj is <#= @base #> @<#= @base #>)
 			return CompareTo(@<#= @base #>);
-		<#+
+<#+
 		}
-		#>
+#>
 		else if (obj is ushort unsig)
 			return CompareTo(unsig);
 		else if (obj is short sig)
@@ -181,15 +181,15 @@ public unsafe readonly struct <#= meta.Name #> :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(<#= meta.Name #> other) => UnsignedValue.CompareTo(other);
-	<#+
+<#+
 	foreach (string @base in meta.Base)
 	{
-	#>
+#>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(<#= @base #> other) => UnsignedValue.CompareTo(other.UnsignedValue);
-	<#+
+<#+
 	}
-	#>
+#>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(ushort other) => UnsignedValue.CompareTo(other);
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -204,10 +204,10 @@ public unsafe readonly struct <#= meta.Name #> :
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(<#= meta.Name #> a, <#= meta.Name #> b) => a.UnsignedValue >= b.UnsignedValue;
 
-	<#+
+<#+
 	foreach (string @base in meta.Base)
 	{
-	#>
+#>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(<#= meta.Name #> a, <#= @base #> b) => a.UnsignedValue < b.UnsignedValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -216,9 +216,9 @@ public unsafe readonly struct <#= meta.Name #> :
 	public static bool operator <=(<#= meta.Name #> a, <#= @base #> b) => a.UnsignedValue <= b.UnsignedValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(<#= meta.Name #> a, <#= @base #> b) => a.UnsignedValue >= b.UnsignedValue;
-	<#+
+<#+
 	}
-	#>
+#>
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(<#= meta.Name #> a, ushort b) => a.UnsignedValue < b;
@@ -287,15 +287,15 @@ public unsafe readonly struct <#= meta.Name #> :
 
 	#region Cast
 
-	<#+
+<#+
 	foreach (string @base in meta.Base)
 	{
-	#>
+#>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static explicit operator <#= meta.Name #>(<#= @base #> @base) => new(@base);
-	<#+
+<#+
 	}
-	#>
+#>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator <#= meta.Name #>(void* ptr) => new((ushort)ptr);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -303,15 +303,15 @@ public unsafe readonly struct <#= meta.Name #> :
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator <#= meta.Name #>(short sig) => new(sig);
 
-	<#+
+<#+
 	foreach (string @base in meta.Base)
 	{
-	#>
+#>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static implicit operator <#= @base #>(<#= meta.Name #> self) => new(self.UnsignedValue);
-	<#+
+<#+
 	}
-	#>
+#>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator void*(<#= meta.Name #> h) => (void*)h.UnsignedValue;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

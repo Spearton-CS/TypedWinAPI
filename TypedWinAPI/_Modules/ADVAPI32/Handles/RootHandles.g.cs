@@ -8,7 +8,7 @@ using System.Numerics;
 namespace TypedWinAPI.ADVAPI32;
 
 /// <summary>
-/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over HKey
+/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over Win32 HKey
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 8),
 	DebuggerDisplay("{UnsignedValue.ToString(\"X16\"),nq}"),
@@ -16,8 +16,8 @@ namespace TypedWinAPI.ADVAPI32;
 	SkipLocalsInit]
 public unsafe readonly struct HKey :
 	IEqualityOperators<HKey, HKey, bool>, IEquatable<HKey>,
-		IEqualityOperators<HKey, Handle, bool>, IEquatable<Handle>,
-	    IEqualityOperators<HKey, nuint, bool>, IEquatable<nuint>,
+	IEqualityOperators<HKey, Handle, bool>, IEquatable<Handle>,
+    IEqualityOperators<HKey, nuint, bool>, IEquatable<nuint>,
     IEqualityOperators<HKey, nint, bool>, IEquatable<nint>,
 
 #if ManagedObjects
@@ -30,8 +30,8 @@ public unsafe readonly struct HKey :
 #endif
 
 	IComparisonOperators<HKey, HKey, bool>, IComparable<HKey>,
-		IComparisonOperators<HKey, Handle, bool>, IComparable<Handle>,
-	    IComparisonOperators<HKey, nuint, bool>, IComparable<nuint>,
+	IComparisonOperators<HKey, Handle, bool>, IComparable<Handle>,
+    IComparisonOperators<HKey, nuint, bool>, IComparable<nuint>,
     IComparisonOperators<HKey, nint, bool>, IComparable<nint>
 {
 	#region Construct
@@ -47,10 +47,10 @@ public unsafe readonly struct HKey :
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HKey(nint sig) => SignedValue = sig;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HKey(Handle @base) => PointerValue = @base.PointerValue;
-	
+
 	#endregion
 
 	#region Fields
@@ -71,9 +71,9 @@ public unsafe readonly struct HKey :
 	{
 		if (obj is HKey other)
 			return this == other;
-				else if (obj is Handle @Handle)
+		else if (obj is Handle @Handle)
 			return this == @Handle;
-				else if (obj is nuint unsig)
+		else if (obj is nuint unsig)
 			return this == unsig;
 		else if (obj is nint sig)
 			return this == sig;
@@ -83,9 +83,9 @@ public unsafe readonly struct HKey :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(HKey other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(Handle other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(nuint other) => this == other;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(nint other) => this == other;
@@ -96,12 +96,12 @@ public unsafe readonly struct HKey :
 	public static bool operator ==(HKey a, HKey b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HKey a, HKey b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HKey a, Handle b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HKey a, Handle b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HKey a, void* b) => a.PointerValue == b;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -130,9 +130,9 @@ public unsafe readonly struct HKey :
 	{
 		if (obj is HKey other)
 			return CompareTo(other);
-				else if (obj is Handle @Handle)
+		else if (obj is Handle @Handle)
 			return CompareTo(@Handle);
-				else if (obj is nuint unsig)
+		else if (obj is nuint unsig)
 			return CompareTo(unsig);
 		else if (obj is nint sig)
 			return CompareTo(sig);
@@ -142,9 +142,9 @@ public unsafe readonly struct HKey :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(HKey other) => UnsignedValue.CompareTo(other);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(Handle other) => UnsignedValue.CompareTo(other.UnsignedValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(nint other) => SignedValue.CompareTo(other);
@@ -160,7 +160,7 @@ public unsafe readonly struct HKey :
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HKey a, HKey b) => a.PointerValue >= b.PointerValue;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HKey a, Handle b) => a.PointerValue < b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >(HKey a, Handle b) => a.PointerValue > b.PointerValue;
@@ -168,7 +168,7 @@ public unsafe readonly struct HKey :
 	public static bool operator <=(HKey a, Handle b) => a.PointerValue <= b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HKey a, Handle b) => a.PointerValue >= b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HKey a, void* b) => a.PointerValue < b;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -245,18 +245,18 @@ public unsafe readonly struct HKey :
 
 	#region Cast
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static explicit operator HKey(Handle @base) => new(@base);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HKey(void* ptr) => new(ptr);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HKey(nuint unsig) => new(unsig);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HKey(nint sig) => new(sig);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static implicit operator Handle(HKey self) => new(self.PointerValue);
-	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator void*(HKey h) => h.PointerValue;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator nuint(HKey h) => h.UnsignedValue;

@@ -11,7 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TypedWinAPI.Safe\TypedWinAPI.Safe.csproj" />
     <ProjectReference Include="..\TypedWinAPI\TypedWinAPI.csproj" />
   </ItemGroup>
 

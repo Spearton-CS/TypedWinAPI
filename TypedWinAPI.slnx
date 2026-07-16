@@ -1,6 +1,9 @@
 <Solution>
+  <Folder Name="/AdditionalModules/" />
+  <Folder Name="/AdditionalModules/Constants/" />
+  <Folder Name="/AdditionalModules/HResultInterpreter/" />
+  <Folder Name="/AdditionalModules/Safe/" />
   <Project Path="Runner/Runner.csproj" />
   <Project Path="TemplateSourceGenerator/TemplateSourceGenerator.csproj" Id="1406c6ec-0662-4502-849f-48905870a130" />
-  <Project Path="TypedWinAPI.Safe/TypedWinAPI.Safe.csproj" />
   <Project Path="TypedWinAPI/TypedWinAPI.csproj" />
 </Solution>

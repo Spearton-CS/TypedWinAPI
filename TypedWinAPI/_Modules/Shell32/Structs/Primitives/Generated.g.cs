@@ -8,31 +8,31 @@ using System.Numerics;
 namespace TypedWinAPI.Shell32;
 
 /// <summary>
-/// Blittable (unmanaged) struct with size 2. Abstraction over SHItemID
+/// Blittable (unmanaged) primitive (read-only) struct with size 2. Abstraction over Win32 SHItemID
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 2)]
 unsafe readonly partial struct SHItemID :
 	IEqualityOperators<SHItemID, SHItemID, bool>, IEquatable<SHItemID>
 {
-		#region Construct
+	#region Construct
 
 	public SHItemID(
-		ushort cb
-		)
+	ushort cb
+	)
 	{
-				this.cb = cb;
+		this.cb = cb;
 
-			}
+	}
 
 	#endregion
-	
+
 	#region Fields
 
-		[FieldOffset(0)] public readonly ushort cb;
+	[FieldOffset(0)] public readonly ushort cb;
 
-		#endregion
+	#endregion
 
-		#region Equality
+	#region Equality
 
 #if ManagedObjects
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -45,19 +45,18 @@ unsafe readonly partial struct SHItemID :
 	public static bool operator ==(SHItemID a, SHItemID b)
 	{
 		return
-				a.cb == b.cb 
-		;
+		a.cb == b.cb 
+;
 	}
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(SHItemID a, SHItemID b)
 	{
 		return
-				a.cb != b.cb 
-		;
+		a.cb != b.cb 
+;
 	}
 
 	#endregion
-	
 #if ManagedStrings
 	#region Format And Parse
 
@@ -66,14 +65,13 @@ unsafe readonly partial struct SHItemID :
 	$$"""
 	SHItemID
 	{
-				cb: {{cb}}
-		}
+		cb: {{cb}}
+	}
 	""";
 
 	#endregion
 #endif
 }
-
 
 #nullable restore
 

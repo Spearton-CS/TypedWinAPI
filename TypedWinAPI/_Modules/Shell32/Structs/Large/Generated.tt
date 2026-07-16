@@ -1,0 +1,40 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" compilerOptions="/langversion:latest /nullable:enable" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".g.cs" #>
+#nullable enable
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Numerics;
+
+namespace TypedWinAPI.Shell32;
+<#
+	Generate(
+	new Struct(
+		"ExecuteInfoW",
+		null,
+		120,
+		StructFlags.None,
+		new Field("cbSize", "uint", 0, true),
+		new Field("fMask", "ExecuteMask", 8, false),
+		new Field("hwnd", "User32.HWND", 16, false),
+		new Field("lpVerb", "char*", 24, false),
+		new Field("lpFile", "char*", 32, false),
+		new Field("lpParameters", "char*", 40, false),
+		new Field("lpDirectory", "char*", 48, false),
+		new Field("nShow", "User32.ShowWindowCommand", 56, false),
+		new Field("hInstApp", "Kernel32.HInstance", 64, false),
+		new Field("lpIDList", "SHItemID*", 72, false),
+		new Field("lpClass", "char*", 80, false),
+		new Field("hKeyClass", "ADVAPI32.HKey", 88, false),
+		new Field("dwHotKey", "User32.HotKey", 96, false),
+		new Field("hIcon", "User32.HIcon", 104, false),
+		new Field("hMonitor", "SHCore.HMonitor", 104, false),
+		new Field("hProcess", "HProcess", 112, false)));
+#>
+#nullable restore
+<#@ include file="$(ProjectDir)/Structs/Large/Large.tt" #>

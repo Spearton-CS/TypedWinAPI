@@ -9,12 +9,23 @@ namespace TypedWinAPI;
 #if ManagedStrings
     DebuggerDisplay("{ToString(),nq}"),
 #endif
-    StructLayout(LayoutKind.Explicit, Size = 4)
+    SkipLocalsInit
 ]
-public readonly record struct HResult([field: FieldOffset(0)] int Raw) :
-    IEqualityOperators<HResult, HResult, bool>, IEquatable<HResult>,
-    IEqualityOperators<HResult, int, bool>, IEquatable<int>
+public partial struct HResult :
+    IEqualityOperators<HResult, int, bool>, IEquatable<int>,
+    IEqualityOperators<HResult, uint, bool>, IEquatable<uint>
 {
+    #region Constructor
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public HResult() => SignedValue = 0;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public HResult(int sig) => SignedValue = sig;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public HResult(uint unsig) => UnsignedValue = unsig;
+
+    #endregion
+
     #region Consts
 
     public static HResult S_OK
@@ -37,37 +48,37 @@ public readonly record struct HResult([field: FieldOffset(0)] int Raw) :
 
     #region Bits
 
-    public bool IsSuccess
+    public readonly bool IsSuccess
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => Raw >= 0;
+        get => SignedValue >= 0;
     }
-    public bool IsError
+    public readonly bool IsError
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => Raw < 0;
-    }
-
-    public bool IsCustomerFacility
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (Raw & 0x20000000) != 0;
-    }
-    public bool IsReservedSet
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (Raw & 0x10000000) != 0;
+        get => SignedValue < 0;
     }
 
-    public ushort Facility
+    public readonly bool IsCustomerFacility
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (ushort)((Raw >> 16) & 0x1FFF);
+        get => (SignedValue & 0x20000000) != 0;
     }
-    public ushort Code
+    public readonly bool IsReservedSet
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => (ushort)(Raw & 0xFFFF);
+        get => (SignedValue & 0x10000000) != 0;
+    }
+
+    public readonly ushort Facility
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => (ushort)((SignedValue >> 16) & 0x1FFF);
+    }
+    public readonly ushort Code
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => (ushort)(SignedValue & 0xFFFF);
     }
 
     #endregion
@@ -77,7 +88,7 @@ public readonly record struct HResult([field: FieldOffset(0)] int Raw) :
     public readonly void ThrowIfFailed()
     {
         if (IsError)
-            Marshal.ThrowExceptionForHR(Raw);
+            Marshal.ThrowExceptionForHR(SignedValue);
     }
 #endif
 
@@ -86,21 +97,49 @@ public readonly record struct HResult([field: FieldOffset(0)] int Raw) :
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator false(HResult hresult) => hresult.IsError;
 
+    #region Equality
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly bool Equals(HResult raw) => this == raw;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator ==(HResult left, HResult right) => left.SignedValue == right.SignedValue;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator !=(HResult left, HResult right) => left.SignedValue != right.SignedValue;
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool Equals(int raw) => this == raw;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator ==(HResult left, int right) => left.Raw == right;
+    public static bool operator ==(HResult left, int right) => left.SignedValue == right;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator !=(HResult left, int right) => left.Raw != right;
+    public static bool operator !=(HResult left, int right) => left.SignedValue != right;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator int(HResult hresult) => hresult.Raw;
+    public readonly bool Equals(uint raw) => this == raw;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator ==(HResult left, uint right) => left.UnsignedValue == right;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator !=(HResult left, uint right) => left.UnsignedValue != right;
+
+    #endregion
+
+    #region Cast
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator int(HResult hresult) => hresult.SignedValue;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HResult(int raw) => new(raw);
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator uint(HResult hresult) => hresult.UnsignedValue;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator HResult(uint raw) => new(raw);
+
+    #endregion
+
 #if ManagedStrings
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override string ToString() => IsSuccess ? $"Success (0x{Raw:X8})" : $"Error (0x{Raw:X8})";
+    public readonly override string ToString() => IsSuccess ? $"Success (0x{SignedValue:X8})" : $"Error (0x{SignedValue:X8})";
 #endif
-    public override int GetHashCode() => Raw;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly override int GetHashCode() => SignedValue;
 }

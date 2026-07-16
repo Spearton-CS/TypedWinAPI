@@ -8,7 +8,7 @@ using System.Numerics;
 namespace TypedWinAPI.GDIPlus;
 
 /// <summary>
-/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over HBitmap
+/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over Win32 HBitmap
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 8),
 	DebuggerDisplay("{UnsignedValue.ToString(\"X16\"),nq}"),
@@ -16,8 +16,8 @@ namespace TypedWinAPI.GDIPlus;
 	SkipLocalsInit]
 public unsafe readonly struct HBitmap :
 	IEqualityOperators<HBitmap, HBitmap, bool>, IEquatable<HBitmap>,
-		IEqualityOperators<HBitmap, Handle, bool>, IEquatable<Handle>,
-	    IEqualityOperators<HBitmap, nuint, bool>, IEquatable<nuint>,
+	IEqualityOperators<HBitmap, Handle, bool>, IEquatable<Handle>,
+    IEqualityOperators<HBitmap, nuint, bool>, IEquatable<nuint>,
     IEqualityOperators<HBitmap, nint, bool>, IEquatable<nint>,
 
 #if ManagedObjects
@@ -30,8 +30,8 @@ public unsafe readonly struct HBitmap :
 #endif
 
 	IComparisonOperators<HBitmap, HBitmap, bool>, IComparable<HBitmap>,
-		IComparisonOperators<HBitmap, Handle, bool>, IComparable<Handle>,
-	    IComparisonOperators<HBitmap, nuint, bool>, IComparable<nuint>,
+	IComparisonOperators<HBitmap, Handle, bool>, IComparable<Handle>,
+    IComparisonOperators<HBitmap, nuint, bool>, IComparable<nuint>,
     IComparisonOperators<HBitmap, nint, bool>, IComparable<nint>
 {
 	#region Construct
@@ -47,10 +47,10 @@ public unsafe readonly struct HBitmap :
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HBitmap(nint sig) => SignedValue = sig;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HBitmap(Handle @base) => PointerValue = @base.PointerValue;
-	
+
 	#endregion
 
 	#region Fields
@@ -71,9 +71,9 @@ public unsafe readonly struct HBitmap :
 	{
 		if (obj is HBitmap other)
 			return this == other;
-				else if (obj is Handle @Handle)
+		else if (obj is Handle @Handle)
 			return this == @Handle;
-				else if (obj is nuint unsig)
+		else if (obj is nuint unsig)
 			return this == unsig;
 		else if (obj is nint sig)
 			return this == sig;
@@ -83,9 +83,9 @@ public unsafe readonly struct HBitmap :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(HBitmap other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(Handle other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(nuint other) => this == other;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(nint other) => this == other;
@@ -96,12 +96,12 @@ public unsafe readonly struct HBitmap :
 	public static bool operator ==(HBitmap a, HBitmap b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HBitmap a, HBitmap b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HBitmap a, Handle b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HBitmap a, Handle b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HBitmap a, void* b) => a.PointerValue == b;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -130,9 +130,9 @@ public unsafe readonly struct HBitmap :
 	{
 		if (obj is HBitmap other)
 			return CompareTo(other);
-				else if (obj is Handle @Handle)
+		else if (obj is Handle @Handle)
 			return CompareTo(@Handle);
-				else if (obj is nuint unsig)
+		else if (obj is nuint unsig)
 			return CompareTo(unsig);
 		else if (obj is nint sig)
 			return CompareTo(sig);
@@ -142,9 +142,9 @@ public unsafe readonly struct HBitmap :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(HBitmap other) => UnsignedValue.CompareTo(other);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(Handle other) => UnsignedValue.CompareTo(other.UnsignedValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(nint other) => SignedValue.CompareTo(other);
@@ -160,7 +160,7 @@ public unsafe readonly struct HBitmap :
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HBitmap a, HBitmap b) => a.PointerValue >= b.PointerValue;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HBitmap a, Handle b) => a.PointerValue < b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >(HBitmap a, Handle b) => a.PointerValue > b.PointerValue;
@@ -168,7 +168,7 @@ public unsafe readonly struct HBitmap :
 	public static bool operator <=(HBitmap a, Handle b) => a.PointerValue <= b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HBitmap a, Handle b) => a.PointerValue >= b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HBitmap a, void* b) => a.PointerValue < b;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -245,18 +245,18 @@ public unsafe readonly struct HBitmap :
 
 	#region Cast
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static explicit operator HBitmap(Handle @base) => new(@base);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HBitmap(void* ptr) => new(ptr);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HBitmap(nuint unsig) => new(unsig);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HBitmap(nint sig) => new(sig);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static implicit operator Handle(HBitmap self) => new(self.PointerValue);
-	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator void*(HBitmap h) => h.PointerValue;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator nuint(HBitmap h) => h.UnsignedValue;

@@ -8,7 +8,7 @@ using System.Numerics;
 namespace TypedWinAPI.GDI32;
 
 /// <summary>
-/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over HRegion
+/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over Win32 HRegion
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 8),
 	DebuggerDisplay("{UnsignedValue.ToString(\"X16\"),nq}"),
@@ -16,9 +16,9 @@ namespace TypedWinAPI.GDI32;
 	SkipLocalsInit]
 public unsafe readonly struct HRegion :
 	IEqualityOperators<HRegion, HRegion, bool>, IEquatable<HRegion>,
-		IEqualityOperators<HRegion, HObj, bool>, IEquatable<HObj>,
-		IEqualityOperators<HRegion, Handle, bool>, IEquatable<Handle>,
-	    IEqualityOperators<HRegion, nuint, bool>, IEquatable<nuint>,
+	IEqualityOperators<HRegion, HObj, bool>, IEquatable<HObj>,
+	IEqualityOperators<HRegion, Handle, bool>, IEquatable<Handle>,
+    IEqualityOperators<HRegion, nuint, bool>, IEquatable<nuint>,
     IEqualityOperators<HRegion, nint, bool>, IEquatable<nint>,
 
 #if ManagedObjects
@@ -31,9 +31,9 @@ public unsafe readonly struct HRegion :
 #endif
 
 	IComparisonOperators<HRegion, HRegion, bool>, IComparable<HRegion>,
-		IComparisonOperators<HRegion, HObj, bool>, IComparable<HObj>,
-		IComparisonOperators<HRegion, Handle, bool>, IComparable<Handle>,
-	    IComparisonOperators<HRegion, nuint, bool>, IComparable<nuint>,
+	IComparisonOperators<HRegion, HObj, bool>, IComparable<HObj>,
+	IComparisonOperators<HRegion, Handle, bool>, IComparable<Handle>,
+    IComparisonOperators<HRegion, nuint, bool>, IComparable<nuint>,
     IComparisonOperators<HRegion, nint, bool>, IComparable<nint>
 {
 	#region Construct
@@ -49,13 +49,13 @@ public unsafe readonly struct HRegion :
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HRegion(nint sig) => SignedValue = sig;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HRegion(HObj @base) => PointerValue = @base.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HRegion(Handle @base) => PointerValue = @base.PointerValue;
-	
+
 	#endregion
 
 	#region Fields
@@ -76,11 +76,11 @@ public unsafe readonly struct HRegion :
 	{
 		if (obj is HRegion other)
 			return this == other;
-				else if (obj is HObj @HObj)
+		else if (obj is HObj @HObj)
 			return this == @HObj;
-				else if (obj is Handle @Handle)
+		else if (obj is Handle @Handle)
 			return this == @Handle;
-				else if (obj is nuint unsig)
+		else if (obj is nuint unsig)
 			return this == unsig;
 		else if (obj is nint sig)
 			return this == sig;
@@ -90,11 +90,11 @@ public unsafe readonly struct HRegion :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(HRegion other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(HObj other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(Handle other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(nuint other) => this == other;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(nint other) => this == other;
@@ -105,17 +105,17 @@ public unsafe readonly struct HRegion :
 	public static bool operator ==(HRegion a, HRegion b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HRegion a, HRegion b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HRegion a, HObj b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HRegion a, HObj b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HRegion a, Handle b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HRegion a, Handle b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HRegion a, void* b) => a.PointerValue == b;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -144,11 +144,11 @@ public unsafe readonly struct HRegion :
 	{
 		if (obj is HRegion other)
 			return CompareTo(other);
-				else if (obj is HObj @HObj)
+		else if (obj is HObj @HObj)
 			return CompareTo(@HObj);
-				else if (obj is Handle @Handle)
+		else if (obj is Handle @Handle)
 			return CompareTo(@Handle);
-				else if (obj is nuint unsig)
+		else if (obj is nuint unsig)
 			return CompareTo(unsig);
 		else if (obj is nint sig)
 			return CompareTo(sig);
@@ -158,11 +158,11 @@ public unsafe readonly struct HRegion :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(HRegion other) => UnsignedValue.CompareTo(other);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(HObj other) => UnsignedValue.CompareTo(other.UnsignedValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(Handle other) => UnsignedValue.CompareTo(other.UnsignedValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(nint other) => SignedValue.CompareTo(other);
@@ -178,7 +178,7 @@ public unsafe readonly struct HRegion :
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HRegion a, HRegion b) => a.PointerValue >= b.PointerValue;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HRegion a, HObj b) => a.PointerValue < b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >(HRegion a, HObj b) => a.PointerValue > b.PointerValue;
@@ -186,7 +186,7 @@ public unsafe readonly struct HRegion :
 	public static bool operator <=(HRegion a, HObj b) => a.PointerValue <= b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HRegion a, HObj b) => a.PointerValue >= b.PointerValue;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HRegion a, Handle b) => a.PointerValue < b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >(HRegion a, Handle b) => a.PointerValue > b.PointerValue;
@@ -194,7 +194,7 @@ public unsafe readonly struct HRegion :
 	public static bool operator <=(HRegion a, Handle b) => a.PointerValue <= b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HRegion a, Handle b) => a.PointerValue >= b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HRegion a, void* b) => a.PointerValue < b;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -271,22 +271,22 @@ public unsafe readonly struct HRegion :
 
 	#region Cast
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static explicit operator HRegion(HObj @base) => new(@base);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static explicit operator HRegion(Handle @base) => new(@base);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HRegion(void* ptr) => new(ptr);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HRegion(nuint unsig) => new(unsig);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HRegion(nint sig) => new(sig);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static implicit operator HObj(HRegion self) => new(self.PointerValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static implicit operator Handle(HRegion self) => new(self.PointerValue);
-	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator void*(HRegion h) => h.PointerValue;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator nuint(HRegion h) => h.UnsignedValue;
@@ -296,7 +296,7 @@ public unsafe readonly struct HRegion :
 	#endregion
 }
 /// <summary>
-/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over HPen
+/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over Win32 HPen
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 8),
 	DebuggerDisplay("{UnsignedValue.ToString(\"X16\"),nq}"),
@@ -304,9 +304,9 @@ public unsafe readonly struct HRegion :
 	SkipLocalsInit]
 public unsafe readonly struct HPen :
 	IEqualityOperators<HPen, HPen, bool>, IEquatable<HPen>,
-		IEqualityOperators<HPen, HObj, bool>, IEquatable<HObj>,
-		IEqualityOperators<HPen, Handle, bool>, IEquatable<Handle>,
-	    IEqualityOperators<HPen, nuint, bool>, IEquatable<nuint>,
+	IEqualityOperators<HPen, HObj, bool>, IEquatable<HObj>,
+	IEqualityOperators<HPen, Handle, bool>, IEquatable<Handle>,
+    IEqualityOperators<HPen, nuint, bool>, IEquatable<nuint>,
     IEqualityOperators<HPen, nint, bool>, IEquatable<nint>,
 
 #if ManagedObjects
@@ -319,9 +319,9 @@ public unsafe readonly struct HPen :
 #endif
 
 	IComparisonOperators<HPen, HPen, bool>, IComparable<HPen>,
-		IComparisonOperators<HPen, HObj, bool>, IComparable<HObj>,
-		IComparisonOperators<HPen, Handle, bool>, IComparable<Handle>,
-	    IComparisonOperators<HPen, nuint, bool>, IComparable<nuint>,
+	IComparisonOperators<HPen, HObj, bool>, IComparable<HObj>,
+	IComparisonOperators<HPen, Handle, bool>, IComparable<Handle>,
+    IComparisonOperators<HPen, nuint, bool>, IComparable<nuint>,
     IComparisonOperators<HPen, nint, bool>, IComparable<nint>
 {
 	#region Construct
@@ -337,13 +337,13 @@ public unsafe readonly struct HPen :
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HPen(nint sig) => SignedValue = sig;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HPen(HObj @base) => PointerValue = @base.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HPen(Handle @base) => PointerValue = @base.PointerValue;
-	
+
 	#endregion
 
 	#region Fields
@@ -364,11 +364,11 @@ public unsafe readonly struct HPen :
 	{
 		if (obj is HPen other)
 			return this == other;
-				else if (obj is HObj @HObj)
+		else if (obj is HObj @HObj)
 			return this == @HObj;
-				else if (obj is Handle @Handle)
+		else if (obj is Handle @Handle)
 			return this == @Handle;
-				else if (obj is nuint unsig)
+		else if (obj is nuint unsig)
 			return this == unsig;
 		else if (obj is nint sig)
 			return this == sig;
@@ -378,11 +378,11 @@ public unsafe readonly struct HPen :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(HPen other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(HObj other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(Handle other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(nuint other) => this == other;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(nint other) => this == other;
@@ -393,17 +393,17 @@ public unsafe readonly struct HPen :
 	public static bool operator ==(HPen a, HPen b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HPen a, HPen b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HPen a, HObj b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HPen a, HObj b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HPen a, Handle b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HPen a, Handle b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HPen a, void* b) => a.PointerValue == b;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -432,11 +432,11 @@ public unsafe readonly struct HPen :
 	{
 		if (obj is HPen other)
 			return CompareTo(other);
-				else if (obj is HObj @HObj)
+		else if (obj is HObj @HObj)
 			return CompareTo(@HObj);
-				else if (obj is Handle @Handle)
+		else if (obj is Handle @Handle)
 			return CompareTo(@Handle);
-				else if (obj is nuint unsig)
+		else if (obj is nuint unsig)
 			return CompareTo(unsig);
 		else if (obj is nint sig)
 			return CompareTo(sig);
@@ -446,11 +446,11 @@ public unsafe readonly struct HPen :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(HPen other) => UnsignedValue.CompareTo(other);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(HObj other) => UnsignedValue.CompareTo(other.UnsignedValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(Handle other) => UnsignedValue.CompareTo(other.UnsignedValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(nint other) => SignedValue.CompareTo(other);
@@ -466,7 +466,7 @@ public unsafe readonly struct HPen :
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HPen a, HPen b) => a.PointerValue >= b.PointerValue;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HPen a, HObj b) => a.PointerValue < b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >(HPen a, HObj b) => a.PointerValue > b.PointerValue;
@@ -474,7 +474,7 @@ public unsafe readonly struct HPen :
 	public static bool operator <=(HPen a, HObj b) => a.PointerValue <= b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HPen a, HObj b) => a.PointerValue >= b.PointerValue;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HPen a, Handle b) => a.PointerValue < b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >(HPen a, Handle b) => a.PointerValue > b.PointerValue;
@@ -482,7 +482,7 @@ public unsafe readonly struct HPen :
 	public static bool operator <=(HPen a, Handle b) => a.PointerValue <= b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HPen a, Handle b) => a.PointerValue >= b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HPen a, void* b) => a.PointerValue < b;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -559,22 +559,22 @@ public unsafe readonly struct HPen :
 
 	#region Cast
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static explicit operator HPen(HObj @base) => new(@base);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static explicit operator HPen(Handle @base) => new(@base);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HPen(void* ptr) => new(ptr);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HPen(nuint unsig) => new(unsig);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HPen(nint sig) => new(sig);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static implicit operator HObj(HPen self) => new(self.PointerValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static implicit operator Handle(HPen self) => new(self.PointerValue);
-	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator void*(HPen h) => h.PointerValue;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator nuint(HPen h) => h.UnsignedValue;
@@ -584,7 +584,7 @@ public unsafe readonly struct HPen :
 	#endregion
 }
 /// <summary>
-/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over HPalette
+/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over Win32 HPalette
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 8),
 	DebuggerDisplay("{UnsignedValue.ToString(\"X16\"),nq}"),
@@ -592,9 +592,9 @@ public unsafe readonly struct HPen :
 	SkipLocalsInit]
 public unsafe readonly struct HPalette :
 	IEqualityOperators<HPalette, HPalette, bool>, IEquatable<HPalette>,
-		IEqualityOperators<HPalette, HObj, bool>, IEquatable<HObj>,
-		IEqualityOperators<HPalette, Handle, bool>, IEquatable<Handle>,
-	    IEqualityOperators<HPalette, nuint, bool>, IEquatable<nuint>,
+	IEqualityOperators<HPalette, HObj, bool>, IEquatable<HObj>,
+	IEqualityOperators<HPalette, Handle, bool>, IEquatable<Handle>,
+    IEqualityOperators<HPalette, nuint, bool>, IEquatable<nuint>,
     IEqualityOperators<HPalette, nint, bool>, IEquatable<nint>,
 
 #if ManagedObjects
@@ -607,9 +607,9 @@ public unsafe readonly struct HPalette :
 #endif
 
 	IComparisonOperators<HPalette, HPalette, bool>, IComparable<HPalette>,
-		IComparisonOperators<HPalette, HObj, bool>, IComparable<HObj>,
-		IComparisonOperators<HPalette, Handle, bool>, IComparable<Handle>,
-	    IComparisonOperators<HPalette, nuint, bool>, IComparable<nuint>,
+	IComparisonOperators<HPalette, HObj, bool>, IComparable<HObj>,
+	IComparisonOperators<HPalette, Handle, bool>, IComparable<Handle>,
+    IComparisonOperators<HPalette, nuint, bool>, IComparable<nuint>,
     IComparisonOperators<HPalette, nint, bool>, IComparable<nint>
 {
 	#region Construct
@@ -625,13 +625,13 @@ public unsafe readonly struct HPalette :
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HPalette(nint sig) => SignedValue = sig;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HPalette(HObj @base) => PointerValue = @base.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HPalette(Handle @base) => PointerValue = @base.PointerValue;
-	
+
 	#endregion
 
 	#region Fields
@@ -652,11 +652,11 @@ public unsafe readonly struct HPalette :
 	{
 		if (obj is HPalette other)
 			return this == other;
-				else if (obj is HObj @HObj)
+		else if (obj is HObj @HObj)
 			return this == @HObj;
-				else if (obj is Handle @Handle)
+		else if (obj is Handle @Handle)
 			return this == @Handle;
-				else if (obj is nuint unsig)
+		else if (obj is nuint unsig)
 			return this == unsig;
 		else if (obj is nint sig)
 			return this == sig;
@@ -666,11 +666,11 @@ public unsafe readonly struct HPalette :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(HPalette other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(HObj other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(Handle other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(nuint other) => this == other;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(nint other) => this == other;
@@ -681,17 +681,17 @@ public unsafe readonly struct HPalette :
 	public static bool operator ==(HPalette a, HPalette b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HPalette a, HPalette b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HPalette a, HObj b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HPalette a, HObj b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HPalette a, Handle b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HPalette a, Handle b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HPalette a, void* b) => a.PointerValue == b;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -720,11 +720,11 @@ public unsafe readonly struct HPalette :
 	{
 		if (obj is HPalette other)
 			return CompareTo(other);
-				else if (obj is HObj @HObj)
+		else if (obj is HObj @HObj)
 			return CompareTo(@HObj);
-				else if (obj is Handle @Handle)
+		else if (obj is Handle @Handle)
 			return CompareTo(@Handle);
-				else if (obj is nuint unsig)
+		else if (obj is nuint unsig)
 			return CompareTo(unsig);
 		else if (obj is nint sig)
 			return CompareTo(sig);
@@ -734,11 +734,11 @@ public unsafe readonly struct HPalette :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(HPalette other) => UnsignedValue.CompareTo(other);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(HObj other) => UnsignedValue.CompareTo(other.UnsignedValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(Handle other) => UnsignedValue.CompareTo(other.UnsignedValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(nint other) => SignedValue.CompareTo(other);
@@ -754,7 +754,7 @@ public unsafe readonly struct HPalette :
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HPalette a, HPalette b) => a.PointerValue >= b.PointerValue;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HPalette a, HObj b) => a.PointerValue < b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >(HPalette a, HObj b) => a.PointerValue > b.PointerValue;
@@ -762,7 +762,7 @@ public unsafe readonly struct HPalette :
 	public static bool operator <=(HPalette a, HObj b) => a.PointerValue <= b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HPalette a, HObj b) => a.PointerValue >= b.PointerValue;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HPalette a, Handle b) => a.PointerValue < b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >(HPalette a, Handle b) => a.PointerValue > b.PointerValue;
@@ -770,7 +770,7 @@ public unsafe readonly struct HPalette :
 	public static bool operator <=(HPalette a, Handle b) => a.PointerValue <= b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HPalette a, Handle b) => a.PointerValue >= b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HPalette a, void* b) => a.PointerValue < b;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -847,22 +847,22 @@ public unsafe readonly struct HPalette :
 
 	#region Cast
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static explicit operator HPalette(HObj @base) => new(@base);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static explicit operator HPalette(Handle @base) => new(@base);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HPalette(void* ptr) => new(ptr);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HPalette(nuint unsig) => new(unsig);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HPalette(nint sig) => new(sig);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static implicit operator HObj(HPalette self) => new(self.PointerValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static implicit operator Handle(HPalette self) => new(self.PointerValue);
-	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator void*(HPalette h) => h.PointerValue;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator nuint(HPalette h) => h.UnsignedValue;
@@ -872,7 +872,7 @@ public unsafe readonly struct HPalette :
 	#endregion
 }
 /// <summary>
-/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over HFont
+/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over Win32 HFont
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 8),
 	DebuggerDisplay("{UnsignedValue.ToString(\"X16\"),nq}"),
@@ -880,9 +880,9 @@ public unsafe readonly struct HPalette :
 	SkipLocalsInit]
 public unsafe readonly struct HFont :
 	IEqualityOperators<HFont, HFont, bool>, IEquatable<HFont>,
-		IEqualityOperators<HFont, HObj, bool>, IEquatable<HObj>,
-		IEqualityOperators<HFont, Handle, bool>, IEquatable<Handle>,
-	    IEqualityOperators<HFont, nuint, bool>, IEquatable<nuint>,
+	IEqualityOperators<HFont, HObj, bool>, IEquatable<HObj>,
+	IEqualityOperators<HFont, Handle, bool>, IEquatable<Handle>,
+    IEqualityOperators<HFont, nuint, bool>, IEquatable<nuint>,
     IEqualityOperators<HFont, nint, bool>, IEquatable<nint>,
 
 #if ManagedObjects
@@ -895,9 +895,9 @@ public unsafe readonly struct HFont :
 #endif
 
 	IComparisonOperators<HFont, HFont, bool>, IComparable<HFont>,
-		IComparisonOperators<HFont, HObj, bool>, IComparable<HObj>,
-		IComparisonOperators<HFont, Handle, bool>, IComparable<Handle>,
-	    IComparisonOperators<HFont, nuint, bool>, IComparable<nuint>,
+	IComparisonOperators<HFont, HObj, bool>, IComparable<HObj>,
+	IComparisonOperators<HFont, Handle, bool>, IComparable<Handle>,
+    IComparisonOperators<HFont, nuint, bool>, IComparable<nuint>,
     IComparisonOperators<HFont, nint, bool>, IComparable<nint>
 {
 	#region Construct
@@ -913,13 +913,13 @@ public unsafe readonly struct HFont :
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HFont(nint sig) => SignedValue = sig;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HFont(HObj @base) => PointerValue = @base.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HFont(Handle @base) => PointerValue = @base.PointerValue;
-	
+
 	#endregion
 
 	#region Fields
@@ -940,11 +940,11 @@ public unsafe readonly struct HFont :
 	{
 		if (obj is HFont other)
 			return this == other;
-				else if (obj is HObj @HObj)
+		else if (obj is HObj @HObj)
 			return this == @HObj;
-				else if (obj is Handle @Handle)
+		else if (obj is Handle @Handle)
 			return this == @Handle;
-				else if (obj is nuint unsig)
+		else if (obj is nuint unsig)
 			return this == unsig;
 		else if (obj is nint sig)
 			return this == sig;
@@ -954,11 +954,11 @@ public unsafe readonly struct HFont :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(HFont other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(HObj other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(Handle other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(nuint other) => this == other;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(nint other) => this == other;
@@ -969,17 +969,17 @@ public unsafe readonly struct HFont :
 	public static bool operator ==(HFont a, HFont b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HFont a, HFont b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HFont a, HObj b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HFont a, HObj b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HFont a, Handle b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HFont a, Handle b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HFont a, void* b) => a.PointerValue == b;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1008,11 +1008,11 @@ public unsafe readonly struct HFont :
 	{
 		if (obj is HFont other)
 			return CompareTo(other);
-				else if (obj is HObj @HObj)
+		else if (obj is HObj @HObj)
 			return CompareTo(@HObj);
-				else if (obj is Handle @Handle)
+		else if (obj is Handle @Handle)
 			return CompareTo(@Handle);
-				else if (obj is nuint unsig)
+		else if (obj is nuint unsig)
 			return CompareTo(unsig);
 		else if (obj is nint sig)
 			return CompareTo(sig);
@@ -1022,11 +1022,11 @@ public unsafe readonly struct HFont :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(HFont other) => UnsignedValue.CompareTo(other);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(HObj other) => UnsignedValue.CompareTo(other.UnsignedValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(Handle other) => UnsignedValue.CompareTo(other.UnsignedValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(nint other) => SignedValue.CompareTo(other);
@@ -1042,7 +1042,7 @@ public unsafe readonly struct HFont :
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HFont a, HFont b) => a.PointerValue >= b.PointerValue;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HFont a, HObj b) => a.PointerValue < b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >(HFont a, HObj b) => a.PointerValue > b.PointerValue;
@@ -1050,7 +1050,7 @@ public unsafe readonly struct HFont :
 	public static bool operator <=(HFont a, HObj b) => a.PointerValue <= b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HFont a, HObj b) => a.PointerValue >= b.PointerValue;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HFont a, Handle b) => a.PointerValue < b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >(HFont a, Handle b) => a.PointerValue > b.PointerValue;
@@ -1058,7 +1058,7 @@ public unsafe readonly struct HFont :
 	public static bool operator <=(HFont a, Handle b) => a.PointerValue <= b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HFont a, Handle b) => a.PointerValue >= b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HFont a, void* b) => a.PointerValue < b;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1135,22 +1135,22 @@ public unsafe readonly struct HFont :
 
 	#region Cast
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static explicit operator HFont(HObj @base) => new(@base);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static explicit operator HFont(Handle @base) => new(@base);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HFont(void* ptr) => new(ptr);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HFont(nuint unsig) => new(unsig);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HFont(nint sig) => new(sig);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static implicit operator HObj(HFont self) => new(self.PointerValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static implicit operator Handle(HFont self) => new(self.PointerValue);
-	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator void*(HFont h) => h.PointerValue;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator nuint(HFont h) => h.UnsignedValue;
@@ -1160,7 +1160,7 @@ public unsafe readonly struct HFont :
 	#endregion
 }
 /// <summary>
-/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over HBrush
+/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over Win32 HBrush
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 8),
 	DebuggerDisplay("{UnsignedValue.ToString(\"X16\"),nq}"),
@@ -1168,9 +1168,9 @@ public unsafe readonly struct HFont :
 	SkipLocalsInit]
 public unsafe readonly struct HBrush :
 	IEqualityOperators<HBrush, HBrush, bool>, IEquatable<HBrush>,
-		IEqualityOperators<HBrush, HObj, bool>, IEquatable<HObj>,
-		IEqualityOperators<HBrush, Handle, bool>, IEquatable<Handle>,
-	    IEqualityOperators<HBrush, nuint, bool>, IEquatable<nuint>,
+	IEqualityOperators<HBrush, HObj, bool>, IEquatable<HObj>,
+	IEqualityOperators<HBrush, Handle, bool>, IEquatable<Handle>,
+    IEqualityOperators<HBrush, nuint, bool>, IEquatable<nuint>,
     IEqualityOperators<HBrush, nint, bool>, IEquatable<nint>,
 
 #if ManagedObjects
@@ -1183,9 +1183,9 @@ public unsafe readonly struct HBrush :
 #endif
 
 	IComparisonOperators<HBrush, HBrush, bool>, IComparable<HBrush>,
-		IComparisonOperators<HBrush, HObj, bool>, IComparable<HObj>,
-		IComparisonOperators<HBrush, Handle, bool>, IComparable<Handle>,
-	    IComparisonOperators<HBrush, nuint, bool>, IComparable<nuint>,
+	IComparisonOperators<HBrush, HObj, bool>, IComparable<HObj>,
+	IComparisonOperators<HBrush, Handle, bool>, IComparable<Handle>,
+    IComparisonOperators<HBrush, nuint, bool>, IComparable<nuint>,
     IComparisonOperators<HBrush, nint, bool>, IComparable<nint>
 {
 	#region Construct
@@ -1201,13 +1201,13 @@ public unsafe readonly struct HBrush :
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HBrush(nint sig) => SignedValue = sig;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HBrush(HObj @base) => PointerValue = @base.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HBrush(Handle @base) => PointerValue = @base.PointerValue;
-	
+
 	#endregion
 
 	#region Fields
@@ -1228,11 +1228,11 @@ public unsafe readonly struct HBrush :
 	{
 		if (obj is HBrush other)
 			return this == other;
-				else if (obj is HObj @HObj)
+		else if (obj is HObj @HObj)
 			return this == @HObj;
-				else if (obj is Handle @Handle)
+		else if (obj is Handle @Handle)
 			return this == @Handle;
-				else if (obj is nuint unsig)
+		else if (obj is nuint unsig)
 			return this == unsig;
 		else if (obj is nint sig)
 			return this == sig;
@@ -1242,11 +1242,11 @@ public unsafe readonly struct HBrush :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(HBrush other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(HObj other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(Handle other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(nuint other) => this == other;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(nint other) => this == other;
@@ -1257,17 +1257,17 @@ public unsafe readonly struct HBrush :
 	public static bool operator ==(HBrush a, HBrush b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HBrush a, HBrush b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HBrush a, HObj b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HBrush a, HObj b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HBrush a, Handle b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HBrush a, Handle b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HBrush a, void* b) => a.PointerValue == b;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1296,11 +1296,11 @@ public unsafe readonly struct HBrush :
 	{
 		if (obj is HBrush other)
 			return CompareTo(other);
-				else if (obj is HObj @HObj)
+		else if (obj is HObj @HObj)
 			return CompareTo(@HObj);
-				else if (obj is Handle @Handle)
+		else if (obj is Handle @Handle)
 			return CompareTo(@Handle);
-				else if (obj is nuint unsig)
+		else if (obj is nuint unsig)
 			return CompareTo(unsig);
 		else if (obj is nint sig)
 			return CompareTo(sig);
@@ -1310,11 +1310,11 @@ public unsafe readonly struct HBrush :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(HBrush other) => UnsignedValue.CompareTo(other);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(HObj other) => UnsignedValue.CompareTo(other.UnsignedValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(Handle other) => UnsignedValue.CompareTo(other.UnsignedValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(nint other) => SignedValue.CompareTo(other);
@@ -1330,7 +1330,7 @@ public unsafe readonly struct HBrush :
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HBrush a, HBrush b) => a.PointerValue >= b.PointerValue;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HBrush a, HObj b) => a.PointerValue < b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >(HBrush a, HObj b) => a.PointerValue > b.PointerValue;
@@ -1338,7 +1338,7 @@ public unsafe readonly struct HBrush :
 	public static bool operator <=(HBrush a, HObj b) => a.PointerValue <= b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HBrush a, HObj b) => a.PointerValue >= b.PointerValue;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HBrush a, Handle b) => a.PointerValue < b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >(HBrush a, Handle b) => a.PointerValue > b.PointerValue;
@@ -1346,7 +1346,7 @@ public unsafe readonly struct HBrush :
 	public static bool operator <=(HBrush a, Handle b) => a.PointerValue <= b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HBrush a, Handle b) => a.PointerValue >= b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HBrush a, void* b) => a.PointerValue < b;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1423,22 +1423,22 @@ public unsafe readonly struct HBrush :
 
 	#region Cast
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static explicit operator HBrush(HObj @base) => new(@base);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static explicit operator HBrush(Handle @base) => new(@base);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HBrush(void* ptr) => new(ptr);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HBrush(nuint unsig) => new(unsig);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HBrush(nint sig) => new(sig);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static implicit operator HObj(HBrush self) => new(self.PointerValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static implicit operator Handle(HBrush self) => new(self.PointerValue);
-	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator void*(HBrush h) => h.PointerValue;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator nuint(HBrush h) => h.UnsignedValue;
@@ -1448,7 +1448,7 @@ public unsafe readonly struct HBrush :
 	#endregion
 }
 /// <summary>
-/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over HBitmap
+/// Struct over <see cref="nuint"/>, or <see cref="nuint"/> or <see langword="void"/>*. Abstraction over Win32 HBitmap
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 8),
 	DebuggerDisplay("{UnsignedValue.ToString(\"X16\"),nq}"),
@@ -1456,9 +1456,9 @@ public unsafe readonly struct HBrush :
 	SkipLocalsInit]
 public unsafe readonly struct HBitmap :
 	IEqualityOperators<HBitmap, HBitmap, bool>, IEquatable<HBitmap>,
-		IEqualityOperators<HBitmap, HObj, bool>, IEquatable<HObj>,
-		IEqualityOperators<HBitmap, Handle, bool>, IEquatable<Handle>,
-	    IEqualityOperators<HBitmap, nuint, bool>, IEquatable<nuint>,
+	IEqualityOperators<HBitmap, HObj, bool>, IEquatable<HObj>,
+	IEqualityOperators<HBitmap, Handle, bool>, IEquatable<Handle>,
+    IEqualityOperators<HBitmap, nuint, bool>, IEquatable<nuint>,
     IEqualityOperators<HBitmap, nint, bool>, IEquatable<nint>,
 
 #if ManagedObjects
@@ -1471,9 +1471,9 @@ public unsafe readonly struct HBitmap :
 #endif
 
 	IComparisonOperators<HBitmap, HBitmap, bool>, IComparable<HBitmap>,
-		IComparisonOperators<HBitmap, HObj, bool>, IComparable<HObj>,
-		IComparisonOperators<HBitmap, Handle, bool>, IComparable<Handle>,
-	    IComparisonOperators<HBitmap, nuint, bool>, IComparable<nuint>,
+	IComparisonOperators<HBitmap, HObj, bool>, IComparable<HObj>,
+	IComparisonOperators<HBitmap, Handle, bool>, IComparable<Handle>,
+    IComparisonOperators<HBitmap, nuint, bool>, IComparable<nuint>,
     IComparisonOperators<HBitmap, nint, bool>, IComparable<nint>
 {
 	#region Construct
@@ -1489,13 +1489,13 @@ public unsafe readonly struct HBitmap :
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HBitmap(nint sig) => SignedValue = sig;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HBitmap(HObj @base) => PointerValue = @base.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public HBitmap(Handle @base) => PointerValue = @base.PointerValue;
-	
+
 	#endregion
 
 	#region Fields
@@ -1516,11 +1516,11 @@ public unsafe readonly struct HBitmap :
 	{
 		if (obj is HBitmap other)
 			return this == other;
-				else if (obj is HObj @HObj)
+		else if (obj is HObj @HObj)
 			return this == @HObj;
-				else if (obj is Handle @Handle)
+		else if (obj is Handle @Handle)
 			return this == @Handle;
-				else if (obj is nuint unsig)
+		else if (obj is nuint unsig)
 			return this == unsig;
 		else if (obj is nint sig)
 			return this == sig;
@@ -1530,11 +1530,11 @@ public unsafe readonly struct HBitmap :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(HBitmap other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(HObj other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(Handle other) => this == other;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(nuint other) => this == other;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly bool Equals(nint other) => this == other;
@@ -1545,17 +1545,17 @@ public unsafe readonly struct HBitmap :
 	public static bool operator ==(HBitmap a, HBitmap b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HBitmap a, HBitmap b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HBitmap a, HObj b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HBitmap a, HObj b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HBitmap a, Handle b) => a.PointerValue == b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(HBitmap a, Handle b) => a.PointerValue != b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator ==(HBitmap a, void* b) => a.PointerValue == b;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1584,11 +1584,11 @@ public unsafe readonly struct HBitmap :
 	{
 		if (obj is HBitmap other)
 			return CompareTo(other);
-				else if (obj is HObj @HObj)
+		else if (obj is HObj @HObj)
 			return CompareTo(@HObj);
-				else if (obj is Handle @Handle)
+		else if (obj is Handle @Handle)
 			return CompareTo(@Handle);
-				else if (obj is nuint unsig)
+		else if (obj is nuint unsig)
 			return CompareTo(unsig);
 		else if (obj is nint sig)
 			return CompareTo(sig);
@@ -1598,11 +1598,11 @@ public unsafe readonly struct HBitmap :
 #endif
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(HBitmap other) => UnsignedValue.CompareTo(other);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(HObj other) => UnsignedValue.CompareTo(other.UnsignedValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(Handle other) => UnsignedValue.CompareTo(other.UnsignedValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(nuint other) => UnsignedValue.CompareTo(other);
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly int CompareTo(nint other) => SignedValue.CompareTo(other);
@@ -1618,7 +1618,7 @@ public unsafe readonly struct HBitmap :
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HBitmap a, HBitmap b) => a.PointerValue >= b.PointerValue;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HBitmap a, HObj b) => a.PointerValue < b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >(HBitmap a, HObj b) => a.PointerValue > b.PointerValue;
@@ -1626,7 +1626,7 @@ public unsafe readonly struct HBitmap :
 	public static bool operator <=(HBitmap a, HObj b) => a.PointerValue <= b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HBitmap a, HObj b) => a.PointerValue >= b.PointerValue;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HBitmap a, Handle b) => a.PointerValue < b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >(HBitmap a, Handle b) => a.PointerValue > b.PointerValue;
@@ -1634,7 +1634,7 @@ public unsafe readonly struct HBitmap :
 	public static bool operator <=(HBitmap a, Handle b) => a.PointerValue <= b.PointerValue;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator >=(HBitmap a, Handle b) => a.PointerValue >= b.PointerValue;
-	
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator <(HBitmap a, void* b) => a.PointerValue < b;
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1711,22 +1711,22 @@ public unsafe readonly struct HBitmap :
 
 	#region Cast
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static explicit operator HBitmap(HObj @base) => new(@base);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static explicit operator HBitmap(Handle @base) => new(@base);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HBitmap(void* ptr) => new(ptr);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HBitmap(nuint unsig) => new(unsig);
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator HBitmap(nint sig) => new(sig);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static implicit operator HObj(HBitmap self) => new(self.PointerValue);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static implicit operator Handle(HBitmap self) => new(self.PointerValue);
-	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator void*(HBitmap h) => h.PointerValue;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator nuint(HBitmap h) => h.UnsignedValue;

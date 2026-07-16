@@ -11,7 +11,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<Version>1.0.1</Version>
+	<Version>1.0.2</Version>
     <Title>TypedWinAPI</Title>
     <Authors>Spearton-CS</Authors>
     <PackageReadmeFile>README.MD</PackageReadmeFile>
@@ -55,7 +55,17 @@ Custom defines;
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+    <None Update="Structs\Large\Large.tt">
+      <Generator></Generator>
+    </None>
+    <None Update="Structs\Primitives\Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Generated.g.cs</LastGenOutput>
+    </None>
     <None Update="Structs\Primitives\Primitive.tt">
+      <Generator></Generator>
+    </None>
+    <None Update="Structs\Small\Small.tt">
       <Generator></Generator>
     </None>
     <None Update="Structs\Struct.tt">
@@ -93,6 +103,10 @@ Custom defines;
       <LastGenOutput>RootHandles.g.cs</LastGenOutput>
       <Generator>TextTemplatingFileGenerator</Generator>
     </None>
+    <None Update="_Modules\Shell32\Structs\Large\Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Generated.g.cs</LastGenOutput>
+    </None>
     <None Update="_Modules\Shell32\Structs\Primitives\Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Generated.g.cs</LastGenOutput>
@@ -109,8 +123,6 @@ Custom defines;
 
   <ItemGroup>
     <Folder Include="Enums\" />
-    <Folder Include="Structs\Large\" />
-    <Folder Include="Structs\Small\" />
     <Folder Include="_Modules\ADVAPI32\Enums\" />
     <Folder Include="_Modules\ADVAPI32\Structs\Large\" />
     <Folder Include="_Modules\ADVAPI32\Structs\Primitives\" />
@@ -146,7 +158,17 @@ Custom defines;
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Structs\Primitives\Generated.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Generated.tt</DependentUpon>
+    </None>
     <None Include="_Modules\Kernel32\_Imports\Kernel32.DeviceIoControl.cs" />
+    <None Include="_Modules\Shell32\Structs\Large\Generated.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Generated.tt</DependentUpon>
+    </None>
     <None Include="_Modules\Shell32\Structs\Primitives\Generated.g.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -164,6 +186,11 @@ Custom defines;
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Structs\Primitives\Generated.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Generated.tt</DependentUpon>
+    </Compile>
     <Compile Update="_Modules\ADVAPI32\Handles\RootHandles.g.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -203,6 +230,11 @@ Custom defines;
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>RootHandles.tt</DependentUpon>
+    </Compile>
+    <Compile Update="_Modules\Shell32\Structs\Large\Generated.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Generated.tt</DependentUpon>
     </Compile>
     <Compile Update="_Modules\Shell32\Structs\Primitives\Generated.g.cs">
       <DesignTime>True</DesignTime>

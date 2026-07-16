@@ -11,16 +11,16 @@
 		{
 #>
 /// <summary>
-/// <#= meta.XAML_Comment ?? $"Blittable (unmanaged) primitive (read-only) struct with size {meta.Size}. Abstraction over Win32 {meta.Name}" #>
+/// <#= meta.XAML_Comment ?? $"Blittable (unmanaged) small struct with size {meta.Size}. Abstraction over Win32 {meta.Name}" #>
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = <#= meta.Size #>)]
-unsafe readonly partial struct <#= meta.Name #> :
+unsafe <#= meta.Flags.HasFlag(StructFlags.ReadOnly) ? "readonly " : "" #>partial struct <#= meta.Name #> :
 	IEqualityOperators<<#= meta.Name #>, <#= meta.Name #>, bool>, IEquatable<<#= meta.Name #>>
 {
 <#+
 	if (!meta.Flags.HasFlag(StructFlags.ConstructorOverride))
 	{
-#>
+	#>
 	#region Construct
 
 	public <#= meta.Name #>(
@@ -28,8 +28,7 @@ unsafe readonly partial struct <#= meta.Name #> :
 	for (int i = 0; i < meta.Fields.Length; i++)
 	{
 		Field field = meta.Fields[i];
-#>
-	<#= field.Type #> <#= field.Name #><#= (i != (meta.Fields.Length - 1)) ? "," : "" #>
+#><#= field.Type #> <#= field.Name #><#= (i != (meta.Fields.Length - 1)) ? "," : "" #>
 <#+
 	}
 #>
@@ -57,7 +56,7 @@ unsafe readonly partial struct <#= meta.Name #> :
 	foreach (Field field in meta.Fields)
 	{
 #>
-	[FieldOffset(<#= field.Offset #>)] public readonly <#= field.Type #> <#= field.Name #>;
+	[FieldOffset(<#= field.Offset #>)] public <#= (field.ReadOnly || meta.Flags.HasFlag(StructFlags.ReadOnly)) ? "readonly " : "" #><#= field.Type #> <#= field.Name #>;
 
 <#+
 	}
@@ -140,7 +139,6 @@ unsafe readonly partial struct <#= meta.Name #> :
 	}
 #>
 }
-
 <#+
 		}
 	}

@@ -1,1 +1,0 @@
-﻿# Reserved for safe-only API over `TypedWinAPI`
