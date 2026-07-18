@@ -1,0 +1,80 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" compilerOptions="/langversion:latest /nullable:enable" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".g.cs" #>
+#nullable enable
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Numerics;
+
+namespace TypedWinAPI.User32;
+
+<#
+	Generate(
+	new Struct(
+		"Point",
+		null,
+		8,
+		StructFlags.ReadOnly,
+		new Field("X", "int", 0, 4, true),
+		new Field("Y", "int", 4, 4, true)),
+	new Struct(
+		"Size",
+		null,
+		8,
+		StructFlags.ReadOnly,
+		new Field("Width", "int", 0, 4, true),
+		new Field("Height", "int", 4, 4, true)),
+	new Struct(
+		"HotKey",
+		null,
+		4,
+		StructFlags.ReadOnly,
+		new Field("Raw", "uint", 0, 4, true),
+		new Field("VirtualKeyRaw", "byte", 0, 1, true),
+		new Field("VirtualKey", "VirtualKey", 0, 1, true),
+		new Field("Modifier", "HotKeyModifier", 1, 1, true)),
+	new Struct(
+		"LParam",
+		null,
+		8,
+		StructFlags.ReadOnly |
+			StructFlags.ToStringOverride |
+			StructFlags.ConstructorOverride,
+		new Field("SignedValue", "nint", 0, 8, true),
+		new Field("UnsignedValue", "nuint", 0, 8, true),
+		new Field("PointerValue", "void*", 0, 8, true),
+		new Field("HandleValue", "Handle", 0, 8, true),
+		new Field("Handle16Value", "Handle16", 0, 2, true)),
+	new Struct(
+		"LResult",
+		null,
+		8,
+		StructFlags.ReadOnly |
+			StructFlags.ToStringOverride |
+			StructFlags.ConstructorOverride,
+		new Field("SignedValue", "nint", 0, 8, true),
+		new Field("UnsignedValue", "nuint", 0, 8, true),
+		new Field("PointerValue", "void*", 0, 8, true),
+		new Field("HandleValue", "Handle", 0, 8, true),
+		new Field("Handle16Value", "Handle16", 0, 2, true)),
+	new Struct(
+		"WParam",
+		null,
+		8,
+		StructFlags.ReadOnly |
+			StructFlags.ToStringOverride |
+			StructFlags.ConstructorOverride,
+		new Field("SignedValue", "nint", 0, 8, true),
+		new Field("UnsignedValue", "nuint", 0, 8, true),
+		new Field("PointerValue", "void*", 0, 8, true),
+		new Field("HandleValue", "Handle", 0, 8, true),
+		new Field("Handle16Value", "Handle16", 0, 2, true)));
+
+#>
+#nullable restore
+<#@ include file="$(ProjectDir)/Structs/Primitives/Primitive.tt" #>

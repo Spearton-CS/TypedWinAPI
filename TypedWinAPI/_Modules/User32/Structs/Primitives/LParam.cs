@@ -1,13 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace TypedWinAPI.User32;
 
-[StructLayout(LayoutKind.Explicit, Size = 8)]
-public unsafe readonly struct LParam :
-    IEqualityOperators<LParam, LParam, bool>, IEquatable<LParam>,
+unsafe partial struct LParam :
     IEqualityOperators<LParam, Handle, bool>, IEquatable<Handle>,
     IEqualityOperators<LParam, Handle16, bool>, IEquatable<Handle16>,
     IEqualityOperators<LParam, nint, bool>, IEquatable<nint>,
@@ -30,12 +26,6 @@ public unsafe readonly struct LParam :
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public LParam(nuint unsigned) => UnsignedValue = unsigned;
 
-    [FieldOffset(0)] public readonly Handle HandleValue;
-    [FieldOffset(0)] public readonly Handle16 Handle16Value;
-    [FieldOffset(0)] public readonly void* PointerValue;
-    [FieldOffset(0)] public readonly nint SignedValue;
-    [FieldOffset(0)] public readonly nuint UnsignedValue;
-
     #region Decomposition
 
     /// <summary>
@@ -50,19 +40,6 @@ public unsafe readonly struct LParam :
     #endregion
 
     #region Equality
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly override bool Equals([NotNullWhen(true)] object? obj)
-        => (obj is LParam other && this == other)
-        || (obj is nint signed && this == signed)
-        || (obj is nuint unsigned && this == unsigned);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(LParam other) => this == other;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator ==(LParam left, LParam right) => left.SignedValue == right.SignedValue;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator !=(LParam left, LParam right) => left.SignedValue != right.SignedValue;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool Equals(Handle other) => this == other;
@@ -151,6 +128,16 @@ public unsafe readonly struct LParam :
     public static explicit operator Bool4(LParam LParam) => LParam.SignedValue != 0;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator LParam(Bool4 b) => (LParam)(b ? 1 : 0);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator Bool1(LParam LParam) => LParam.SignedValue != 0;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator LParam(Bool1 b) => (LParam)(b ? 1 : 0);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator bool(LParam LParam) => LParam.SignedValue != 0;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator LParam(bool b) => (LParam)(b ? 1 : 0);
 
     #endregion
 }

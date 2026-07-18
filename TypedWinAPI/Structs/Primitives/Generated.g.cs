@@ -11,7 +11,7 @@ namespace TypedWinAPI;
 /// Blittable (unmanaged) primitive (read-only) struct with size 4. Abstraction over Win32 HResult
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 4)]
-unsafe readonly partial struct HResult :
+public unsafe readonly partial struct HResult :
 	IEqualityOperators<HResult, HResult, bool>, IEquatable<HResult>
 {
 

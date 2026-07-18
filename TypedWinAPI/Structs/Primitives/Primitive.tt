@@ -9,13 +9,28 @@
 	{
 		foreach (Struct meta in metas)
 		{
-			Field[] fieldsUniqueOffset = meta.Fields.GroupBy(f => f.Offset).Select(g => g.OrderByDescending(f => f.Size).First()).ToArray();
+			Field[] fieldsUniqueOffset;
+			{
+				var sorted = meta.Fields.OrderBy(f => f.Offset).ThenByDescending(f => f.Size).ToArray();
+				var result = new List<Field>(sorted.Length);
+				foreach (var current in sorted)
+				{
+					if (result.Count != 0)
+					{
+						Field last = result[result.Count - 1];
+						if ((current.Offset + current.Size) <= (last.Offset + last.Size))
+							continue;
+					}
+					result.Add(current);
+				}
+				fieldsUniqueOffset = result.ToArray();
+			}
 #>
 /// <summary>
 /// <#= meta.XAML_Comment ?? $"Blittable (unmanaged) primitive (read-only) struct with size {meta.Size}. Abstraction over Win32 {meta.Name}" #>
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = <#= meta.Size #>)]
-unsafe readonly partial struct <#= meta.Name #> :
+<#= meta.IsInternalDeclared ? "internal" : "public" #> unsafe readonly partial struct <#= meta.Name #> :
 	IEqualityOperators<<#= meta.Name #>, <#= meta.Name #>, bool>, IEquatable<<#= meta.Name #>>
 {
 <#+
@@ -26,18 +41,18 @@ unsafe readonly partial struct <#= meta.Name #> :
 
 	public <#= meta.Name #>(
 <#+
-	for (int i = 0; i < meta.Fields.Length; i++)
+	for (int i = 0; i < fieldsUniqueOffset.Length; i++)
 	{
-		Field field = meta.Fields[i];
+		Field field = fieldsUniqueOffset[i];
 #>
-	<#= field.Type #> <#= field.Name #><#= (i != (meta.Fields.Length - 1)) ? "," : "" #>
+	<#= field.Type #> <#= field.Name #><#= (i != (fieldsUniqueOffset.Length - 1)) ? "," : "" #>
 <#+
 	}
 #>
 	)
 	{
 <#+
-		foreach (Field field in meta.Fields)
+		foreach (Field field in fieldsUniqueOffset)
 		{
 #>
 		this.<#= field.Name #> = <#= field.Name #>;

@@ -49,6 +49,7 @@ public enum StructFlags : ulong
 	ToStringOverride = 1 << 1,
 	ConstructorOverride = 1 << 2,
 	EqualsOverride = 1 << 3,
+	InternalDeclaration = 1 << 4,
 }
 public class Struct(
 	string Name,
@@ -67,5 +68,6 @@ public class Struct(
 	public bool IsToStringOverriden => Flags.HasFlag(StructFlags.ToStringOverride);
 	public bool IsConstructorOverriden => Flags.HasFlag(StructFlags.ConstructorOverride);
 	public bool IsEqualsOverriden => Flags.HasFlag(StructFlags.EqualsOverride);
+	public bool IsInternalDeclared => Flags.HasFlag(StructFlags.InternalDeclaration);
 }
 #>

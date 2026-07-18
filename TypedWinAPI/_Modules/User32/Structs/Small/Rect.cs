@@ -1,30 +1,13 @@
-﻿using System.Numerics;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace TypedWinAPI.User32;
 
-/// <summary>
-/// Defines the coordinates of the upper-left and lower-right corners of a rectangle.
-/// </summary>
-/// <remarks>
-/// This structure uses memory overlapping to provide access via both <c>Left/Top/Right/Bottom</c> 
-/// and <c>X/Y/Point</c> fields without extra memory overhead.
-/// </remarks>
-[StructLayout(LayoutKind.Explicit, Size = 16)]
-public readonly record struct Rect(
-    [field: FieldOffset(0)] int Left,
-    [field: FieldOffset(4)] int Top,
-    [field: FieldOffset(8)] int Right,
-    [field: FieldOffset(12)] int Bottom)
-    : IEqualityOperators<Rect, Rect, bool>, IEquatable<Rect>
+partial struct Rect
 {
-    /// <summary> The x-coordinate of the upper-left corner (aliases <see cref="Left"/>). </summary>
-    [FieldOffset(0)] public readonly int X;
-    /// <summary> The y-coordinate of the upper-left corner (aliases <see cref="Top"/>). </summary>
-    [FieldOffset(4)] public readonly int Y;
-    /// <summary> The upper-left corner as a <see cref="TypedWinAPI.User32.Point"/> structure. </summary>
     [FieldOffset(0)] public readonly Point Location;
+    [FieldOffset(0)] public readonly int X;
+    [FieldOffset(4)] public readonly int Y;
 
     /// <summary> Gets the width of the rectangle (Right - Left). </summary>
     public readonly int Width
@@ -54,5 +37,11 @@ public readonly record struct Rect(
     {
         x = X; y = Y;
         width = Width; height = Height;
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly void Deconstruct(out int left, out int top, out int right, out int bottom)
+    {
+        left = Left; top = Top;
+        right = Right; bottom = Bottom;
     }
 }

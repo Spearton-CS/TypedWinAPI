@@ -11,7 +11,7 @@ namespace TypedWinAPI.Shell32;
 /// Blittable (unmanaged) primitive (read-only) struct with size 2. Abstraction over Win32 SHItemID
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 2)]
-unsafe readonly partial struct SHItemID :
+public unsafe readonly partial struct SHItemID :
 	IEqualityOperators<SHItemID, SHItemID, bool>, IEquatable<SHItemID>
 {
 	#region Construct

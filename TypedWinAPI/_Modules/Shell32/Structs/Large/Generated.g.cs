@@ -10,7 +10,7 @@ namespace TypedWinAPI.Shell32;
 /// Blittable (unmanaged) large struct with size 120. Abstraction over Win32 ExecuteInfoW
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 120)]
-unsafe partial struct ExecuteInfoW
+public unsafe partial struct ExecuteInfoW
 {
 	#region Construct
 
@@ -29,7 +29,6 @@ char* lpClass,
 ADVAPI32.HKey hKeyClass,
 User32.HotKey dwHotKey,
 User32.HIcon hIcon,
-SHCore.HMonitor hMonitor,
 HProcess hProcess
 	)
 	{
@@ -60,8 +59,6 @@ HProcess hProcess
 		this.dwHotKey = dwHotKey;
 
 		this.hIcon = hIcon;
-
-		this.hMonitor = hMonitor;
 
 		this.hProcess = hProcess;
 

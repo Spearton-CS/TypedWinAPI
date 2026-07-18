@@ -6,9 +6,7 @@ namespace TypedWinAPI.User32;
 /// <summary>
 /// Helper structure to decode keyboard message flags contained in lParam.
 /// </summary>
-[StructLayout(LayoutKind.Explicit, Size = 8)]
-public readonly record struct KeyEventArgsFlags(
-    [field: FieldOffset(0)] LParam lParam)
+partial struct KeyEventArgsFlags
 {
     public const nint
         RepeatCountMask = 0x0000_FFFF,

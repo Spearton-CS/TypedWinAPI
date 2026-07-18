@@ -1,14 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace TypedWinAPI.User32;
 
-[StructLayout(LayoutKind.Explicit, Size = 8)]
-public unsafe readonly struct LResult :
-    IEqualityOperators<LResult, LResult, bool>, IEquatable<LResult>,
-    IEqualityOperators<LResult, Handle, bool>, IEquatable<Handle>,
+unsafe partial struct LResult :
     IEqualityOperators<LResult, Handle16, bool>, IEquatable<Handle16>,
     IEqualityOperators<LResult, nint, bool>, IEquatable<nint>,
     IEqualityOperators<LResult, nuint, bool>, IEquatable<nuint>
@@ -30,12 +25,6 @@ public unsafe readonly struct LResult :
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public LResult(nuint unsigned) => UnsignedValue = unsigned;
 
-    [FieldOffset(0)] public readonly Handle HandleValue;
-    [FieldOffset(0)] public readonly Handle16 Handle16Value;
-    [FieldOffset(0)] public readonly void* PointerValue;
-    [FieldOffset(0)] public readonly nint SignedValue;
-    [FieldOffset(0)] public readonly nuint UnsignedValue;
-
     #region Decomposition
 
     /// <summary>
@@ -50,19 +39,6 @@ public unsafe readonly struct LResult :
     #endregion
 
     #region Equality
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly override bool Equals([NotNullWhen(true)] object? obj)
-        => (obj is LResult other && this == other)
-        || (obj is nint signed && this == signed)
-        || (obj is nuint unsigned && this == unsigned);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(LResult other) => this == other;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator ==(LResult left, LResult right) => left.SignedValue == right.SignedValue;
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator !=(LResult left, LResult right) => left.SignedValue != right.SignedValue;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool Equals(Handle other) => this == other;
@@ -151,6 +127,16 @@ public unsafe readonly struct LResult :
     public static explicit operator Bool4(LResult LResult) => LResult.SignedValue != 0;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator LResult(Bool4 b) => (LResult)(b ? 1 : 0);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator Bool1(LResult LResult) => LResult.SignedValue != 0;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator LResult(Bool1 b) => (LResult)(b ? 1 : 0);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator bool(LResult LResult) => LResult.SignedValue != 0;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static explicit operator LResult(bool b) => (LResult)(b ? 1 : 0);
 
     #endregion
 }
