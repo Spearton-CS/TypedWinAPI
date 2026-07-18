@@ -9,6 +9,7 @@
 	{
 		foreach (Struct meta in metas)
 		{
+			Field[] fieldsUniqueOffset = meta.Fields.GroupBy(f => f.Offset).Select(g => g.OrderByDescending(f => f.Size).First()).ToArray();
 #>
 /// <summary>
 /// <#= meta.XAML_Comment ?? $"Blittable (unmanaged) primitive (read-only) struct with size {meta.Size}. Abstraction over Win32 {meta.Name}" #>
@@ -18,7 +19,7 @@ unsafe readonly partial struct <#= meta.Name #> :
 	IEqualityOperators<<#= meta.Name #>, <#= meta.Name #>, bool>, IEquatable<<#= meta.Name #>>
 {
 <#+
-	if (!meta.Flags.HasFlag(StructFlags.ConstructorOverride))
+	if (!meta.IsConstructorOverriden)
 	{
 #>
 	#region Construct
@@ -65,7 +66,7 @@ unsafe readonly partial struct <#= meta.Name #> :
 	#endregion
 
 <#+
-	if (!meta.Flags.HasFlag(StructFlags.EqualsOverride))
+	if (!meta.IsEqualsOverriden)
 	{
 #>
 	#region Equality
@@ -82,11 +83,11 @@ unsafe readonly partial struct <#= meta.Name #> :
 	{
 		return
 <#+
-		for (int i = 0; i < meta.Fields.Length; i++)
+		for (int i = 0; i < fieldsUniqueOffset.Length; i++)
 		{
-			Field field = meta.Fields[i];
+			Field field = fieldsUniqueOffset[i];
 #>
-		a.<#= field.Name #> == b.<#= field.Name #> <#= (i != (meta.Fields.Length - 1)) ? "&&\r\n" : "" #>
+		<#= (i != (fieldsUniqueOffset.Length - 1)) ? $"{field.Equals()} &&\r\n" : field.Equals() #>
 <#+
 		}
 #>;
@@ -96,11 +97,11 @@ unsafe readonly partial struct <#= meta.Name #> :
 	{
 		return
 <#+
-		for (int i = 0; i < meta.Fields.Length; i++)
+		for (int i = 0; i < fieldsUniqueOffset.Length; i++)
 		{
-			Field field = meta.Fields[i];
+			Field field = fieldsUniqueOffset[i];
 #>
-		a.<#= field.Name #> != b.<#= field.Name #> <#= (i != (meta.Fields.Length - 1)) ? "||\r\n" : "" #>
+		<#= (i != (fieldsUniqueOffset.Length - 1)) ? $"{field.NonEquals()} &&\r\n" : field.NonEquals() #>
 <#+
 		}
 #>;
@@ -112,7 +113,7 @@ unsafe readonly partial struct <#= meta.Name #> :
 #>
 
 <#+
-	if (!meta.Flags.HasFlag(StructFlags.ToStringOverride))
+	if (!meta.IsToStringOverriden)
 	{
 #>
 #if ManagedStrings

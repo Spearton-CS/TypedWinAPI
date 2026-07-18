@@ -45,14 +45,14 @@ unsafe readonly partial struct SHItemID :
 	public static bool operator ==(SHItemID a, SHItemID b)
 	{
 		return
-		a.cb == b.cb 
+		a.cb == b.cb
 ;
 	}
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(SHItemID a, SHItemID b)
 	{
 		return
-		a.cb != b.cb 
+		!(a.cb == b.cb)
 ;
 	}
 

@@ -23,12 +23,12 @@ namespace TypedWinAPI;
 		new Field(
 			"SignedValue",
 			"int",
-			0,
+			0, 4,
 			true),
 		new Field(
 			"UnsignedValue",
 			"uint",
-			0,
+			0, 4,
 			true)));
 #>
 #nullable restore

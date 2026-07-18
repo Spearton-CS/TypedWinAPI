@@ -20,11 +20,7 @@ namespace TypedWinAPI.Shell32;
 		null,
 		2,
 		StructFlags.ReadOnly,
-		new Field(
-			"cb",
-			"ushort",
-			0,
-			true)));
+		new Field("cb", "ushort", 0, 2, true)));
 #>
 #nullable restore
 <#@ include file="$(ProjectDir)/Structs/Primitives/Primitive.tt" #>

@@ -146,46 +146,42 @@ HProcess hProcess
 
 		a.hIcon == b.hIcon &&
 
-		a.hMonitor == b.hMonitor &&
-
-		a.hProcess == b.hProcess 
+		a.hProcess == b.hProcess
 ;
 	}
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool operator !=(scoped in ExecuteInfoW a, scoped in ExecuteInfoW b)
 	{
 		return
-		a.cbSize != b.cbSize ||
+		!(a.cbSize == b.cbSize) ||
 
-		a.fMask != b.fMask ||
+		!(a.fMask == b.fMask) ||
 
-		a.hwnd != b.hwnd ||
+		!(a.hwnd == b.hwnd) ||
 
-		a.lpVerb != b.lpVerb ||
+		!(a.lpVerb == b.lpVerb) ||
 
-		a.lpFile != b.lpFile ||
+		!(a.lpFile == b.lpFile) ||
 
-		a.lpParameters != b.lpParameters ||
+		!(a.lpParameters == b.lpParameters) ||
 
-		a.lpDirectory != b.lpDirectory ||
+		!(a.lpDirectory == b.lpDirectory) ||
 
-		a.nShow != b.nShow ||
+		!(a.nShow == b.nShow) ||
 
-		a.hInstApp != b.hInstApp ||
+		!(a.hInstApp == b.hInstApp) ||
 
-		a.lpIDList != b.lpIDList ||
+		!(a.lpIDList == b.lpIDList) ||
 
-		a.lpClass != b.lpClass ||
+		!(a.lpClass == b.lpClass) ||
 
-		a.hKeyClass != b.hKeyClass ||
+		!(a.hKeyClass == b.hKeyClass) ||
 
-		a.dwHotKey != b.dwHotKey ||
+		!(a.dwHotKey == b.dwHotKey) ||
 
-		a.hIcon != b.hIcon ||
+		!(a.hIcon == b.hIcon) ||
 
-		a.hMonitor != b.hMonitor ||
-
-		a.hProcess != b.hProcess 
+		!(a.hProcess == b.hProcess)
 ;
 	}
 

@@ -4,18 +4,42 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#+
-public readonly struct Field(
-	string Name,
-	string Type,
-	int Offset,
-	bool ReadOnly)
+public class Field(
+	string Name, string Type,
+	int Offset, int Size,
+	bool ReadOnly,
+	string? EqualsOverride = null,
+	string? NonEqualsOverride = null)
 {
 	public readonly string Name = Name;
 	public readonly string Type = Type;
 	public readonly int Offset = Offset;
+	public readonly int Size = Size;
 	public readonly bool ReadOnly = ReadOnly;
+	public readonly string? EqualsOverride = EqualsOverride;
+	public readonly string? NonEqualsOverride = NonEqualsOverride;
 
 	public override string ToString() => (Type.EndsWith("*") || Type.StartsWith("delegate*")) ? $"(nuint){Name}:X16" : Name;
+	public string Equals()
+	{
+		if (EqualsOverride is not null)
+			return EqualsOverride;
+		if (Type.StartsWith("Span")
+		|| Type.StartsWith("ReadOnlySpan")
+		|| Type.StartsWith("Memory")
+		|| Type.StartsWith("ReadOnlyMemory")
+		|| Type.EndsWith("[]"))
+			return $"a.{Name}.SequenceEqual(b.{Name})";
+		if (Type.StartsWith("fixed"))
+		{
+			int braceIndex = Type.IndexOf('[');
+			string type = Type.Substring(5, braceIndex - 5), length = Type.Substring(braceIndex + 1, Type.Length - braceIndex - 1);
+			return $"new ReadOnlySpan<{type}>(a.{Name}, {length}).SequenceEqual(new ReadOnlySpan<{type}>(b.{Name}, {length}))";
+		}
+		
+		return $"a.{Name} == b.{Name}";
+	}
+	public string NonEquals() => NonEqualsOverride ?? $"!({Equals()})";
 }
 [Flags]
 public enum StructFlags : ulong
@@ -38,5 +62,10 @@ public class Struct(
 	public readonly int Size = Size;
 	public readonly Field[] Fields = Fields;
 	public readonly StructFlags Flags = Flags;
+
+	public bool IsReadOnly => Flags.HasFlag(StructFlags.ReadOnly);
+	public bool IsToStringOverriden => Flags.HasFlag(StructFlags.ToStringOverride);
+	public bool IsConstructorOverriden => Flags.HasFlag(StructFlags.ConstructorOverride);
+	public bool IsEqualsOverriden => Flags.HasFlag(StructFlags.EqualsOverride);
 }
 #>
