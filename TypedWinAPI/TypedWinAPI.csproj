@@ -95,6 +95,10 @@ Custom defines;
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RootHandles.g.cs</LastGenOutput>
     </None>
+    <None Update="_Modules\MSimg32\Structs\Primitives\Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Generated.g.cs</LastGenOutput>
+    </None>
     <None Update="_Modules\SHCore\Handles\RootHandles.tt">
       <LastGenOutput>RootHandles.g.cs</LastGenOutput>
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -118,6 +122,10 @@ Custom defines;
     <None Update="_Modules\User32\Handles\RootHandles.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RootHandles.g.cs</LastGenOutput>
+    </None>
+    <None Update="_Modules\User32\Structs\Large\Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Generated.g.cs</LastGenOutput>
     </None>
     <None Update="_Modules\User32\Structs\Primitives\Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -152,7 +160,7 @@ Custom defines;
     <Folder Include="_Modules\MSimg32\Enums\" />
     <Folder Include="_Modules\MSimg32\Handles\" />
     <Folder Include="_Modules\MSimg32\Structs\Large\" />
-    <Folder Include="_Modules\MSimg32\Structs\Primitives\" />
+    <Folder Include="_Modules\MSimg32\Structs\Small\" />
     <Folder Include="_Modules\SHCore\Structs\Large\" />
     <Folder Include="_Modules\SHCore\Structs\Primitives\" />
     <Folder Include="_Modules\SHCore\Structs\Small\" />
@@ -172,6 +180,11 @@ Custom defines;
       <DependentUpon>Generated.tt</DependentUpon>
     </None>
     <None Include="_Modules\Kernel32\_Imports\Kernel32.DeviceIoControl.cs" />
+    <None Include="_Modules\MSimg32\Structs\Primitives\Generated.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Generated.tt</DependentUpon>
+    </None>
     <None Include="_Modules\Shell32\Structs\Large\Generated.g.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -186,6 +199,11 @@ Custom defines;
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>RootHandles.tt</DependentUpon>
+    </None>
+    <None Include="_Modules\User32\Structs\Large\Generated.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Generated.tt</DependentUpon>
     </None>
     <None Include="_Modules\User32\Structs\Small\Generated.g.cs">
       <DesignTime>True</DesignTime>
@@ -234,6 +252,11 @@ Custom defines;
       <AutoGen>True</AutoGen>
       <DependentUpon>RootHandles.tt</DependentUpon>
     </Compile>
+    <Compile Update="_Modules\MSimg32\Structs\Primitives\Generated.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Generated.tt</DependentUpon>
+    </Compile>
     <Compile Update="_Modules\SHCore\Handles\RootHandles.g.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -263,6 +286,11 @@ Custom defines;
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>RootHandles16.tt</DependentUpon>
+    </Compile>
+    <Compile Update="_Modules\User32\Structs\Large\Generated.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Generated.tt</DependentUpon>
     </Compile>
     <Compile Update="_Modules\User32\Structs\Primitives\Generated.g.cs">
       <DesignTime>True</DesignTime>

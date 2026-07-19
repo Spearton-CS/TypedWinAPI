@@ -19,7 +19,15 @@ public class Field(
 	public readonly string? EqualsOverride = EqualsOverride;
 	public readonly string? NonEqualsOverride = NonEqualsOverride;
 
-	public override string ToString() => (Type.EndsWith("*") || Type.StartsWith("delegate*")) ? $"(nuint){Name}:X16" : Name;
+	public override string ToString()
+	{
+		if (Type.EndsWith("*") || Type.StartsWith("delegate*"))
+			return $"(nuint){Name}:X16";
+		else if (Type.StartsWith("fixed"))
+			return $"\"{Type}[{Size}]\"";
+		else
+			return Name;
+	}
 	public string Equals()
 	{
 		if (EqualsOverride is not null)
@@ -32,9 +40,8 @@ public class Field(
 			return $"a.{Name}.SequenceEqual(b.{Name})";
 		if (Type.StartsWith("fixed"))
 		{
-			int braceIndex = Type.IndexOf('[');
-			string type = Type.Substring(5, braceIndex - 5), length = Type.Substring(braceIndex + 1, Type.Length - braceIndex - 1);
-			return $"new ReadOnlySpan<{type}>(a.{Name}, {length}).SequenceEqual(new ReadOnlySpan<{type}>(b.{Name}, {length}))";
+			string type = Type.Substring(5, Type.Length - 5);
+			return $"MemoryMarshal.CreateReadOnlySpan<{type}>(in a.{Name}[0], {Size}).SequenceEqual(MemoryMarshal.CreateReadOnlySpan<{type}>(in b.{Name}[0], {Size}))";
 		}
 		
 		return $"a.{Name} == b.{Name}";

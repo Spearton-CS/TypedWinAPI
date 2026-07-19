@@ -73,7 +73,7 @@
 	foreach (Field field in meta.Fields)
 	{
 #>
-	[FieldOffset(<#= field.Offset #>)] public readonly <#= field.Type #> <#= field.Name #>;
+	[FieldOffset(<#= field.Offset #>)] public readonly <#= field.Type #> <#= field.Name #><#= field.Type.StartsWith("fixed") ? $"[{field.Size}]" : "" #>;
 
 <#+
 	}

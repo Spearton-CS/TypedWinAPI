@@ -18,7 +18,7 @@ namespace TypedWinAPI.Shell32;
 		"ExecuteInfoW",
 		null,
 		120,
-		StructFlags.None,
+		StructFlags.ConstructorOverride,
 		new Field("cbSize", "uint", 0, 4, true),
 		new Field("fMask", "ExecuteMask", 8, 4, false),
 		new Field("hwnd", "User32.HWND", 16, 8, false),

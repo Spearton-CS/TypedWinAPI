@@ -12,59 +12,6 @@ namespace TypedWinAPI.Shell32;
 [StructLayout(LayoutKind.Explicit, Size = 120)]
 public unsafe partial struct ExecuteInfoW
 {
-	#region Construct
-
-	public ExecuteInfoW(
-uint cbSize,
-ExecuteMask fMask,
-User32.HWND hwnd,
-char* lpVerb,
-char* lpFile,
-char* lpParameters,
-char* lpDirectory,
-User32.ShowWindowCommand nShow,
-Kernel32.HInstance hInstApp,
-SHItemID* lpIDList,
-char* lpClass,
-ADVAPI32.HKey hKeyClass,
-User32.HotKey dwHotKey,
-User32.HIcon hIcon,
-HProcess hProcess
-	)
-	{
-		this.cbSize = cbSize;
-
-		this.fMask = fMask;
-
-		this.hwnd = hwnd;
-
-		this.lpVerb = lpVerb;
-
-		this.lpFile = lpFile;
-
-		this.lpParameters = lpParameters;
-
-		this.lpDirectory = lpDirectory;
-
-		this.nShow = nShow;
-
-		this.hInstApp = hInstApp;
-
-		this.lpIDList = lpIDList;
-
-		this.lpClass = lpClass;
-
-		this.hKeyClass = hKeyClass;
-
-		this.dwHotKey = dwHotKey;
-
-		this.hIcon = hIcon;
-
-		this.hProcess = hProcess;
-
-	}
-
-	#endregion
 
 	#region Fields
 

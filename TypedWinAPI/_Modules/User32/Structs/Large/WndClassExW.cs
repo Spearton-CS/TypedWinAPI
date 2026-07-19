@@ -1,35 +1,32 @@
-﻿using System.Runtime.InteropServices;
+﻿namespace TypedWinAPI.User32;
 
-namespace TypedWinAPI.User32;
-
-/// <summary>
-/// Contains window class information. It is used with the RegisterClassEx and GetClassInfoEx functions.
-/// </summary>
-[StructLayout(LayoutKind.Explicit, CharSet = CharSet.Unicode, Size = 80)]
-public unsafe struct WndClassExW()
+unsafe partial struct WndClassExW
 {
-    /// <summary> The size, in bytes, of this structure. </summary>
-    [FieldOffset(0)] public uint cbSize = 80;
-    /// <summary> The class style(s). </summary>
-    [FieldOffset(4)] public ClassStyles style;
-    /// <summary> A pointer to the window procedure (WndProc). </summary>
-    [FieldOffset(8)] public delegate* unmanaged[Stdcall]<HWND, WndProcMsgType, WParam, LParam, LResult> lpfnWndProc;
-    /// <summary> The number of extra bytes to allocate following the window-class structure. </summary>
-    [FieldOffset(16)] public int cbClsExtra;
-    /// <summary> The number of extra bytes to allocate following the window instance. </summary>
-    [FieldOffset(20)] public int cbWndExtra;
-    /// <summary> A handle to the instance that contains the window procedure for the class. </summary>
-    [FieldOffset(24)] public Kernel32.HInstance hInstance;
-    /// <summary> A handle to the class icon. </summary>
-    [FieldOffset(32)] public HIcon hIcon;
-    /// <summary> A handle to the class cursor. </summary>
-    [FieldOffset(40)] public HCursor hCursor;
-    /// <summary> A handle to the class background brush. </summary>
-    [FieldOffset(48)] public Handle hbrBackground;
-    /// <summary> Pointer to a null-terminated character string that specifies the resource name of the class menu. </summary>
-    [FieldOffset(56)] public char* lpszMenuName;
-    /// <summary> Pointer to a null-terminated string or is an atom. Specifies the window class name. </summary>
-    [FieldOffset(64)] public char* lpszClassName;
-    /// <summary> A handle to a small icon that is associated with the window class. </summary>
-    [FieldOffset(72)] public HIcon hIconSm;
+    public WndClassExW() => this.cbSize = 80;
+    public WndClassExW(
+        ClassStyles style,
+        delegate* unmanaged[Stdcall]<HWND, WndProcMsgType, WParam, LParam, LResult> lpfnWndProc,
+        int cbClsExtra,
+        int cbWndExtra,
+        Kernel32.HInstance hInstance,
+        HIcon hIcon,
+        HCursor hCursor,
+        Handle hbrBackground,
+        char* lpszMenuName,
+        char* lpszClassName,
+        HIcon hIconSm)
+    {
+        this.cbSize = 80;
+        this.style = style;
+        this.lpfnWndProc = lpfnWndProc;
+        this.cbClsExtra = cbClsExtra;
+        this.cbWndExtra = cbWndExtra;
+        this.hInstance = hInstance;
+        this.hIcon = hIcon;
+        this.hCursor = hCursor;
+        this.hbrBackground = hbrBackground;
+        this.lpszMenuName = lpszMenuName;
+        this.lpszClassName = lpszClassName;
+        this.hIconSm = hIconSm;
+    }
 }

@@ -1,0 +1,80 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" compilerOptions="/langversion:latest /nullable:enable" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".g.cs" #>
+#nullable enable
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Numerics;
+
+namespace TypedWinAPI.User32;
+
+<#
+	Generate(
+	new Struct(
+		"CreateStructW",
+		null,
+		72,
+		StructFlags.None,
+		new Field("lpCreateParams", "void*", 0, 8, false),
+		new Field("hInstance", "Kernel32.HInstance", 8, 8, false),
+		new Field("hMenu", "HMenu", 16, 8, false),
+		new Field("hwndParent", "HWND", 24, 8, false),
+		new Field("cy", "int", 32, 4, false),
+		new Field("cx", "int", 36, 4, false),
+		new Field("y", "int", 40, 4, false),
+		new Field("x", "int", 44, 4, false),
+		new Field("style", "WindowStyles", 48, 4, false),
+		new Field("lpszName", "char*", 52, 8, false),
+		new Field("lpszClass", "char*", 60, 8, false),
+		new Field("dwExStyle", "WindowExStyles", 68, 8, false)),
+	new Struct(
+		"PaintStruct",
+		null,
+		72,
+		StructFlags.ConstructorOverride,
+		new Field("hdc", "Handle", 0, 8, false),
+		new Field("fErase", "Bool4", 8, 4, false),
+		new Field("rcPaint", "Rect", 12, 16, false),
+		new Field("fRestore", "Bool4", 28, 4, false),
+		new Field("fIncUpdate", "Bool4", 32, 4, false),
+		new Field("rgbReserved", "fixed byte", 40, 32, false)),
+	new Struct(
+		"WndClassExW",
+		null,
+		80,
+		StructFlags.ConstructorOverride,
+		new Field("cbSize", "uint", 0, 4, false),
+		new Field("style", "ClassStyles", 4, 4, false),
+		new Field("lpfnWndProc", "delegate* unmanaged[Stdcall]<HWND, WndProcMsgType, WParam, LParam, LResult>", 8, 8, false),
+		new Field("cbClsExtra", "int", 16, 4, false),
+		new Field("cbWndExtra", "int", 20, 4, false),
+		new Field("hInstance", "Kernel32.HInstance", 24, 8, false),
+		new Field("hIcon", "HIcon", 32, 8, false),
+		new Field("hCursor", "HCursor", 40, 8, false),
+		new Field("hbrBackground", "Handle", 48, 8, false),
+		new Field("lpszMenuName", "char*", 56, 8, false),
+		new Field("lpszClassName", "char*", 64, 8, false),
+		new Field("hIconSm", "HIcon", 72, 8, false)),
+	new Struct(
+		"MsgBoxParamsW",
+		null,
+		68,
+		StructFlags.ConstructorOverride,
+		new Field("cbSize", "uint", 0, 4, false),
+		new Field("hwndOwner", "HWND", 4, 8, false),
+		new Field("hInstance", "Kernel32.HInstance", 12, 8, false),
+		new Field("lpszText", "char*", 20, 8, false),
+		new Field("lpszCaption", "char*", 28, 8, false),
+		new Field("dwStyle", "MessageBoxStyle", 36, 4, false),
+		new Field("lpszIcon", "char*", 40, 8, false),
+		new Field("dwContextHelpId", "nuint", 48, 8, false),
+		new Field("lpfnMsgBoxCallback", "delegate* unmanaged[Stdcall]<HelpInfo*, void>", 56, 8, false),
+		new Field("dwLanguageId", "Kernel32.LanguageId", 64, 2, false)));
+#>
+#nullable restore
+<#@ include file="$(ProjectDir)/Structs/Large/Large.tt" #>
