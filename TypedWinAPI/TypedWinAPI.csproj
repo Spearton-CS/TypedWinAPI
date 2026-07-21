@@ -179,7 +179,6 @@ Custom defines;
       <AutoGen>True</AutoGen>
       <DependentUpon>Generated.tt</DependentUpon>
     </None>
-    <None Include="_Modules\Kernel32\_Imports\Kernel32.DeviceIoControl.cs" />
     <None Include="_Modules\MSimg32\Structs\Primitives\Generated.g.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

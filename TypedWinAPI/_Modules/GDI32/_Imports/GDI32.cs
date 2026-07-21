@@ -1,7 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-
-namespace TypedWinAPI.GDI32;
+﻿namespace TypedWinAPI.GDI32;
 
 public static unsafe partial class GDI32
 {

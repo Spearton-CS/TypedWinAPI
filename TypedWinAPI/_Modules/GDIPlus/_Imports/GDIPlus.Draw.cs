@@ -6,8 +6,8 @@ unsafe partial class GDIPlus
 {
     [LibraryImport(DLL, SetLastError = true, EntryPoint = "GdipDrawLine")]
     public static partial Status DrawLine(
-    HGraphics graphics, HPen pen,
-    float x1, float y1, float x2, float y2);
+        HGraphics graphics, HPen pen,
+        float x1, float y1, float x2, float y2);
 
     [LibraryImport(DLL, SetLastError = true, EntryPoint = "GdipDrawRectangle")]
     public static partial Status DrawRectangle(

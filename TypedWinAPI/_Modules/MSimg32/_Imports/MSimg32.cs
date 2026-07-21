@@ -4,7 +4,7 @@ namespace TypedWinAPI.MSimg32;
 
 public static unsafe partial class MSimg32
 {
-    public const string DLL = "msimg32";
+    public const string DLL = "msimg32.dll";
 
     #region Transparency
 

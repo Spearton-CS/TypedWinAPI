@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace TypedWinAPI.User32;
 
@@ -18,19 +17,11 @@ public static unsafe partial class User32
     /// <summary> Loads the specified cursor resource from the executable file associated with an application instance. </summary>
     [LibraryImport(DLL, SetLastError = true)]
     public static partial HCursor LoadCursorW(Kernel32.HInstance hInstance, char* lpCursorName);
+#if ManagedStrings
     /// <summary> Loads the specified cursor resource using a managed string. </summary>
     [LibraryImport(DLL, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
     public static partial HCursor LoadCursorW(Kernel32.HInstance hInstance, string lpCursorName);
+#endif
 
-    #endregion
-
-    #region DPI (Windows 10 and 11 only)
-
-    [LibraryImport(DLL, SetLastError = true)]
-    public static partial uint GetDpiForWindow(HWND hwnd);
-
-    [LibraryImport(DLL, SetLastError = true)]
-    public static partial Bool4 SetProcessDpiAwarenessContext(DpiAwarenessContext value);
-
-    #endregion
+#endregion
 }

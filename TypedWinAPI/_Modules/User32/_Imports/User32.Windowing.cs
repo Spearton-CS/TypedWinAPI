@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace TypedWinAPI.User32;
 
@@ -20,22 +19,14 @@ unsafe partial class User32
     public static partial HWND CreateWindowExW(
         WindowExStyles dwExStyle, char* lpClassName, char* lpWindowName, WindowStyles dwStyle,
         int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMenu hMenu, Kernel32.HInstance hInstance, void* lpParam);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND CreateWindowExW(WindowExStyles dwExStyle, char* lpClassName, char* lpWindowName, WindowStyles dwStyle,
-        Rect rect, HWND hWndParent, HMenu hMenu, Kernel32.HInstance hInstance, void* lpParam)
-        => CreateWindowExW(dwExStyle, lpClassName, lpWindowName, dwStyle,
-            rect.X, rect.Y, rect.Width, rect.Height, hWndParent, hMenu, hInstance, lpParam);
 
+#if ManagedStrings
     /// <summary> Creates a window using managed strings for class and window names. </summary>
     [LibraryImport(DLL, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
     public static partial HWND CreateWindowExW(
         WindowExStyles dwExStyle, string? lpClassName, string? lpWindowName, WindowStyles dwStyle,
         int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMenu hMenu, Kernel32.HInstance hInstance, void* lpParam);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HWND CreateWindowExW(WindowExStyles dwExStyle, string? lpClassName, string? lpWindowName, WindowStyles dwStyle,
-        Rect rect, HWND hWndParent, HMenu hMenu, Kernel32.HInstance hInstance, void* lpParam)
-        => CreateWindowExW(dwExStyle, lpClassName, lpWindowName, dwStyle,
-            rect.X, rect.Y, rect.Width, rect.Height, hWndParent, hMenu, hInstance, lpParam);
+#endif
 
     #endregion
 
@@ -92,17 +83,9 @@ unsafe partial class User32
     [LibraryImport(DLL, SetLastError = true)]
     public static partial Bool4 MoveWindow(HWND hWnd, int X, int Y, int nWidth, int nHeight, Bool4 bRepaint);
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Bool4 MoveWindow(HWND hWnd, Rect rect, Bool4 bRepaint)
-        => MoveWindow(hWnd, rect.X, rect.Y, rect.Width, rect.Height, bRepaint);
-
     /// <summary> Changes the size, position, and Z order of a child, pop-up, or top-level window. </summary>
     [LibraryImport(DLL, SetLastError = true)]
     public static partial Bool4 SetWindowPos(HWND hWnd, HWND hWndInsertAfter, int X, int Y, int cx, int cy, SetWindowPosFlags uFlags);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Bool4 SetWindowPos(HWND hWnd, HWND hWndInsertAfter, Rect rect, SetWindowPosFlags uFlags)
-        => SetWindowPos(hWnd, hWndInsertAfter, rect.X, rect.Y, rect.Width, rect.Height, uFlags);
 
     /// <summary> Retrieves the dimensions of the bounding rectangle of the specified window. </summary>
     [LibraryImport(DLL, SetLastError = true)]
@@ -121,16 +104,20 @@ unsafe partial class User32
     /// <summary> Changes the text of the specified window's title bar (if it has one). </summary>
     [LibraryImport(DLL, SetLastError = true)]
     public static partial void SetWindowTextW(HWND hWnd, char* lpText);
+#if ManagedStrings
     /// <summary> Changes the window text using a managed string. </summary>
     [LibraryImport(DLL, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
     public static partial void SetWindowTextW(HWND hWnd, string lpText);
+#endif
 
     /// <summary> Copies the text of the specified window's title bar into a buffer. </summary>
     [LibraryImport(DLL, SetLastError = true)]
     public static partial int GetWindowTextW(HWND hWnd, char* lpString, int nMaxCount);
+#if ManagedObjects
     /// <summary> Copies the window text into a managed char array. </summary>
     [LibraryImport(DLL, SetLastError = true)]
     public static partial int GetWindowTextW(HWND hWnd, [Out] char[] lpString, int nMaxCount);
+#endif
 
     /// <summary> Retrieves the length, in characters, of the specified window's title bar text. </summary>
     [LibraryImport(DLL, SetLastError = true)]
@@ -159,8 +146,10 @@ unsafe partial class User32
 
     [LibraryImport(DLL, SetLastError = true)]
     public static partial HWND FindWindowExW(HWND hWndParent, HWND hWndChildAfter, char* lpszClass, char* lpszWindow);
+#if ManagedStrings
     [LibraryImport(DLL, StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
     public static partial HWND FindWindowExW(HWND hWndParent, HWND hWndChildAfter, string? lpszClass, string? lpszWindow);
+#endif
 
     [LibraryImport(DLL, SetLastError = true)]
     public static partial HWND GetWindow(HWND hWnd, GetWindowCommand uCmd);
@@ -182,10 +171,7 @@ unsafe partial class User32
 
     /// <summary> Adds a rectangle to the specified window's update region. </summary>
     [LibraryImport(DLL, SetLastError = true)]
-    public static partial Bool4 InvalidateRect(HWND hWnd, in Rect lpRect, Bool4 bErase);
-    /// <summary> Invalidates the entire client area of the specified window. </summary>
-    public static Bool4 InvalidateRect(HWND hWnd, Bool4 bErase)
-        => InvalidateRect(hWnd, in Unsafe.NullRef<Rect>(), bErase);
+    public static partial Bool4 InvalidateRect(HWND hWnd, Rect* lpRect, Bool4 bErase);
     /// <summary> Updates the client area of the specified window by sending a WM_PAINT message. </summary>
     [LibraryImport(DLL, SetLastError = true)]
     public static partial Bool4 UpdateWindow(HWND hWnd);
@@ -234,8 +220,10 @@ unsafe partial class User32
 
     [LibraryImport(DLL, SetLastError = true)]
     public static partial MessageBoxResult MessageBoxW(HWND hWnd, char* lpText, char* lpCaption, MessageBoxStyle uType);
+#if ManagedStrings
     [LibraryImport(DLL, StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
     public static partial MessageBoxResult MessageBoxW(HWND hWnd, string? lpText, string? lpCaption, MessageBoxStyle uType);
+#endif
 
     [LibraryImport(DLL, SetLastError = true)]
     public static partial MessageBoxResult MessageBoxIndirectW(in MsgBoxParamsW lpmbp);

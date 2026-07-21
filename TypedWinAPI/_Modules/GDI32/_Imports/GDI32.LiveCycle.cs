@@ -22,15 +22,18 @@ unsafe partial class GDI32
         int nHeight, int nWidth, int nEscapement, int nOrientation,
         FontWeight fnWeight, byte fdwItalic, byte fdwUnderline, byte fdwStrikeOut,
         FontCharSet fdwCharSet, FontOutputPrecision fdwOutputPrecision, FontClipPrecision fdwClipPrecision,
-        FontQuality fdwQuality, FontPitchAndFamily fdwPitchAndFamily, char* lpszFace); //400 - Normal 700 - Bold (fnWeight), 4 - ANTIALIAS, 6 - CLEARTYPE (fdwQuality)
+        FontQuality fdwQuality, FontPitchAndFamily fdwPitchAndFamily, char* lpszFace);
+
+#if ManagedStrings
     [LibraryImport(DLL, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
     public static partial HFont CreateFontW(
         int nHeight, int nWidth, int nEscapement, int nOrientation,
         FontWeight fnWeight, byte fdwItalic, byte fdwUnderline, byte fdwStrikeOut,
         FontCharSet fdwCharSet, FontOutputPrecision fdwOutputPrecision, FontClipPrecision fdwClipPrecision,
         FontQuality fdwQuality, FontPitchAndFamily fdwPitchAndFamily, string lpszFace);
+#endif
 
-    #endregion
+#endregion
 
     #region Delete
 

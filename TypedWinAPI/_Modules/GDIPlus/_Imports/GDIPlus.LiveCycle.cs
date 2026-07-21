@@ -32,8 +32,10 @@ unsafe partial class GDIPlus
 
     [LibraryImport(DLL, SetLastError = true, EntryPoint = "GdipCreateFontFamilyFromName")]
     public static partial Status CreateFontFamilyFromName(char* name, HFontCollection fontCollection, out HFontFamily fontFamily);
+#if ManagedStrings
     [LibraryImport(DLL, SetLastError = true, EntryPoint = "GdipCreateFontFamilyFromName", StringMarshalling = StringMarshalling.Utf16)]
     public static partial Status CreateFontFamilyFromName(string name, HFontCollection fontCollection, out HFontFamily fontFamily);
+#endif
 
     [LibraryImport(DLL, SetLastError = true, EntryPoint = "GdipCreateFont")]
     public static partial Status CreateFont(
@@ -56,10 +58,12 @@ unsafe partial class GDIPlus
 
     [LibraryImport(DLL, SetLastError = true, EntryPoint = "GdipLoadImageFromFile")]
     public static partial Status LoadImageFromFile(char* filename, out HImage image);
+#if ManagedStrings
     [LibraryImport(DLL, SetLastError = true, EntryPoint = "GdipLoadImageFromFile", StringMarshalling = StringMarshalling.Utf16)]
     public static partial Status LoadImageFromFile(string filename, out HImage image);
+#endif
 
-    #endregion
+#endregion
 
     #region Delete
 
