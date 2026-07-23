@@ -1,0 +1,145 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" compilerOptions="/langversion:latest /nullable:enable" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".g.cs" #>
+#nullable enable
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Numerics;
+
+namespace TypedWinAPI.Kernel32;
+
+<#
+	Generate(
+	new Struct(
+		"DiskFormatParameters",
+		null,
+		20,
+		StructFlags.None,
+		new Field("MediaType", "MediaType", 0, 4, false),
+		new Field("StartCylinderNumber", "uint", 4, 4, false),
+		new Field("EndCylinderNumber", "uint", 8, 4, false),
+		new Field("StartHeadNumber", "uint", 12, 4, false),
+		new Field("EndHeadNumber", "uint", 16, 4, false)),
+
+	new Struct(
+		"DiskGeometry",
+		null,
+		24,
+		StructFlags.None,
+		new Field("Cylinders", "long", 0, 8, false),
+		new Field("MediaType", "MediaType", 8, 4, false),
+		new Field("TracksPerCylinder", "uint", 12, 4, false),
+		new Field("SectorsPerTrack", "uint", 16, 4, false),
+		new Field("BytesPerSector", "uint", 20, 4, false)),
+
+	new Struct(
+		"DiskGeometryEx",
+		null,
+		32,
+		StructFlags.None,
+		new Field("Geometry", "DiskGeometry", 0, 24, false),
+		new Field("DiskSize", "long", 24, 8, false)),
+
+	new Struct(
+		"FsFileZeroDataInformation",
+		null,
+		16,
+		StructFlags.None,
+		new Field("FileOffset", "long", 0, 8, false),
+		new Field("BeyondFinalZero", "long", 8, 8, false)),
+	
+	new Struct(
+		"FsMoveFileParams",
+		null,
+		32,
+		StructFlags.None,
+		new Field("FileHandle", "Handle", 0, 8, false),
+		new Field("StartingVcn", "long", 8, 8, false),
+		new Field("StartingLcn", "long", 16, 8, false),
+		new Field("ClusterCount", "uint", 24, 4, false)),
+	
+	new Struct(
+		"FsReparseDataBuffer",
+		null,
+		24,
+		StructFlags.ConstructorOverride,
+		new Field("Header", "FsReparseDataBufferHeader", 0, 8, false),
+
+		new Field("SymlinkSubstituteNameOffset", "ushort", 8, 2, false),
+		new Field("SymlinkSubstituteNameLength", "ushort", 10, 2, false),
+		new Field("SymlinkPrintNameOffset", "ushort", 12, 2, false),
+		new Field("SymlinkPrintNameLength", "ushort", 14, 2, false),
+		
+		new Field("SymlinkFlags", "uint", 16, 4, false),
+		
+		new Field("MountPointSubstituteNameOffset", "ushort", 8, 2, false),
+		new Field("MountPointSubstituteNameLength", "ushort", 10, 2, false),
+		new Field("MountPointPrintNameOffset", "ushort", 12, 2, false),
+		new Field("MountPointPrintNameLength", "ushort", 14, 2, false)),
+	
+	new Struct(
+		"MountMgrMountPoint",
+		null,
+		24,
+		StructFlags.None,
+		new Field("SymbolicLinkNameOffset", "uint", 0, 4, false),
+		new Field("SymbolicLinkNameLength", "uint", 4, 4, false),
+		new Field("UniqueIdOffset", "uint", 8, 4, false),
+		new Field("UniqueIdLength", "uint", 12, 4, false),
+		new Field("DeviceNameOffset", "uint", 16, 4, false),
+		new Field("DeviceNameLength", "ushort", 20, 2, false)),
+	
+	new Struct(
+		"PartitionInformation",
+		null,
+		32,
+		StructFlags.None,
+		new Field("StartingOffset", "long", 0, 8, false),
+		new Field("PartitionLength", "long", 8, 8, false),
+		new Field("HiddenSectors", "uint", 16, 4, false),
+		new Field("PartitionNumber", "uint", 20, 4, false),
+		new Field("PartitionType", "PartitionType", 24, 1, false),
+		new Field("BootIndicator", "Bool1", 25, 1, false),
+		new Field("RecognizedPartition", "Bool1", 26, 1, false),
+		new Field("RewritePartition", "Bool1", 27, 1, false)),
+	
+	new Struct(
+		"StorageDeviceNumber",
+		null,
+		12,
+		StructFlags.None,
+		new Field("DeviceType", "DeviceType", 0, 4, false),
+		new Field("DeviceNumber", "uint", 4, 4, false),
+		new Field("PartitionNumber", "uint", 8, 4, false)),
+	
+	new Struct(
+		"StoragePropertyQuery",
+		null,
+		12,
+		StructFlags.None,
+		new Field("PropertyId", "StoragePropertyId", 0, 4, false),
+		new Field("QueryType", "StorageQueryType", 4, 4, false),
+		new Field("AdditionalParameters", "byte", 8, 1, false)));
+
+	/*
+//Primitive:
+
+FsReparseDataBufferHeader 8
+FsReparseTag ReparseTag 0
+ushort ReparseDataLength 4
+
+StorageHotplugInfo 8
+uint Size 0 = 8
+Bool1 MediaRemovable 4
+Bool1 MediaHotplug 5
+Bool1 DeviceHotplug 6
+Bool1 WriteCacheEnableOverride 7
+	*/
+#>
+#nullable restore
+<#@ include file="$(ProjectDir)/Structs/Small/Small.tt" #>
